@@ -4,131 +4,1645 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>SmartPOS Indonesia</title>
 
     <!-- Bootstrap -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="assets/css/bootstrap.min.css">
 
     <!-- Font Awesome -->
-    <link href="assets/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="assets/css/all.min.css">
 
-    <!-- Custom CSS -->
-    <link href="assets/css/style.css" rel="stylesheet">
-    <link href="assets/css/dashboard.css" rel="stylesheet">
+    <!-- ==========================
+         SMARTPOS CSS FRAMEWORK
+    =========================== -->
+
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="assets/css/header.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
 
 </head>
 
 <body>
 
-<div class="wrapper">
+<div class="app">
 
-    <!-- Sidebar -->
-    <aside id="sidebar">
+    <!-- =======================================
+            SIDEBAR
+    ======================================== -->
 
-        <div class="logo">
+    <aside class="sidebar" id="sidebar">
 
-            <h3>SmartPOS</h3>
+        <div class="sidebar-logo">
+
+            <div class="logo-icon">
+
+                <i class="fas fa-store"></i>
+
+            </div>
+
+            <div class="logo-text">
+
+                <h2>SmartPOS</h2>
+
+                <span>Indonesia</span>
+
+            </div>
 
         </div>
 
-        <ul class="menu">
+        <ul class="sidebar-menu">
 
-            <li data-page="dashboard">
-                <i class="fas fa-home"></i>
-                Dashboard
+            <li class="active">
+
+                <a href="#dashboard">
+
+                    <i class="fas fa-home"></i>
+
+                    <span>Dashboard</span>
+
+                </a>
+
             </li>
 
-            <li data-page="penjualan">
-                <i class="fas fa-cash-register"></i>
-                Penjualan
+            <li>
+
+                <a href="#penjualan">
+
+                    <i class="fas fa-cash-register"></i>
+
+                    <span>Penjualan</span>
+
+                </a>
+
             </li>
 
-            <li data-page="barang">
-                <i class="fas fa-box"></i>
-                Barang
+            <li>
+
+                <a href="#barang">
+
+                    <i class="fas fa-box"></i>
+
+                    <span>Barang</span>
+
+                </a>
+
             </li>
 
-            <li data-page="pembelian">
-                <i class="fas fa-cart-plus"></i>
-                Pembelian
+            <li>
+
+                <a href="#pembelian">
+
+                    <i class="fas fa-shopping-cart"></i>
+
+                    <span>Pembelian</span>
+
+                </a>
+
             </li>
 
-            <li data-page="stok">
-                <i class="fas fa-warehouse"></i>
-                Stok
+            <li>
+
+                <a href="#stok">
+
+                    <i class="fas fa-warehouse"></i>
+
+                    <span>Stok</span>
+
+                </a>
+
             </li>
 
-            <li data-page="keuangan">
-                <i class="fas fa-wallet"></i>
-                Keuangan
+            <li>
+
+                <a href="#keuangan">
+
+                    <i class="fas fa-wallet"></i>
+
+                    <span>Keuangan</span>
+
+                </a>
+
             </li>
 
-            <li data-page="pajak">
-                <i class="fas fa-file-invoice-dollar"></i>
-                Pajak
+            <li>
+
+                <a href="#pajak">
+
+                    <i class="fas fa-file-invoice-dollar"></i>
+
+                    <span>Pajak</span>
+
+                </a>
+
             </li>
 
-            <li data-page="laporan">
-                <i class="fas fa-chart-line"></i>
-                Laporan
+            <li>
+
+                <a href="#laporan">
+
+                    <i class="fas fa-chart-line"></i>
+
+                    <span>Laporan</span>
+
+                </a>
+
             </li>
 
-            <li data-page="pengaturan">
-                <i class="fas fa-cog"></i>
-                Pengaturan
+            <li>
+
+                <a href="#pengaturan">
+
+                    <i class="fas fa-cogs"></i>
+
+                    <span>Pengaturan</span>
+
+                </a>
+
             </li>
 
         </ul>
 
     </aside>
 
-    <!-- Main -->
-    <main>
+    <!-- =======================================
+            CONTENT
+    ======================================== -->
 
-        <!-- Header -->
-        <header>
+    <div class="content">
 
-            <button id="toggleSidebar">
+        <!-- HEADER -->
 
-                <i class="fas fa-bars"></i>
+        <header class="header">
 
-            </button>
+            <div class="header-left">
 
-            <h2 id="pageTitle">
+                <button class="menu-toggle"
+                        id="menuToggle">
 
-                Dashboard
+                    <i class="fas fa-bars"></i>
 
-            </h2>
+                </button>
 
-            <div class="user-area">
+                <div class="page-title">
 
-                <i class="fas fa-user-circle"></i>
+                    <h2>Dashboard</h2>
 
-                <span id="username">
+                    <span>Ringkasan Aktivitas Hari Ini</span>
 
-                    Administrator
+                </div>
 
-                </span>
+            </div>
+
+            <div class="header-center">
+
+                <div class="search-box">
+
+                    <i class="fas fa-search"></i>
+
+                    <input
+                        type="text"
+                        placeholder="Cari transaksi, barang, pelanggan...">
+
+                </div>
+
+            </div>
+
+            <div class="header-right">
+
+                <button class="notification-btn">
+
+                    <i class="fas fa-bell"></i>
+
+                    <span class="badge">3</span>
+
+                </button>
+
+                <button class="notification-btn">
+
+                    <i class="fas fa-envelope"></i>
+
+                    <span class="badge">5</span>
+
+                </button>
+
+                <div class="header-user">
+
+                    <div class="user-avatar">
+
+                        <img
+                            src="assets/images/avatar.png"
+                            alt="Admin">
+
+                    </div>
+
+                    <div class="user-info">
+
+                        <h4>Administrator</h4>
+
+                        <span>Super Admin</span>
+
+                    </div>
+
+                    <i class="fas fa-chevron-down"></i>
+
+                </div>
 
             </div>
 
         </header>
 
-        <!-- Content -->
-        <section id="content">
+        <!-- MAIN -->
 
-            <!-- Dashboard akan dimuat disini -->
+        <main class="main-content">
 
-        </section>
+            <div class="dashboard">
 
-    </main>
+                <!-- ==========================================
+     WELCOME BANNER
+========================================== -->
+
+<section class="welcome-card">
+
+    <div class="welcome-content">
+
+        <div>
+
+            <h1 class="welcome-title">
+
+                Selamat Datang 👋
+
+            </h1>
+
+            <p class="welcome-description">
+
+                Selamat bekerja, Administrator.
+                Berikut ringkasan operasional toko Anda hari ini.
+
+            </p>
+
+        </div>
+
+        <div class="welcome-info">
+
+            <div class="welcome-item">
+
+                <i class="fas fa-calendar-day"></i>
+
+                <div>
+
+                    <strong>22 Juli 2026</strong>
+
+                    <span>Kamis</span>
+
+                </div>
+
+            </div>
+
+            <div class="welcome-item">
+
+                <i class="fas fa-store"></i>
+
+                <div>
+
+                    <strong>Cabang Utama</strong>
+
+                    <span>Surabaya</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="welcome-illustration">
+
+        <i class="fas fa-chart-line"></i>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     KPI CARD
+========================================== -->
+
+<section class="kpi-grid">
+
+    <div class="kpi-card">
+
+        <div class="kpi-top">
+
+            <div class="kpi-icon">
+
+                <i class="fas fa-wallet"></i>
+
+            </div>
+
+            <span class="badge success">
+
+                +12%
+
+            </span>
+
+        </div>
+
+        <div class="kpi-content">
+
+            <span class="kpi-label">
+
+                Omzet Hari Ini
+
+            </span>
+
+            <h2 class="kpi-value">
+
+                Rp0
+
+            </h2>
+
+            <small>
+
+                Belum ada transaksi
+
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="kpi-card">
+
+        <div class="kpi-top">
+
+            <div class="kpi-icon">
+
+                <i class="fas fa-receipt"></i>
+
+            </div>
+
+            <span class="badge primary">
+
+                0
+
+            </span>
+
+        </div>
+
+        <div class="kpi-content">
+
+            <span class="kpi-label">
+
+                Total Transaksi
+
+            </span>
+
+            <h2 class="kpi-value">
+
+                0
+
+            </h2>
+
+            <small>
+
+                Hari ini
+
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="kpi-card">
+
+        <div class="kpi-top">
+
+            <div class="kpi-icon">
+
+                <i class="fas fa-boxes"></i>
+
+            </div>
+
+            <span class="badge warning">
+
+                5
+
+            </span>
+
+        </div>
+
+        <div class="kpi-content">
+
+            <span class="kpi-label">
+
+                Stok Menipis
+
+            </span>
+
+            <h2 class="kpi-value">
+
+                5
+
+            </h2>
+
+            <small>
+
+                Perlu Restock
+
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="kpi-card">
+
+        <div class="kpi-top">
+
+            <div class="kpi-icon">
+
+                <i class="fas fa-file-invoice-dollar"></i>
+
+            </div>
+
+            <span class="badge danger">
+
+                PKP
+
+            </span>
+
+        </div>
+
+        <div class="kpi-content">
+
+            <span class="kpi-label">
+
+                Simulasi PPN
+
+            </span>
+
+            <h2 class="kpi-value">
+
+                Rp0
+
+            </h2>
+
+            <small>
+
+                Belum ada penjualan
+
+            </small>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     QUICK ACTION
+========================================== -->
+
+<section class="quick-action">
+
+    <div class="quick-card">
+
+        <div class="quick-icon">
+
+            <i class="fas fa-cash-register"></i>
+
+        </div>
+
+        <h4>
+
+            Penjualan Baru
+
+        </h4>
+
+        <p>
+
+            Membuat transaksi penjualan.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="quick-card">
+
+        <div class="quick-icon">
+
+            <i class="fas fa-barcode"></i>
+
+        </div>
+
+        <h4>
+
+            Tambah Barang
+
+        </h4>
+
+        <p>
+
+            Menambah produk baru.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="quick-card">
+
+        <div class="quick-icon">
+
+            <i class="fas fa-shopping-cart"></i>
+
+        </div>
+
+        <h4>
+
+            Input Pembelian
+
+        </h4>
+
+        <p>
+
+            Mencatat pembelian supplier.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="quick-card">
+
+        <div class="quick-icon">
+
+            <i class="fas fa-chart-pie"></i>
+
+        </div>
+
+        <h4>
+
+            Laporan
+
+        </h4>
+
+        <p>
+
+            Melihat laporan penjualan.
+
+        </p>
+
+    </div>
+
+</section>
+                <!-- ==========================================
+     DASHBOARD GRID
+========================================== -->
+
+<div class="dashboard-grid">
+
+    <!-- ======================================
+         LEFT COLUMN
+    ======================================= -->
+
+    <div class="dashboard-column">
+
+        <!-- Sales Chart -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <div>
+
+                    <h3 class="widget-title">
+
+                        Grafik Penjualan
+
+                    </h3>
+
+                    <span class="widget-subtitle">
+
+                        Penjualan 30 hari terakhir
+
+                    </span>
+
+                </div>
+
+                <button class="btn btn-primary">
+
+                    Bulan Ini
+
+                </button>
+
+            </div>
+
+            <div class="chart-container">
+
+                <canvas id="salesChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <!-- Revenue Summary -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Ringkasan Pendapatan
+
+                </h3>
+
+            </div>
+
+            <div class="revenue-summary">
+
+                <div class="summary-card">
+
+                    <h4>Pendapatan</h4>
+
+                    <h2>Rp0</h2>
+                    <span>Hari Ini</span>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <h4>Modal</h4>
+
+                    <h2>Rp0</h2>
+                    <span>Hari Ini</span>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <h4>Laba Kotor</h4>
+
+                    <h2>Rp0</h2>
+                    <span>Hari Ini</span>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <h4>PPN Keluaran</h4>
+
+                    <h2>Rp0</h2>
+                    <span>Simulasi Coretax</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Cash Flow -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Arus Kas Hari Ini
+
+                </h3>
+
+            </div>
+
+            <div class="cash-flow">
+
+                <div class="cash-item">
+
+                    <div class="cash-left">
+
+                        <div class="cash-icon success">
+
+                            <i class="fas fa-arrow-down"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h4>Pemasukan</h4>
+
+                            <span>Penjualan</span>
+
+                        </div>
+
+                    </div>
+
+                    <strong>Rp0</strong>
+
+                </div>
+
+
+                <div class="cash-item">
+
+                    <div class="cash-left">
+
+                        <div class="cash-icon danger">
+
+                            <i class="fas fa-arrow-up"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h4>Pengeluaran</h4>
+
+                            <span>Operasional</span>
+
+                        </div>
+
+                    </div>
+
+                    <strong>Rp0</strong>
+
+                </div>
+
+
+                <div class="cash-item">
+
+                    <div class="cash-left">
+
+                        <div class="cash-icon primary">
+
+                            <i class="fas fa-wallet"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h4>Saldo Kas</h4>
+
+                            <span>Realtime</span>
+
+                        </div>
+
+                    </div>
+
+                    <strong>Rp0</strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================
+         RIGHT COLUMN
+    ======================================= -->
+
+    <div class="dashboard-column">
+
+        <!-- Payment Summary -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Metode Pembayaran
+
+                </h3>
+
+            </div>
+
+            <div class="payment-summary">
+
+                <div class="payment-item">
+
+                    <div class="payment-icon">
+
+                        <i class="fas fa-money-bill-wave"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="payment-title">
+
+                            Tunai
+
+                        </div>
+
+                        <div class="payment-value">
+
+                            Rp0
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="payment-item">
+
+                    <div class="payment-icon">
+
+                        <i class="fas fa-qrcode"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="payment-title">
+
+                            QRIS
+
+                        </div>
+
+                        <div class="payment-value">
+
+                            Rp0
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="payment-item">
+
+                    <div class="payment-icon">
+
+                        <i class="fas fa-credit-card"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="payment-title">
+
+                            Debit / Kredit
+
+                        </div>
+
+                        <div class="payment-value">
+
+                            Rp0
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="payment-item">
+
+                    <div class="payment-icon">
+
+                        <i class="fas fa-university"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="payment-title">
+
+                            Transfer
+
+                        </div>
+
+                        <div class="payment-value">
+
+                            Rp0
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Sales Target -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Target Penjualan
+
+                </h3>
+
+            </div>
+
+            <div class="sales-target">
+
+                <div class="target-header">
+
+                    <span class="target-title">
+
+                        Progress
+
+                    </span>
+
+                    <span class="target-percent">
+
+                        0%
+
+                    </span>
+
+                </div>
+
+                <div class="target-progress">
+
+                    <div class="target-progress-bar"
+                         style="width:0%;">
+
+                    </div>
+
+                </div>
+
+                <div class="target-footer">
+
+                    <span>
+
+                        Rp0
+
+                    </span>
+
+                    <span>
+
+                        Target Rp10.000.000
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+                <!-- =====================================================
+     OPERATION GRID
+====================================================== -->
+
+<div class="dashboard-grid">
+
+    <!-- ==========================================
+         LEFT COLUMN
+    =========================================== -->
+
+    <div class="dashboard-column">
+
+        <!-- ======================================
+             RECENT TRANSACTION
+        ======================================= -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Transaksi Terbaru
+
+                </h3>
+
+                <a href="#penjualan"
+                   class="btn btn-light">
+
+                    Lihat Semua
+
+                </a>
+
+            </div>
+
+            <div class="transaction-list">
+
+                <div class="transaction-item">
+
+                    <div class="transaction-left">
+
+                        <div class="transaction-icon">
+
+                            <i class="fas fa-shopping-cart"></i>
+
+                        </div>
+
+                        <div class="transaction-info">
+
+                            <h4>INV-000001</h4>
+
+                            <p>Belum ada transaksi</p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="transaction-right">
+
+                        <div class="transaction-total">
+
+                            Rp0
+
+                        </div>
+
+                        <div class="transaction-time">
+
+                            --
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ======================================
+             STOCK ALERT
+        ======================================= -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Stok Menipis
+
+                </h3>
+
+            </div>
+
+            <div class="stock-alert">
+
+                <div class="stock-item">
+
+                    <div class="stock-left">
+
+                        <div class="stock-image">
+
+                            <img src="assets/images/product-placeholder.png">
+
+                        </div>
+
+                        <div>
+
+                            <div class="stock-name">
+
+                                Belum ada data
+
+                            </div>
+
+                            <div class="stock-code">
+
+                                SKU-00000
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stock-qty">
+
+                        0
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ======================================
+             TOP PRODUCT
+        ======================================= -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Produk Terlaris
+
+                </h3>
+
+            </div>
+
+            <div class="top-product">
+
+                <div class="top-product-item">
+
+                    <div class="stock-left">
+
+                        <div class="stock-image">
+
+                            <img src="assets/images/product-placeholder.png">
+
+                        </div>
+
+                        <div>
+
+                            <div class="stock-name">
+
+                                Belum ada penjualan
+
+                            </div>
+
+                            <div class="stock-code">
+
+                                0 Terjual
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="top-product-right">
+
+                        Rp0
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         RIGHT COLUMN
+    =========================================== -->
+
+    <div class="dashboard-column">
+
+        <!-- ======================================
+             ACTIVITY TIMELINE
+        ======================================= -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Aktivitas Hari Ini
+
+                </h3>
+
+            </div>
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+
+                    <div class="timeline-dot"></div>
+
+                    <div class="timeline-content">
+
+                        <div class="timeline-title">
+
+                            Sistem Siap Digunakan
+
+                        </div>
+
+                        <div class="timeline-text">
+
+                            Dashboard SmartPOS berhasil dimuat.
+
+                        </div>
+
+                        <div class="timeline-time">
+
+                            Baru saja
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ======================================
+             NOTIFICATION
+        ======================================= -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Notifikasi
+
+                </h3>
+
+            </div>
+
+            <div class="notification-list">
+
+                <div class="notification-item">
+
+                    <div class="notification-icon">
+
+                        <i class="fas fa-bell"></i>
+
+                    </div>
+
+                    <div class="notification-content">
+
+                        <div class="notification-title">
+
+                            Selamat Datang
+
+                        </div>
+
+                        <div class="notification-message">
+
+                            SmartPOS berhasil dijalankan.
+
+                        </div>
+
+                        <div class="notification-date">
+
+                            Hari ini
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ======================================
+             MINI CALENDAR
+        ======================================= -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Kalender
+
+                </h3>
+
+            </div>
+
+            <div class="mini-calendar">
+
+                <div class="calendar-header">
+
+                    <div class="calendar-month">
+
+                        Juli 2026
+
+                    </div>
+
+                </div>
+
+                <div class="calendar-grid">
+
+                    <div class="calendar-day">M</div>
+                    <div class="calendar-day">S</div>
+                    <div class="calendar-day">S</div>
+                    <div class="calendar-day">R</div>
+                    <div class="calendar-day">K</div>
+                    <div class="calendar-day">J</div>
+                    <div class="calendar-day">S</div>
+
+                    <div class="calendar-date">20</div>
+                    <div class="calendar-date">21</div>
+                    <div class="calendar-date today">22</div>
+                    <div class="calendar-date">23</div>
+                    <div class="calendar-date">24</div>
+                    <div class="calendar-date">25</div>
+                    <div class="calendar-date">26</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ======================================
+             REMINDER
+        ======================================= -->
+
+        <div class="dashboard-widget">
+
+            <div class="widget-header">
+
+                <h3 class="widget-title">
+
+                    Reminder
+
+                </h3>
+
+            </div>
+
+            <div class="reminder-list">
+
+                <div class="reminder-item">
+
+                    <div class="reminder-icon">
+
+                        <i class="fas fa-clock"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="reminder-title">
+
+                            Tidak ada pengingat
+
+                        </div>
+
+                        <div class="reminder-date">
+
+                            Semua tugas telah selesai.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+                            <!-- ==========================================
+                 DASHBOARD FOOTER
+            =========================================== -->
+
+            <footer class="dashboard-footer">
+
+                <div>
+
+                    <strong>SmartPOS Indonesia Enterprise</strong>
+
+                    <br>
+
+                    <small>
+
+                        © 2026 SmartPOS Indonesia. All Rights Reserved.
+
+                    </small>
+
+                </div>
+
+                <div>
+
+                    <small>
+
+                        Version 1.0.0 Enterprise
+
+                    </small>
+
+                </div>
+
+            </footer>
+
+        </main>
+
+    </div>
 
 </div>
 
+<!-- ==========================================
+     SIDEBAR OVERLAY
+========================================== -->
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ==========================================
+     FLOATING ACTION BUTTON
+========================================== -->
+
+<button class="dashboard-fab"
+        id="fabButton"
+        title="Transaksi Baru">
+
+    <i class="fas fa-plus"></i>
+
+</button>
+
+<!-- ==========================================
+     GLOBAL LOADING
+========================================== -->
+
+<div class="loading-screen"
+     id="loadingScreen">
+
+    <div class="loading-content">
+
+        <div class="spinner-border text-primary"
+             role="status">
+
+            <span class="visually-hidden">
+
+                Loading...
+
+            </span>
+
+        </div>
+
+        <h4 class="mt-3">
+
+            SmartPOS Indonesia
+
+        </h4>
+
+        <p>
+
+            Memuat aplikasi...
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- ==========================================
+     GLOBAL MODAL
+========================================== -->
+
+<div class="modal fade"
+     id="globalModal"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    SmartPOS
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+
+                </button>
+
+            </div>
+
+            <div class="modal-body"
+                 id="modalBody">
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                    Tutup
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================
+     OFFCANVAS DRAWER
+========================================== -->
+
+<div class="drawer"
+     id="drawer">
+
+    <div class="drawer-header">
+
+        <h4>
+
+            SmartPOS
+
+        </h4>
+
+        <button id="closeDrawer">
+
+            <i class="fas fa-times"></i>
+
+        </button>
+
+    </div>
+
+    <div class="drawer-body">
+
+    </div>
+
+</div>
+
+<!-- ==========================================
+     TOAST CONTAINER
+========================================== -->
+
+<div class="toast-container
+            position-fixed
+            bottom-0
+            end-0
+            p-3">
+
+</div>
+
+<!-- ==========================================
+     JAVASCRIPT LIBRARY
+========================================== -->
+
 <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- ==========================================
+     SMARTPOS SCRIPT
+========================================== -->
+
 <script src="assets/js/app.js"></script>
 
+<script src="assets/js/dashboard.js"></script>
+
 </body>
+
+
 </html>
