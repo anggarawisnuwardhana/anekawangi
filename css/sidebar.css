@@ -1,0 +1,496 @@
+/* ============================================================
+   SmartPOS Indonesia
+   File : sidebar.css
+   Version : 1.0
+============================================================ */
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+
+.sidebar{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:var(--sidebar-width);
+    height:100vh;
+
+    background:var(--bg-sidebar);
+
+    border-right:1px solid var(--border);
+
+    display:flex;
+    flex-direction:column;
+
+    transition:all var(--transition);
+
+    z-index:var(--z-sidebar);
+
+    overflow:hidden;
+
+}
+
+
+/* ============================================================
+   COLLAPSE
+============================================================ */
+
+.sidebar.collapsed{
+
+    width:var(--sidebar-collapse);
+
+}
+
+
+/* ============================================================
+   LOGO
+============================================================ */
+
+.sidebar-logo{
+
+    height:70px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:0 22px;
+
+    border-bottom:1px solid var(--border);
+
+    flex-shrink:0;
+
+}
+
+.sidebar-logo img{
+
+    width:38px;
+
+    height:38px;
+
+    object-fit:contain;
+
+}
+
+.sidebar-logo h2{
+
+    font-size:20px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+
+}
+
+.sidebar.collapsed h2{
+
+    display:none;
+
+}
+
+
+/* ============================================================
+   MENU
+============================================================ */
+
+.sidebar-menu{
+
+    flex:1;
+
+    overflow-y:auto;
+
+    overflow-x:hidden;
+
+    padding:18px 10px;
+
+}
+
+
+/* ============================================================
+   SECTION TITLE
+============================================================ */
+
+.menu-title{
+
+    font-size:11px;
+
+    text-transform:uppercase;
+
+    color:var(--text-light);
+
+    letter-spacing:1px;
+
+    padding:10px 14px;
+
+    margin-top:8px;
+
+}
+
+.sidebar.collapsed .menu-title{
+
+    display:none;
+
+}
+
+
+/* ============================================================
+   MENU ITEM
+============================================================ */
+
+.menu-item{
+
+    margin-bottom:6px;
+
+}
+
+
+/* ============================================================
+   MENU LINK
+============================================================ */
+
+.menu-link{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:12px 14px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:all var(--transition);
+
+    color:var(--text);
+
+}
+
+.menu-link:hover{
+
+    background:var(--primary-light);
+
+    color:var(--primary);
+
+}
+
+
+/* ============================================================
+   ACTIVE
+============================================================ */
+
+.menu-item.active>.menu-link{
+
+    background:var(--primary);
+
+    color:#fff;
+
+    box-shadow:var(--shadow-sm);
+
+}
+
+
+/* ============================================================
+   ICON
+============================================================ */
+
+.menu-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.menu-left i{
+
+    width:22px;
+
+    text-align:center;
+
+    font-size:17px;
+
+}
+
+
+/* ============================================================
+   TEXT
+============================================================ */
+
+.menu-text{
+
+    white-space:nowrap;
+
+    transition:.2s;
+
+}
+
+.sidebar.collapsed .menu-text{
+
+    display:none;
+
+}
+
+
+/* ============================================================
+   ARROW
+============================================================ */
+
+.menu-arrow{
+
+    transition:.25s;
+
+}
+
+.sidebar.collapsed .menu-arrow{
+
+    display:none;
+
+}
+
+.menu-item.open>.menu-link .menu-arrow{
+
+    transform:rotate(180deg);
+
+}
+
+
+/* ============================================================
+   SUB MENU
+============================================================ */
+
+.sub-menu{
+
+    max-height:0;
+
+    overflow:hidden;
+
+    transition:max-height .3s ease;
+
+    margin-left:22px;
+
+}
+
+.menu-item.open .sub-menu{
+
+    max-height:600px;
+
+}
+
+
+/* ============================================================
+   SUB LINK
+============================================================ */
+
+.sub-menu a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:10px 14px;
+
+    margin:4px 0;
+
+    border-radius:10px;
+
+    color:var(--text-soft);
+
+    font-size:14px;
+
+    transition:all var(--transition);
+
+}
+
+.sub-menu a:hover{
+
+    background:var(--bg);
+
+    color:var(--primary);
+
+}
+
+
+/* ============================================================
+   ACTIVE SUB
+============================================================ */
+
+.sub-menu a.active{
+
+    color:var(--primary);
+
+    font-weight:600;
+
+}
+
+
+/* ============================================================
+   COLLAPSE SUB
+============================================================ */
+
+.sidebar.collapsed .sub-menu{
+
+    display:none;
+
+}
+
+
+/* ============================================================
+   BADGE
+============================================================ */
+
+.menu-badge{
+
+    min-width:22px;
+
+    height:22px;
+
+    border-radius:999px;
+
+    background:var(--danger);
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:11px;
+
+    font-weight:600;
+
+}
+
+
+/* ============================================================
+   FOOTER
+============================================================ */
+
+.sidebar-footer{
+
+    border-top:1px solid var(--border);
+
+    padding:18px;
+
+}
+
+
+/* ============================================================
+   USER
+============================================================ */
+
+.sidebar-user{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.sidebar-user img{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+}
+
+.user-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.user-name{
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+.user-role{
+
+    font-size:12px;
+
+    color:var(--text-soft);
+
+}
+
+.sidebar.collapsed .user-info{
+
+    display:none;
+
+}
+
+
+/* ============================================================
+   SCROLLBAR
+============================================================ */
+
+.sidebar-menu::-webkit-scrollbar{
+
+    width:5px;
+
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb{
+
+    background:transparent;
+
+}
+
+.sidebar-menu:hover::-webkit-scrollbar-thumb{
+
+    background:var(--scrollbar);
+
+}
+
+
+/* ============================================================
+   HOVER ANIMATION
+============================================================ */
+
+.menu-link:hover{
+
+    transform:translateX(4px);
+
+}
+
+.sub-menu a:hover{
+
+    transform:translateX(6px);
+
+}
+
+
+/* ============================================================
+   DARK MODE
+============================================================ */
+
+body.dark .sidebar{
+
+    border-right:1px solid var(--border);
+
+}
