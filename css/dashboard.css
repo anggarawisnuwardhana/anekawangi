@@ -1,0 +1,2531 @@
+/* ============================================================
+   SmartPOS Indonesia
+   DASHBOARD
+   PART 1
+   Dashboard Layout • Welcome • KPI • Quick Action
+   Version : 1.0
+============================================================ */
+
+/* ============================================================
+   DASHBOARD
+============================================================ */
+
+.dashboard{
+
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+
+}
+
+/* ============================================================
+   PAGE HEADER
+============================================================ */
+
+.dashboard-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+}
+
+.dashboard-title h1{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.dashboard-title p{
+
+    margin-top:6px;
+
+    color:var(--text-soft);
+
+    font-size:14px;
+
+}
+
+.dashboard-action{
+
+    display:flex;
+
+    gap:12px;
+
+    align-items:center;
+
+}
+
+/* ============================================================
+   WELCOME
+============================================================ */
+
+.welcome-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:30px;
+
+    padding:32px;
+
+    border-radius:24px;
+
+    background:linear-gradient(135deg,#2563EB,#3B82F6);
+
+    color:#fff;
+
+}
+
+.welcome-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    right:-60px;
+
+    top:-60px;
+
+    width:240px;
+
+    height:240px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+}
+
+.welcome-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    right:80px;
+
+    bottom:-70px;
+
+    width:170px;
+
+    height:170px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.06);
+
+}
+
+.welcome-content{
+
+    position:relative;
+
+    z-index:2;
+
+    flex:1;
+
+}
+
+.welcome-title{
+
+    font-size:32px;
+
+    font-weight:700;
+
+    margin-bottom:12px;
+
+}
+
+.welcome-description{
+
+    max-width:620px;
+
+    line-height:1.8;
+
+    color:rgba(255,255,255,.92);
+
+}
+
+.welcome-info{
+
+    display:flex;
+
+    gap:16px;
+
+    margin-top:24px;
+
+    flex-wrap:wrap;
+
+}
+
+.welcome-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:10px 14px;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,.12);
+
+    backdrop-filter:blur(8px);
+
+    font-size:13px;
+
+}
+
+.welcome-illustration{
+
+    position:relative;
+
+    z-index:2;
+
+    width:180px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.welcome-illustration i{
+
+    font-size:90px;
+
+    opacity:.18;
+
+}
+
+/* ============================================================
+   KPI GRID
+============================================================ */
+
+.kpi-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+}
+
+/* ============================================================
+   KPI CARD
+============================================================ */
+
+.kpi-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:var(--bg-card);
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:22px;
+
+    transition:.25s;
+
+    box-shadow:var(--shadow-xs);
+
+}
+
+.kpi-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:var(--shadow-lg);
+
+}
+
+.kpi-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    right:-30px;
+
+    top:-30px;
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    background:var(--primary-light);
+
+    opacity:.45;
+
+}
+
+.kpi-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.kpi-title{
+
+    font-size:13px;
+
+    color:var(--text-soft);
+
+}
+
+.kpi-icon{
+
+    width:52px;
+
+    height:52px;
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:var(--primary-light);
+
+    color:var(--primary);
+
+    font-size:22px;
+
+}
+
+.kpi-value{
+
+    font-size:30px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.kpi-footer{
+
+    margin-top:18px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.kpi-growth{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.kpi-growth.up{
+
+    color:var(--success);
+
+}
+
+.kpi-growth.down{
+
+    color:var(--danger);
+
+}
+
+.kpi-period{
+
+    font-size:12px;
+
+    color:var(--text-light);
+
+}
+
+/* ============================================================
+   DASHBOARD GRID
+============================================================ */
+
+.dashboard-grid{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:24px;
+
+}
+
+.dashboard-column{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:24px;
+
+}
+
+/* ============================================================
+   SECTION HEADER
+============================================================ */
+
+.section-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.section-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.section-subtitle{
+
+    margin-top:4px;
+
+    font-size:13px;
+
+    color:var(--text-soft);
+
+}
+
+/* ============================================================
+   QUICK ACTION
+============================================================ */
+
+.quick-action{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:18px;
+
+}
+
+.quick-card{
+
+    background:var(--bg-card);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:24px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.quick-card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:var(--shadow);
+
+    border-color:var(--primary);
+
+}
+
+.quick-icon{
+
+    width:64px;
+
+    height:64px;
+
+    margin:auto;
+
+    border-radius:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:var(--primary-light);
+
+    color:var(--primary);
+
+    font-size:26px;
+
+}
+
+.quick-title{
+
+    margin-top:16px;
+
+    font-weight:600;
+
+    color:var(--text);
+
+}
+
+.quick-desc{
+
+    margin-top:6px;
+
+    font-size:13px;
+
+    color:var(--text-soft);
+
+}
+
+/* ============================================================
+   DASHBOARD WIDGET
+============================================================ */
+
+.dashboard-widget{
+
+    background:var(--bg-card);
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:24px;
+
+    box-shadow:var(--shadow-xs);
+
+}
+
+/* ============================================================
+   ANIMATION
+============================================================ */
+
+.dashboard-fade{
+
+    animation:dashboardFade .4s ease;
+
+}
+
+@keyframes dashboardFade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(18px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media(max-width:1200px){
+
+.kpi-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.quick-action{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.dashboard-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.dashboard-header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.welcome-card{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    padding:24px;
+
+}
+
+.welcome-title{
+
+    font-size:26px;
+
+}
+
+.welcome-illustration{
+
+    display:none;
+
+}
+
+.kpi-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+.quick-action{
+
+    grid-template-columns:1fr;
+
+}
+
+}
+
+@media(max-width:576px){
+
+.dashboard{
+
+    gap:18px;
+
+}
+
+.dashboard-title h1{
+
+    font-size:24px;
+
+}
+
+.dashboard-widget{
+
+    padding:18px;
+
+}
+
+}/* ============================================================
+   SmartPOS Indonesia
+   DASHBOARD
+   PART 2
+   Sales Chart • Revenue • Tax • Top Product
+============================================================ */
+
+
+/* ============================================================
+   SALES CHART
+============================================================ */
+
+.chart-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.chart-toolbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:14px;
+
+}
+
+.chart-filter{
+
+    display:flex;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+}
+
+.chart-filter .btn{
+
+    min-width:90px;
+
+}
+
+.chart-container{
+
+    position:relative;
+
+    width:100%;
+
+    height:360px;
+
+}
+
+.chart-container canvas{
+
+    width:100%!important;
+
+    height:100%!important;
+
+}
+
+
+/* ============================================================
+   REVENUE SUMMARY
+============================================================ */
+
+.revenue-summary{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:18px;
+
+}
+
+.revenue-item{
+
+    background:var(--bg-soft);
+
+    border-radius:16px;
+
+    padding:20px;
+
+    transition:.25s;
+
+}
+
+.revenue-item:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.revenue-label{
+
+    font-size:13px;
+
+    color:var(--text-soft);
+
+}
+
+.revenue-value{
+
+    margin-top:10px;
+
+    font-size:28px;
+
+    font-weight:700;
+
+}
+
+.revenue-growth{
+
+    margin-top:8px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    font-size:13px;
+
+}
+
+.revenue-growth.up{
+
+    color:var(--success);
+
+}
+
+.revenue-growth.down{
+
+    color:var(--danger);
+
+}
+
+
+/* ============================================================
+   CASH FLOW
+============================================================ */
+
+.cash-flow{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.cash-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:16px 18px;
+
+    border:1px solid var(--border);
+
+    border-radius:16px;
+
+}
+
+.cash-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.cash-icon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:20px;
+
+}
+
+.cash-in .cash-icon{
+
+    background:var(--success-light);
+
+    color:var(--success);
+
+}
+
+.cash-out .cash-icon{
+
+    background:var(--danger-light);
+
+    color:var(--danger);
+
+}
+
+.cash-title{
+
+    font-weight:600;
+
+}
+
+.cash-subtitle{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--text-soft);
+
+}
+
+.cash-value{
+
+    font-size:22px;
+
+    font-weight:700;
+
+}
+
+
+/* ============================================================
+   TAX SUMMARY
+============================================================ */
+
+.tax-summary{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.tax-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:14px 18px;
+
+    background:var(--bg-soft);
+
+    border-radius:14px;
+
+}
+
+.tax-label{
+
+    font-size:14px;
+
+    color:var(--text-soft);
+
+}
+
+.tax-value{
+
+    font-weight:700;
+
+}
+
+.tax-total{
+
+    margin-top:8px;
+
+    padding-top:18px;
+
+    border-top:2px dashed var(--border);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.tax-total span:last-child{
+
+    font-size:24px;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+
+/* ============================================================
+   TOP PRODUCT
+============================================================ */
+
+.top-product{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.top-product-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:14px;
+
+    border-radius:16px;
+
+    transition:.25s;
+
+}
+
+.top-product-item:hover{
+
+    background:var(--bg-soft);
+
+}
+
+.top-product-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.top-product-image{
+
+    width:56px;
+
+    height:56px;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    background:var(--bg-soft);
+
+}
+
+.top-product-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+.top-product-name{
+
+    font-weight:600;
+
+}
+
+.top-product-category{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--text-soft);
+
+}
+
+.top-product-right{
+
+    text-align:right;
+
+}
+
+.top-product-price{
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+.top-product-sold{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--text-soft);
+
+}
+
+
+/* ============================================================
+   SALES PROGRESS
+============================================================ */
+
+.sales-progress{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.sales-progress-item{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.sales-progress-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.sales-progress-title{
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+.sales-progress-value{
+
+    font-size:13px;
+
+    color:var(--text-soft);
+
+}
+
+.sales-progress .progress{
+
+    height:10px;
+
+}
+
+
+/* ============================================================
+   PERFORMANCE CARD
+============================================================ */
+
+.performance-card{
+
+    background:linear-gradient(135deg,#1E40AF,#2563EB);
+
+    border-radius:22px;
+
+    padding:28px;
+
+    color:#fff;
+
+    overflow:hidden;
+
+    position:relative;
+
+}
+
+.performance-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    right:-40px;
+
+    top:-40px;
+
+    width:180px;
+
+    height:180px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+}
+
+.performance-title{
+
+    position:relative;
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.performance-value{
+
+    position:relative;
+
+    margin-top:14px;
+
+    font-size:40px;
+
+    font-weight:700;
+
+}
+
+.performance-description{
+
+    position:relative;
+
+    margin-top:10px;
+
+    color:rgba(255,255,255,.88);
+
+    line-height:1.7;
+
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media(max-width:992px){
+
+.revenue-summary{
+
+    grid-template-columns:1fr;
+
+}
+
+.chart-container{
+
+    height:300px;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.cash-item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:14px;
+
+}
+
+.top-product-item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+.top-product-right{
+
+    text-align:left;
+
+}
+
+.chart-toolbar{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+}
+
+/* ============================================================
+   SmartPOS Indonesia
+   DASHBOARD
+   PART 3
+   Recent Transaction • Timeline • Notification
+   Stock Alert • Calendar • Reminder
+============================================================ */
+
+
+/* ============================================================
+   RECENT TRANSACTION
+============================================================ */
+
+.transaction-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.transaction-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    padding:18px 0;
+
+    border-bottom:1px solid var(--border);
+
+    transition:.25s;
+
+}
+
+.transaction-item:last-child{
+
+    border-bottom:none;
+
+}
+
+.transaction-item:hover{
+
+    background:var(--bg-soft);
+
+    margin:0 -24px;
+
+    padding:18px 24px;
+
+}
+
+.transaction-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+}
+
+.transaction-icon{
+
+    width:54px;
+
+    height:54px;
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:20px;
+
+    background:var(--primary-light);
+
+    color:var(--primary);
+
+}
+
+.transaction-info h4{
+
+    font-size:15px;
+
+    font-weight:600;
+
+}
+
+.transaction-info p{
+
+    margin-top:4px;
+
+    font-size:13px;
+
+    color:var(--text-soft);
+
+}
+
+.transaction-right{
+
+    text-align:right;
+
+}
+
+.transaction-total{
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.transaction-time{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--text-light);
+
+}
+
+
+/* ============================================================
+   STOCK ALERT
+============================================================ */
+
+.stock-alert{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.stock-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:14px 16px;
+
+    border-radius:14px;
+
+    border:1px solid var(--border);
+
+    transition:.25s;
+
+}
+
+.stock-item:hover{
+
+    background:var(--bg-soft);
+
+}
+
+.stock-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.stock-image{
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    background:var(--bg-soft);
+
+}
+
+.stock-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+.stock-name{
+
+    font-weight:600;
+
+}
+
+.stock-code{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--text-soft);
+
+}
+
+.stock-qty{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:var(--danger);
+
+}
+
+
+/* ============================================================
+   ACTIVITY TIMELINE
+============================================================ */
+
+.timeline{
+
+    position:relative;
+
+    padding-left:26px;
+
+}
+
+.timeline::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:8px;
+
+    top:0;
+
+    bottom:0;
+
+    width:2px;
+
+    background:var(--border);
+
+}
+
+.timeline-item{
+
+    position:relative;
+
+    padding-bottom:28px;
+
+}
+
+.timeline-item:last-child{
+
+    padding-bottom:0;
+
+}
+
+.timeline-dot{
+
+    position:absolute;
+
+    left:-26px;
+
+    width:18px;
+
+    height:18px;
+
+    border-radius:50%;
+
+    border:4px solid #fff;
+
+    background:var(--primary);
+
+    box-shadow:0 0 0 2px var(--primary);
+
+}
+
+.timeline-content{
+
+    background:var(--bg-soft);
+
+    border-radius:16px;
+
+    padding:16px;
+
+}
+
+.timeline-title{
+
+    font-weight:600;
+
+}
+
+.timeline-text{
+
+    margin-top:6px;
+
+    color:var(--text-soft);
+
+    line-height:1.7;
+
+    font-size:13px;
+
+}
+
+.timeline-time{
+
+    margin-top:10px;
+
+    font-size:12px;
+
+    color:var(--text-light);
+
+}
+
+
+/* ============================================================
+   NOTIFICATION
+============================================================ */
+
+.notification-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.notification-item{
+
+    display:flex;
+
+    gap:16px;
+
+    padding:16px 0;
+
+    border-bottom:1px solid var(--border);
+
+    transition:.25s;
+
+}
+
+.notification-item:last-child{
+
+    border-bottom:none;
+
+}
+
+.notification-item:hover{
+
+    background:var(--bg-soft);
+
+    margin:0 -24px;
+
+    padding:16px 24px;
+
+}
+
+.notification-icon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:14px;
+
+    background:var(--primary-light);
+
+    color:var(--primary);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:18px;
+
+}
+
+.notification-content{
+
+    flex:1;
+
+}
+
+.notification-title{
+
+    font-weight:600;
+
+}
+
+.notification-message{
+
+    margin-top:5px;
+
+    font-size:13px;
+
+    color:var(--text-soft);
+
+    line-height:1.6;
+
+}
+
+.notification-date{
+
+    margin-top:8px;
+
+    font-size:12px;
+
+    color:var(--text-light);
+
+}
+
+
+/* ============================================================
+   MINI CALENDAR
+============================================================ */
+
+.mini-calendar{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.calendar-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.calendar-month{
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.calendar-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(7,1fr);
+
+    gap:8px;
+
+}
+
+.calendar-day{
+
+    text-align:center;
+
+    font-size:12px;
+
+    color:var(--text-soft);
+
+    font-weight:600;
+
+}
+
+.calendar-date{
+
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.calendar-date:hover{
+
+    background:var(--primary-light);
+
+}
+
+.calendar-date.today{
+
+    background:var(--primary);
+
+    color:#fff;
+
+    font-weight:700;
+
+}
+
+.calendar-date.event{
+
+    background:var(--warning-light);
+
+    color:var(--warning);
+
+}
+
+
+/* ============================================================
+   REMINDER
+============================================================ */
+
+.reminder-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+}
+
+.reminder-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:16px;
+
+    border-radius:16px;
+
+    background:var(--bg-soft);
+
+}
+
+.reminder-icon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:var(--warning-light);
+
+    color:var(--warning);
+
+    font-size:20px;
+
+}
+
+.reminder-title{
+
+    font-weight:600;
+
+}
+
+.reminder-date{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--text-soft);
+
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media(max-width:768px){
+
+.transaction-item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.transaction-right{
+
+    text-align:left;
+
+}
+
+.stock-item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+.notification-item{
+
+    margin:0;
+
+    padding:16px 0;
+
+}
+
+.notification-item:hover{
+
+    margin:0;
+
+    padding:16px 0;
+
+}
+
+.calendar-grid{
+
+    gap:6px;
+
+}
+
+.calendar-date{
+
+    height:38px;
+
+}
+
+}
+
+/* ============================================================
+   SmartPOS Indonesia
+   DASHBOARD
+   PART 4
+   Enterprise Widget • Target • Payment • Branch
+============================================================ */
+
+
+/* ============================================================
+   SALES TARGET
+============================================================ */
+
+.sales-target{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.target-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.target-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.target-percent{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+.target-progress{
+
+    width:100%;
+
+    height:14px;
+
+    background:#EEF2F7;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+}
+
+.target-progress-bar{
+
+    height:100%;
+
+    width:0;
+
+    background:linear-gradient(90deg,#2563EB,#60A5FA);
+
+    transition:width .4s ease;
+
+}
+
+.target-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    color:var(--text-soft);
+
+    font-size:13px;
+
+}
+
+
+/* ============================================================
+   PAYMENT SUMMARY
+============================================================ */
+
+.payment-summary{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:16px;
+
+}
+
+.payment-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    background:var(--bg-soft);
+
+    transition:.25s;
+
+}
+
+.payment-item:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.payment-icon{
+
+    width:56px;
+
+    height:56px;
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:22px;
+
+    background:var(--primary-light);
+
+    color:var(--primary);
+
+}
+
+.payment-title{
+
+    font-weight:600;
+
+}
+
+.payment-value{
+
+    margin-top:6px;
+
+    font-size:20px;
+
+    font-weight:700;
+
+}
+
+
+/* ============================================================
+   BRANCH SUMMARY
+============================================================ */
+
+.branch-summary{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.branch-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:18px;
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+}
+
+.branch-name{
+
+    font-weight:600;
+
+}
+
+.branch-location{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--text-soft);
+
+}
+
+.branch-sales{
+
+    text-align:right;
+
+}
+
+.branch-total{
+
+    font-size:22px;
+
+    font-weight:700;
+
+}
+
+.branch-growth{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--success);
+
+}
+
+
+/* ============================================================
+   CASHIER RANK
+============================================================ */
+
+.cashier-ranking{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.cashier-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.cashier-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.cashier-avatar{
+
+    width:54px;
+
+    height:54px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+}
+
+.cashier-avatar img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+.cashier-name{
+
+    font-weight:600;
+
+}
+
+.cashier-transaction{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--text-soft);
+
+}
+
+.cashier-score{
+
+    text-align:right;
+
+}
+
+.cashier-value{
+
+    font-size:20px;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+
+/* ============================================================
+   MINI KPI
+============================================================ */
+
+.mini-kpi{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:16px;
+
+}
+
+.mini-kpi-card{
+
+    background:var(--bg-soft);
+
+    border-radius:18px;
+
+    padding:20px;
+
+    text-align:center;
+
+}
+
+.mini-kpi-value{
+
+    font-size:28px;
+
+    font-weight:700;
+
+}
+
+.mini-kpi-title{
+
+    margin-top:8px;
+
+    font-size:13px;
+
+    color:var(--text-soft);
+
+}
+
+
+/* ============================================================
+   QUICK STATUS
+============================================================ */
+
+.quick-status{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:18px;
+
+}
+
+.status-card{
+
+    padding:20px;
+
+    border-radius:18px;
+
+    background:var(--bg-soft);
+
+    text-align:center;
+
+}
+
+.status-card i{
+
+    font-size:28px;
+
+    margin-bottom:14px;
+
+    color:var(--primary);
+
+}
+
+.status-value{
+
+    font-size:24px;
+
+    font-weight:700;
+
+}
+
+.status-label{
+
+    margin-top:8px;
+
+    color:var(--text-soft);
+
+}
+
+
+/* ============================================================
+   FLOATING ACTION
+============================================================ */
+
+.dashboard-fab{
+
+    position:fixed;
+
+    right:28px;
+
+    bottom:28px;
+
+    width:64px;
+
+    height:64px;
+
+    border-radius:50%;
+
+    background:var(--primary);
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    box-shadow:var(--shadow-lg);
+
+    transition:.25s;
+
+    z-index:999;
+
+}
+
+.dashboard-fab:hover{
+
+    transform:scale(1.08);
+
+}
+
+
+/* ============================================================
+   DASHBOARD FOOTER
+============================================================ */
+
+.dashboard-footer{
+
+    margin-top:20px;
+
+    padding:18px 24px;
+
+    border-radius:18px;
+
+    background:var(--bg-soft);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    color:var(--text-soft);
+
+    font-size:13px;
+
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media(max-width:1200px){
+
+.mini-kpi{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.quick-status{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media(max-width:768px){
+
+.payment-summary{
+
+    grid-template-columns:1fr;
+
+}
+
+.quick-status{
+
+    grid-template-columns:1fr;
+
+}
+
+.mini-kpi{
+
+    grid-template-columns:1fr;
+
+}
+
+.branch-item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+.cashier-item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+.dashboard-footer{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:10px;
+
+}
+
+.dashboard-fab{
+
+    width:56px;
+
+    height:56px;
+
+    right:20px;
+
+    bottom:20px;
+
+}
+
+}
