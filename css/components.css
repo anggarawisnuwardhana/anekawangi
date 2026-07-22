@@ -4259,3 +4259,25 @@ textarea.form-control{
 }
 
 }
+
+.brand-logo{
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:var(--primary);
+
+    border-radius:12px;
+
+    color:white;
+
+    font-size:22px;
+
+}
