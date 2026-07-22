@@ -1,0 +1,2743 @@
+/* ============================================================
+   SmartPOS Indonesia
+   RESPONSIVE FRAMEWORK
+   PART 1
+   Desktop & Large Screen
+============================================================ */
+
+
+/* ============================================================
+   LARGE DESKTOP
+   1600px+
+============================================================ */
+
+@media (min-width:1600px){
+
+.container{
+
+    max-width:1560px;
+
+}
+
+.main-content{
+
+    padding:36px;
+
+}
+
+.dashboard{
+
+    gap:30px;
+
+}
+
+.dashboard-grid{
+
+    grid-template-columns:2.4fr 1fr;
+
+}
+
+.kpi-grid{
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:24px;
+
+}
+
+.quick-action{
+
+    grid-template-columns:repeat(4,1fr);
+
+}
+
+.chart-container{
+
+    height:420px;
+
+}
+
+.table-wrapper{
+
+    overflow-x:auto;
+
+}
+
+.modal-lg{
+
+    max-width:1000px;
+
+}
+
+.modal-xl{
+
+    max-width:1400px;
+
+}
+
+}
+
+
+/* ============================================================
+   DESKTOP
+   1400px - 1599px
+============================================================ */
+
+@media (max-width:1599px){
+
+.container{
+
+    max-width:1360px;
+
+}
+
+.main-content{
+
+    padding:28px;
+
+}
+
+.dashboard-grid{
+
+    grid-template-columns:2fr 1fr;
+
+}
+
+.chart-container{
+
+    height:380px;
+
+}
+
+}
+
+
+/* ============================================================
+   NORMAL DESKTOP
+   1200px - 1399px
+============================================================ */
+
+@media (max-width:1399px){
+
+.container{
+
+    max-width:1180px;
+
+}
+
+.main-content{
+
+    padding:24px;
+
+}
+
+.sidebar{
+
+    width:260px;
+
+}
+
+.content{
+
+    margin-left:260px;
+
+}
+
+.dashboard{
+
+    gap:22px;
+
+}
+
+.kpi-grid{
+
+    gap:18px;
+
+}
+
+.dashboard-grid{
+
+    gap:20px;
+
+}
+
+.quick-action{
+
+    gap:16px;
+
+}
+
+.chart-container{
+
+    height:340px;
+
+}
+
+}
+
+
+/* ============================================================
+   LARGE TABLE
+============================================================ */
+
+@media (min-width:1200px){
+
+.table{
+
+    min-width:100%;
+
+}
+
+.table td{
+
+    white-space:nowrap;
+
+}
+
+}
+
+
+/* ============================================================
+   LARGE FORM
+============================================================ */
+
+@media (min-width:1200px){
+
+.form-grid-2{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:20px;
+
+}
+
+.form-grid-3{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:20px;
+
+}
+
+.form-grid-4{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+}
+
+}
+
+
+/* ============================================================
+   LARGE CARD
+============================================================ */
+
+@media (min-width:1400px){
+
+.card{
+
+    padding:24px;
+
+}
+
+.dashboard-widget{
+
+    padding:26px;
+
+}
+
+}
+
+
+/* ============================================================
+   LARGE MODAL
+============================================================ */
+
+@media (min-width:1400px){
+
+.modal-body{
+
+    max-height:75vh;
+
+}
+
+.drawer{
+
+    width:560px;
+
+}
+
+}
+
+
+/* ============================================================
+   LARGE TYPOGRAPHY
+============================================================ */
+
+@media (min-width:1600px){
+
+.dashboard-title h1{
+
+    font-size:34px;
+
+}
+
+.welcome-title{
+
+    font-size:36px;
+
+}
+
+.kpi-value{
+
+    font-size:34px;
+
+}
+
+.section-title{
+
+    font-size:22px;
+
+}
+
+}
+
+
+/* ============================================================
+   HOVER EFFECT
+============================================================ */
+
+@media (hover:hover){
+
+.btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.card:hover{
+
+    transition:.25s;
+
+}
+
+.product-card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+}
+
+
+/* ============================================================
+   DESKTOP ONLY
+============================================================ */
+
+.desktop-only{
+
+    display:block;
+
+}
+
+.mobile-only{
+
+    display:none;
+
+}
+
+/* ============================================================
+   SmartPOS Indonesia
+   RESPONSIVE FRAMEWORK
+   PART 2
+   Laptop (992px - 1199px)
+============================================================ */
+
+@media (max-width:1199px){
+
+/* ============================================================
+   LAYOUT
+============================================================ */
+
+.main-content{
+
+    padding:20px;
+
+}
+
+.content{
+
+    margin-left:250px;
+
+}
+
+.sidebar{
+
+    width:250px;
+
+}
+
+/* ============================================================
+   DASHBOARD
+============================================================ */
+
+.dashboard{
+
+    gap:20px;
+
+}
+
+.dashboard-grid{
+
+    grid-template-columns:1fr;
+
+    gap:20px;
+
+}
+
+.dashboard-column{
+
+    gap:20px;
+
+}
+
+.dashboard-widget{
+
+    padding:20px;
+
+}
+
+.dashboard-header{
+
+    gap:16px;
+
+}
+
+/* ============================================================
+   WELCOME CARD
+============================================================ */
+
+.welcome-card{
+
+    padding:28px;
+
+}
+
+.welcome-title{
+
+    font-size:28px;
+
+}
+
+.welcome-description{
+
+    max-width:100%;
+
+}
+
+.welcome-illustration{
+
+    width:150px;
+
+}
+
+.welcome-illustration i{
+
+    font-size:72px;
+
+}
+
+/* ============================================================
+   KPI
+============================================================ */
+
+.kpi-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:18px;
+
+}
+
+.kpi-card{
+
+    padding:20px;
+
+}
+
+.kpi-value{
+
+    font-size:28px;
+
+}
+
+/* ============================================================
+   QUICK ACTION
+============================================================ */
+
+.quick-action{
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:16px;
+
+}
+
+.quick-card{
+
+    padding:20px;
+
+}
+
+/* ============================================================
+   CHART
+============================================================ */
+
+.chart-container{
+
+    height:320px;
+
+}
+
+/* ============================================================
+   REVENUE
+============================================================ */
+
+.revenue-summary{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+/* ============================================================
+   PAYMENT
+============================================================ */
+
+.payment-summary{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+/* ============================================================
+   MINI KPI
+============================================================ */
+
+.mini-kpi{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+/* ============================================================
+   QUICK STATUS
+============================================================ */
+
+.quick-status{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.table-responsive{
+
+    overflow-x:auto;
+
+}
+
+.table{
+
+    min-width:900px;
+
+}
+
+/* ============================================================
+   FORM
+============================================================ */
+
+.form-grid-4{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.form-grid-3{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.form-grid-2{
+
+    grid-template-columns:1fr;
+
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+.modal{
+
+    width:90%;
+
+}
+
+.modal-lg{
+
+    width:94%;
+
+}
+
+/* ============================================================
+   DRAWER
+============================================================ */
+
+.drawer{
+
+    width:420px;
+
+}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+
+.dashboard-footer{
+
+    gap:16px;
+
+}
+
+/* ============================================================
+   PRODUCT CARD
+============================================================ */
+
+.product-grid{
+
+    grid-template-columns:repeat(3,1fr);
+
+}
+
+/* ============================================================
+   SALES LIST
+============================================================ */
+
+.top-product{
+
+    gap:14px;
+
+}
+
+.transaction-list{
+
+    gap:2px;
+
+}
+
+.stock-alert{
+
+    gap:14px;
+
+}
+
+/* ============================================================
+   BRANCH
+============================================================ */
+
+.branch-summary{
+
+    gap:14px;
+
+}
+
+/* ============================================================
+   CASHIER
+============================================================ */
+
+.cashier-ranking{
+
+    gap:14px;
+
+}
+
+/* ============================================================
+   TYPOGRAPHY
+============================================================ */
+
+.dashboard-title h1{
+
+    font-size:26px;
+
+}
+
+.section-title{
+
+    font-size:18px;
+
+}
+
+}
+
+/* ============================================================
+   DESKTOP / LAPTOP ONLY
+============================================================ */
+
+@media (min-width:992px){
+
+.mobile-only{
+
+    display:none !important;
+
+}
+
+.desktop-only{
+
+    display:block !important;
+
+}
+
+}
+
+/* ============================================================
+   SmartPOS Indonesia
+   RESPONSIVE FRAMEWORK
+   PART 3
+   Tablet (768px - 991px)
+============================================================ */
+
+@media (max-width:991px){
+
+/* ============================================================
+   LAYOUT
+============================================================ */
+
+.sidebar{
+
+    position:fixed;
+
+    left:-280px;
+
+    top:0;
+
+    width:280px;
+
+    height:100vh;
+
+    z-index:999;
+
+    transition:left .3s ease;
+
+}
+
+.sidebar.active{
+
+    left:0;
+
+}
+
+.sidebar-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.3s;
+
+    z-index:998;
+
+}
+
+.sidebar-overlay.active{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+.content{
+
+    margin-left:0;
+
+    width:100%;
+
+}
+
+.main-content{
+
+    padding:18px;
+
+}
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.header{
+
+    padding:16px 18px;
+
+}
+
+.header-left{
+
+    gap:12px;
+
+}
+
+.header-right{
+
+    gap:12px;
+
+}
+
+.menu-toggle{
+
+    display:flex !important;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.search-box{
+
+    flex:1;
+
+    max-width:320px;
+
+}
+
+/* ============================================================
+   DASHBOARD
+============================================================ */
+
+.dashboard{
+
+    gap:18px;
+
+}
+
+.dashboard-header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.dashboard-action{
+
+    width:100%;
+
+    justify-content:flex-start;
+
+    flex-wrap:wrap;
+
+}
+
+/* ============================================================
+   WELCOME CARD
+============================================================ */
+
+.welcome-card{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    padding:24px;
+
+}
+
+.welcome-title{
+
+    font-size:26px;
+
+}
+
+.welcome-description{
+
+    line-height:1.7;
+
+}
+
+.welcome-info{
+
+    width:100%;
+
+}
+
+.welcome-item{
+
+    flex:1;
+
+    justify-content:center;
+
+}
+
+.welcome-illustration{
+
+    display:none;
+
+}
+
+/* ============================================================
+   KPI
+============================================================ */
+
+.kpi-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:16px;
+
+}
+
+.kpi-card{
+
+    padding:18px;
+
+}
+
+.kpi-value{
+
+    font-size:24px;
+
+}
+
+/* ============================================================
+   GRID
+============================================================ */
+
+.dashboard-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+.dashboard-column{
+
+    gap:18px;
+
+}
+
+/* ============================================================
+   QUICK ACTION
+============================================================ */
+
+.quick-action{
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:14px;
+
+}
+
+.quick-card{
+
+    padding:18px;
+
+}
+
+.quick-icon{
+
+    width:56px;
+
+    height:56px;
+
+    font-size:22px;
+
+}
+
+/* ============================================================
+   CHART
+============================================================ */
+
+.chart-container{
+
+    height:280px;
+
+}
+
+/* ============================================================
+   REVENUE
+============================================================ */
+
+.revenue-summary{
+
+    grid-template-columns:1fr;
+
+}
+
+/* ============================================================
+   PAYMENT
+============================================================ */
+
+.payment-summary{
+
+    grid-template-columns:1fr;
+
+}
+
+/* ============================================================
+   MINI KPI
+============================================================ */
+
+.mini-kpi{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+/* ============================================================
+   QUICK STATUS
+============================================================ */
+
+.quick-status{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+/* ============================================================
+   PRODUCT
+============================================================ */
+
+.product-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.table-responsive{
+
+    overflow-x:auto;
+
+    -webkit-overflow-scrolling:touch;
+
+}
+
+.table{
+
+    min-width:800px;
+
+}
+
+/* ============================================================
+   FORM
+============================================================ */
+
+.form-grid-4,
+
+.form-grid-3,
+
+.form-grid-2{
+
+    grid-template-columns:1fr;
+
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+.modal,
+
+.modal-lg,
+
+.modal-xl{
+
+    width:95%;
+
+}
+
+.modal-body{
+
+    max-height:65vh;
+
+}
+
+/* ============================================================
+   DRAWER
+============================================================ */
+
+.drawer{
+
+    width:360px;
+
+}
+
+/* ============================================================
+   TRANSACTION
+============================================================ */
+
+.transaction-item{
+
+    gap:16px;
+
+}
+
+.transaction-total{
+
+    font-size:16px;
+
+}
+
+/* ============================================================
+   STOCK
+============================================================ */
+
+.stock-item{
+
+    gap:14px;
+
+}
+
+/* ============================================================
+   TIMELINE
+============================================================ */
+
+.timeline{
+
+    padding-left:22px;
+
+}
+
+.timeline-dot{
+
+    width:16px;
+
+    height:16px;
+
+}
+
+/* ============================================================
+   NOTIFICATION
+============================================================ */
+
+.notification-item{
+
+    gap:14px;
+
+}
+
+/* ============================================================
+   CALENDAR
+============================================================ */
+
+.calendar-grid{
+
+    gap:6px;
+
+}
+
+.calendar-date{
+
+    height:38px;
+
+}
+
+/* ============================================================
+   DASHBOARD FOOTER
+============================================================ */
+
+.dashboard-footer{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+/* ============================================================
+   FAB
+============================================================ */
+
+.dashboard-fab{
+
+    width:58px;
+
+    height:58px;
+
+    right:20px;
+
+    bottom:20px;
+
+}
+
+/* ============================================================
+   UTILITIES
+============================================================ */
+
+.desktop-only{
+
+    display:none !important;
+
+}
+
+.tablet-only{
+
+    display:block !important;
+
+}
+
+.mobile-only{
+
+    display:none !important;
+
+}
+
+}
+
+/* ============================================================
+   TABLET LANDSCAPE
+============================================================ */
+
+@media (min-width:768px) and (max-width:991px) and (orientation:landscape){
+
+.chart-container{
+
+    height:300px;
+
+}
+
+.quick-action{
+
+    grid-template-columns:repeat(4,1fr);
+
+}
+
+.kpi-grid{
+
+    grid-template-columns:repeat(4,1fr);
+
+}
+
+}
+
+/* ============================================================
+   SmartPOS Indonesia
+   RESPONSIVE FRAMEWORK
+   PART 4
+   Mobile (<768px)
+============================================================ */
+
+@media (max-width:767px){
+
+/* ============================================================
+   BODY
+============================================================ */
+
+html{
+
+    font-size:15px;
+
+}
+
+body{
+
+    overflow-x:hidden;
+
+}
+
+/* ============================================================
+   LAYOUT
+============================================================ */
+
+.main-content{
+
+    padding:16px;
+
+}
+
+.content{
+
+    width:100%;
+
+    margin-left:0;
+
+}
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+
+.sidebar{
+
+    width:280px;
+
+}
+
+.sidebar-logo{
+
+    padding:20px;
+
+}
+
+.sidebar-menu{
+
+    padding:10px;
+
+}
+
+.sidebar-menu a{
+
+    min-height:48px;
+
+}
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.header{
+
+    padding:14px 16px;
+
+}
+
+.header-left{
+
+    gap:10px;
+
+}
+
+.header-right{
+
+    gap:8px;
+
+}
+
+.header-user{
+
+    display:none;
+
+}
+
+.search-box{
+
+    display:none;
+
+}
+
+.notification-btn{
+
+    width:42px;
+
+    height:42px;
+
+}
+
+.profile-btn{
+
+    width:42px;
+
+    height:42px;
+
+}
+
+/* ============================================================
+   DASHBOARD
+============================================================ */
+
+.dashboard{
+
+    gap:16px;
+
+}
+
+.dashboard-header{
+
+    gap:12px;
+
+}
+
+.dashboard-title h1{
+
+    font-size:22px;
+
+}
+
+.dashboard-title p{
+
+    font-size:13px;
+
+}
+
+.dashboard-widget{
+
+    padding:18px;
+
+}
+
+/* ============================================================
+   WELCOME
+============================================================ */
+
+.welcome-card{
+
+    padding:20px;
+
+    border-radius:20px;
+
+}
+
+.welcome-title{
+
+    font-size:22px;
+
+}
+
+.welcome-description{
+
+    font-size:14px;
+
+}
+
+.welcome-info{
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+.welcome-item{
+
+    justify-content:flex-start;
+
+}
+
+/* ============================================================
+   KPI
+============================================================ */
+
+.kpi-grid{
+
+    grid-template-columns:1fr;
+
+    gap:14px;
+
+}
+
+.kpi-card{
+
+    padding:18px;
+
+}
+
+.kpi-icon{
+
+    width:46px;
+
+    height:46px;
+
+    font-size:18px;
+
+}
+
+.kpi-value{
+
+    font-size:24px;
+
+}
+
+/* ============================================================
+   QUICK ACTION
+============================================================ */
+
+.quick-action{
+
+    grid-template-columns:1fr;
+
+    gap:12px;
+
+}
+
+.quick-card{
+
+    padding:18px;
+
+}
+
+.quick-icon{
+
+    width:54px;
+
+    height:54px;
+
+}
+
+/* ============================================================
+   GRID
+============================================================ */
+
+.dashboard-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+.dashboard-column{
+
+    gap:16px;
+
+}
+
+/* ============================================================
+   CHART
+============================================================ */
+
+.chart-container{
+
+    height:240px;
+
+}
+
+/* ============================================================
+   PAYMENT
+============================================================ */
+
+.payment-summary{
+
+    grid-template-columns:1fr;
+
+}
+
+/* ============================================================
+   MINI KPI
+============================================================ */
+
+.mini-kpi{
+
+    grid-template-columns:1fr;
+
+}
+
+/* ============================================================
+   QUICK STATUS
+============================================================ */
+
+.quick-status{
+
+    grid-template-columns:1fr;
+
+}
+
+/* ============================================================
+   PRODUCT
+============================================================ */
+
+.product-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.table-responsive{
+
+    overflow-x:auto;
+
+    -webkit-overflow-scrolling:touch;
+
+}
+
+.table{
+
+    min-width:700px;
+
+}
+
+/* ============================================================
+   TRANSACTION
+============================================================ */
+
+.transaction-item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:14px;
+
+}
+
+.transaction-right{
+
+    text-align:left;
+
+}
+
+/* ============================================================
+   STOCK
+============================================================ */
+
+.stock-item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+/* ============================================================
+   TOP PRODUCT
+============================================================ */
+
+.top-product-item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+.top-product-right{
+
+    text-align:left;
+
+}
+
+/* ============================================================
+   CASH FLOW
+============================================================ */
+
+.cash-item{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+/* ============================================================
+   FORM
+============================================================ */
+
+.form-grid-2,
+
+.form-grid-3,
+
+.form-grid-4{
+
+    grid-template-columns:1fr;
+
+}
+
+.input,
+
+select,
+
+textarea{
+
+    min-height:46px;
+
+}
+
+/* ============================================================
+   BUTTON
+============================================================ */
+
+.btn{
+
+    min-height:44px;
+
+    padding:12px 18px;
+
+}
+
+.btn-block{
+
+    width:100%;
+
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+.modal,
+
+.modal-lg,
+
+.modal-xl{
+
+    width:96%;
+
+    border-radius:16px;
+
+}
+
+.modal-header,
+
+.modal-body,
+
+.modal-footer{
+
+    padding:16px;
+
+}
+
+/* ============================================================
+   DRAWER
+============================================================ */
+
+.drawer{
+
+    width:100%;
+
+}
+
+/* ============================================================
+   CALENDAR
+============================================================ */
+
+.calendar-date{
+
+    height:36px;
+
+    font-size:13px;
+
+}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+
+.dashboard-footer{
+
+    font-size:12px;
+
+}
+
+/* ============================================================
+   FLOATING BUTTON
+============================================================ */
+
+.dashboard-fab{
+
+    width:54px;
+
+    height:54px;
+
+    right:16px;
+
+    bottom:16px;
+
+}
+
+/* ============================================================
+   VISIBILITY
+============================================================ */
+
+.desktop-only{
+
+    display:none !important;
+
+}
+
+.tablet-only{
+
+    display:none !important;
+
+}
+
+.mobile-only{
+
+    display:block !important;
+
+}
+
+.hide-mobile{
+
+    display:none !important;
+
+}
+
+.show-mobile{
+
+    display:block !important;
+
+}
+
+}
+
+/* ============================================================
+   EXTRA SMALL DEVICE
+   <480px
+============================================================ */
+
+@media (max-width:479px){
+
+.main-content{
+
+    padding:12px;
+
+}
+
+.welcome-card{
+
+    padding:18px;
+
+}
+
+.dashboard-widget{
+
+    padding:16px;
+
+}
+
+.kpi-card{
+
+    padding:16px;
+
+}
+
+.chart-container{
+
+    height:200px;
+
+}
+
+.btn{
+
+    font-size:14px;
+
+}
+
+.modal{
+
+    width:98%;
+
+}
+
+}
+
+/* ============================================================
+   SmartPOS Indonesia
+   RESPONSIVE FRAMEWORK
+   PART 5
+   Print • Dark Mode • Touch • Landscape
+============================================================ */
+
+
+/* ============================================================
+   PRINT
+============================================================ */
+
+@media print{
+
+body{
+
+    background:#fff !important;
+
+    color:#000 !important;
+
+    font-size:12pt;
+
+}
+
+.sidebar,
+.header,
+.dashboard-fab,
+.notification,
+.toast,
+.dropdown,
+.modal,
+.btn,
+.no-print{
+
+    display:none !important;
+
+}
+
+.content{
+
+    margin:0 !important;
+
+    padding:0 !important;
+
+    width:100% !important;
+
+}
+
+.card,
+.dashboard-widget{
+
+    border:1px solid #ccc;
+
+    box-shadow:none !important;
+
+    break-inside:avoid;
+
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+th,
+td{
+
+    border:1px solid #999;
+
+    padding:8px;
+
+}
+
+}
+
+
+/* ============================================================
+   THERMAL 58mm
+============================================================ */
+
+@media print{
+
+.thermal-58{
+
+    width:58mm;
+
+    font-size:10px;
+
+    margin:auto;
+
+}
+
+}
+
+
+/* ============================================================
+   THERMAL 80mm
+============================================================ */
+
+@media print{
+
+.thermal-80{
+
+    width:80mm;
+
+    font-size:12px;
+
+    margin:auto;
+
+}
+
+}
+
+
+/* ============================================================
+   DARK MODE
+============================================================ */
+
+@media (prefers-color-scheme:dark){
+
+.auto-dark{
+
+    background:#0F172A;
+
+    color:#F8FAFC;
+
+}
+
+.auto-dark .card,
+.auto-dark .dashboard-widget{
+
+    background:#1E293B;
+
+    border-color:#334155;
+
+}
+
+.auto-dark .table{
+
+    color:#F8FAFC;
+
+}
+
+}
+
+
+/* ============================================================
+   SAFE AREA (iPhone)
+============================================================ */
+
+@supports(padding:max(0px)){
+
+.safe-top{
+
+    padding-top:max(20px,env(safe-area-inset-top));
+
+}
+
+.safe-bottom{
+
+    padding-bottom:max(20px,env(safe-area-inset-bottom));
+
+}
+
+.safe-left{
+
+    padding-left:max(20px,env(safe-area-inset-left));
+
+}
+
+.safe-right{
+
+    padding-right:max(20px,env(safe-area-inset-right));
+
+}
+
+}
+
+
+/* ============================================================
+   TOUCH DEVICE
+============================================================ */
+
+@media (pointer:coarse){
+
+button,
+.btn,
+input,
+select,
+textarea{
+
+    min-height:48px;
+
+}
+
+.sidebar-menu a{
+
+    min-height:48px;
+
+}
+
+.table td{
+
+    padding:14px;
+
+}
+
+}
+
+
+/* ============================================================
+   LANDSCAPE PHONE
+============================================================ */
+
+@media (max-width:767px) and (orientation:landscape){
+
+.chart-container{
+
+    height:220px;
+
+}
+
+.kpi-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.quick-action{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+============================================================ */
+
+@media (prefers-reduced-motion:reduce){
+
+*{
+
+    animation:none !important;
+
+    transition:none !important;
+
+    scroll-behavior:auto !important;
+
+}
+
+}
+
+
+/* ============================================================
+   HIGH DPI / RETINA
+============================================================ */
+
+@media (-webkit-min-device-pixel-ratio:2),
+       (min-resolution:192dpi){
+
+img{
+
+    image-rendering:auto;
+
+}
+
+.logo{
+
+    image-rendering:auto;
+
+}
+
+}
+
+
+/* ============================================================
+   HOVER SUPPORT
+============================================================ */
+
+@media (hover:none){
+
+.btn:hover,
+.card:hover,
+.quick-card:hover,
+.kpi-card:hover{
+
+    transform:none;
+
+}
+
+}
+
+
+/* ============================================================
+   KEYBOARD NAVIGATION
+============================================================ */
+
+:focus-visible{
+
+    outline:3px solid var(--primary);
+
+    outline-offset:2px;
+
+}
+
+
+/* ============================================================
+   SCROLLBAR (Desktop Only)
+============================================================ */
+
+@media (min-width:992px){
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+    height:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#F1F5F9;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#CBD5E1;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#94A3B8;
+
+}
+
+}
+
+
+/* ============================================================
+   SMOOTH SCROLL
+============================================================ */
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+
+/* ============================================================
+   SELECTION
+============================================================ */
+
+::selection{
+
+    background:var(--primary);
+
+    color:#fff;
+
+}
+
+
+/* ============================================================
+   IMAGE
+============================================================ */
+
+img{
+
+    max-width:100%;
+
+    height:auto;
+
+    display:block;
+
+}
+
+
+/* ============================================================
+   VIDEO
+============================================================ */
+
+video{
+
+    max-width:100%;
+
+    height:auto;
+
+}
+
+
+/* ============================================================
+   IFRAME
+============================================================ */
+
+iframe{
+
+    max-width:100%;
+
+    border:none;
+
+}
+
+
+/* ============================================================
+   FINAL UTILITIES
+============================================================ */
+
+.hide{
+
+    display:none !important;
+
+}
+
+.show{
+
+    display:block !important;
+
+}
+
+.w-auto{
+
+    width:auto !important;
+
+}
+
+.h-auto{
+
+    height:auto !important;
+
+}
+
+.text-wrap{
+
+    white-space:normal !important;
+
+}
+
+.text-nowrap{
+
+    white-space:nowrap !important;
+
+}/* ============================================================
+   SmartPOS Indonesia
+   RESPONSIVE FRAMEWORK
+   PART 6
+   Enterprise Optimization
+============================================================ */
+
+
+/* ============================================================
+   PERFORMANCE
+============================================================ */
+
+.optimize{
+
+    will-change:transform,opacity;
+
+    transform:translateZ(0);
+
+    backface-visibility:hidden;
+
+}
+
+.gpu{
+
+    transform:translate3d(0,0,0);
+
+}
+
+/* ============================================================
+   SCROLL SNAP
+============================================================ */
+
+.scroll-x{
+
+    display:flex;
+
+    overflow-x:auto;
+
+    scroll-snap-type:x mandatory;
+
+    gap:16px;
+
+    -webkit-overflow-scrolling:touch;
+
+}
+
+.scroll-item{
+
+    scroll-snap-align:start;
+
+    flex-shrink:0;
+
+}
+
+/* ============================================================
+   STICKY
+============================================================ */
+
+.sticky-top{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:100;
+
+}
+
+.sticky-bottom{
+
+    position:sticky;
+
+    bottom:0;
+
+    z-index:100;
+
+}
+
+/* ============================================================
+   RESIZE
+============================================================ */
+
+.resize{
+
+    resize:both;
+
+    overflow:auto;
+
+}
+
+.resize-y{
+
+    resize:vertical;
+
+}
+
+.resize-x{
+
+    resize:horizontal;
+
+}
+
+/* ============================================================
+   DRAG AREA
+============================================================ */
+
+.drag-area{
+
+    cursor:grab;
+
+    user-select:none;
+
+}
+
+.drag-area:active{
+
+    cursor:grabbing;
+
+}
+
+/* ============================================================
+   SKELETON
+============================================================ */
+
+.skeleton{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.skeleton::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.4),
+        transparent
+    );
+
+    animation:skeletonMove 1.2s infinite;
+
+}
+
+@keyframes skeletonMove{
+
+0%{
+
+transform:translateX(-100%);
+
+}
+
+100%{
+
+transform:translateX(100%);
+
+}
+
+}
+
+/* ============================================================
+   LOADING STATE
+============================================================ */
+
+.loading{
+
+    pointer-events:none;
+
+    opacity:.65;
+
+}
+
+/* ============================================================
+   DISABLED
+============================================================ */
+
+.disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+}
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.empty-state{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:48px;
+
+    text-align:center;
+
+}
+
+.empty-state i{
+
+    font-size:56px;
+
+    margin-bottom:16px;
+
+    color:var(--text-soft);
+
+}
+
+.empty-state h3{
+
+    margin-bottom:8px;
+
+}
+
+.empty-state p{
+
+    color:var(--text-soft);
+
+}
+
+/* ============================================================
+   OVERFLOW
+============================================================ */
+
+.overflow-x{
+
+    overflow-x:auto;
+
+}
+
+.overflow-y{
+
+    overflow-y:auto;
+
+}
+
+/* ============================================================
+   IMAGE
+============================================================ */
+
+.img-cover{
+
+    object-fit:cover;
+
+}
+
+.img-contain{
+
+    object-fit:contain;
+
+}
+
+/* ============================================================
+   BADGE POSITION
+============================================================ */
+
+.badge-floating{
+
+    position:absolute;
+
+    top:-6px;
+
+    right:-6px;
+
+}
+
+/* ============================================================
+   FLOAT
+============================================================ */
+
+.float-right{
+
+    float:right;
+
+}
+
+.float-left{
+
+    float:left;
+
+}
+
+.clearfix::after{
+
+    content:"";
+
+    display:block;
+
+    clear:both;
+
+}
+
+/* ============================================================
+   USER INTERACTION
+============================================================ */
+
+.no-pointer{
+
+    pointer-events:none;
+
+}
+
+.pointer{
+
+    cursor:pointer;
+
+}
+
+/* ============================================================
+   Z INDEX
+============================================================ */
+
+.z-1{
+
+    z-index:1;
+
+}
+
+.z-10{
+
+    z-index:10;
+
+}
+
+.z-100{
+
+    z-index:100;
+
+}
+
+.z-500{
+
+    z-index:500;
+
+}
+
+.z-1000{
+
+    z-index:1000;
+
+}
+
+/* ============================================================
+   OPACITY
+============================================================ */
+
+.opacity-0{
+
+    opacity:0;
+
+}
+
+.opacity-25{
+
+    opacity:.25;
+
+}
+
+.opacity-50{
+
+    opacity:.5;
+
+}
+
+.opacity-75{
+
+    opacity:.75;
+
+}
+
+.opacity-100{
+
+    opacity:1;
+
+}
+
+/* ============================================================
+   PRINT UTILITY
+============================================================ */
+
+@media print{
+
+.print-hide{
+
+    display:none !important;
+
+}
+
+.print-show{
+
+    display:block !important;
+
+}
+
+}
+
+/* ============================================================
+   HIGH CONTRAST
+============================================================ */
+
+@media(prefers-contrast:more){
+
+.card,
+.dashboard-widget{
+
+    border-width:2px;
+
+}
+
+.btn{
+
+    border-width:2px;
+
+}
+
+}
+
+/* ============================================================
+   COLOR SCHEME
+============================================================ */
+
+:root{
+
+    color-scheme:light;
+
+}
