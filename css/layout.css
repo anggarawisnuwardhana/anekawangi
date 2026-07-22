@@ -1,0 +1,587 @@
+/* ============================================================
+   SmartPOS Indonesia
+   File : layout.css
+   Version : 1.0
+============================================================ */
+
+/* ============================================================
+   WRAPPER
+============================================================ */
+
+.wrapper{
+
+    display:flex;
+
+    width:100%;
+
+    min-height:100vh;
+
+    background:var(--bg);
+
+}
+
+
+/* ============================================================
+   MAIN
+============================================================ */
+
+.main{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    margin-left:var(--sidebar-width);
+
+    min-height:100vh;
+
+    transition:margin-left var(--transition);
+
+}
+
+
+/* ============================================================
+   SIDEBAR COLLAPSE
+============================================================ */
+
+.sidebar-collapse .main{
+
+    margin-left:var(--sidebar-collapse);
+
+}
+
+
+/* ============================================================
+   PAGE CONTENT
+============================================================ */
+
+.content{
+
+    flex:1;
+
+    padding:28px;
+
+    background:var(--bg);
+
+    overflow:auto;
+
+}
+
+
+/* ============================================================
+   PAGE TITLE
+============================================================ */
+
+.page-title{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:28px;
+
+}
+
+.page-title h1{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.page-title p{
+
+    margin-top:4px;
+
+    color:var(--text-soft);
+
+}
+
+
+/* ============================================================
+   PAGE ACTION
+============================================================ */
+
+.page-action{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+/* ============================================================
+   GRID
+============================================================ */
+
+.grid{
+
+    display:grid;
+
+    gap:20px;
+
+}
+
+.grid-2{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.grid-3{
+
+    grid-template-columns:repeat(3,1fr);
+
+}
+
+.grid-4{
+
+    grid-template-columns:repeat(4,1fr);
+
+}
+
+.grid-5{
+
+    grid-template-columns:repeat(5,1fr);
+
+}
+
+.grid-auto{
+
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+}
+
+
+/* ============================================================
+   ROW
+============================================================ */
+
+.row{
+
+    display:flex;
+
+    gap:20px;
+
+}
+
+.col{
+
+    flex:1;
+
+}
+
+
+/* ============================================================
+   SECTION
+============================================================ */
+
+.section{
+
+    margin-bottom:28px;
+
+}
+
+
+/* ============================================================
+   CARD CONTAINER
+============================================================ */
+
+.card-container{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+    gap:20px;
+
+}
+
+
+/* ============================================================
+   FLEX
+============================================================ */
+
+.flex{
+
+    display:flex;
+
+}
+
+.flex-between{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.flex-center{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.flex-column{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+/* ============================================================
+   GAP
+============================================================ */
+
+.gap-5{gap:5px;}
+.gap-10{gap:10px;}
+.gap-15{gap:15px;}
+.gap-20{gap:20px;}
+.gap-25{gap:25px;}
+.gap-30{gap:30px;}
+
+
+/* ============================================================
+   WIDTH
+============================================================ */
+
+.w-25{
+
+    width:25%;
+
+}
+
+.w-50{
+
+    width:50%;
+
+}
+
+.w-75{
+
+    width:75%;
+
+}
+
+.w-100{
+
+    width:100%;
+
+}
+
+
+/* ============================================================
+   HEIGHT
+============================================================ */
+
+.h-100{
+
+    height:100%;
+
+}
+
+.min-vh{
+
+    min-height:100vh;
+
+}
+
+
+/* ============================================================
+   OVERFLOW
+============================================================ */
+
+.overflow-auto{
+
+    overflow:auto;
+
+}
+
+.overflow-hidden{
+
+    overflow:hidden;
+
+}
+
+
+/* ============================================================
+   POSITION
+============================================================ */
+
+.relative{
+
+    position:relative;
+
+}
+
+.absolute{
+
+    position:absolute;
+
+}
+
+.fixed{
+
+    position:fixed;
+
+}
+
+
+/* ============================================================
+   DISPLAY
+============================================================ */
+
+.block{
+
+    display:block;
+
+}
+
+.inline{
+
+    display:inline-block;
+
+}
+
+.none{
+
+    display:none;
+
+}
+
+
+/* ============================================================
+   BORDER
+============================================================ */
+
+.border{
+
+    border:1px solid var(--border);
+
+}
+
+.border-top{
+
+    border-top:1px solid var(--border);
+
+}
+
+.border-bottom{
+
+    border-bottom:1px solid var(--border);
+
+}
+
+.rounded{
+
+    border-radius:var(--radius);
+
+}
+
+.rounded-lg{
+
+    border-radius:var(--radius-lg);
+
+}
+
+.rounded-full{
+
+    border-radius:999px;
+
+}
+
+
+/* ============================================================
+   BACKGROUND
+============================================================ */
+
+.bg-white{
+
+    background:#fff;
+
+}
+
+.bg-primary{
+
+    background:var(--primary);
+
+}
+
+.bg-success{
+
+    background:var(--success);
+
+}
+
+.bg-warning{
+
+    background:var(--warning);
+
+}
+
+.bg-danger{
+
+    background:var(--danger);
+
+}
+
+
+/* ============================================================
+   SHADOW
+============================================================ */
+
+.shadow-xs{
+
+    box-shadow:var(--shadow-xs);
+
+}
+
+.shadow-sm{
+
+    box-shadow:var(--shadow-sm);
+
+}
+
+.shadow{
+
+    box-shadow:var(--shadow);
+
+}
+
+.shadow-lg{
+
+    box-shadow:var(--shadow-lg);
+
+}
+
+
+/* ============================================================
+   SPACING
+============================================================ */
+
+.m-0{margin:0;}
+
+.mt-10{margin-top:10px;}
+.mt-20{margin-top:20px;}
+.mt-30{margin-top:30px;}
+.mt-40{margin-top:40px;}
+
+.mb-10{margin-bottom:10px;}
+.mb-20{margin-bottom:20px;}
+.mb-30{margin-bottom:30px;}
+.mb-40{margin-bottom:40px;}
+
+.ml-10{margin-left:10px;}
+.ml-20{margin-left:20px;}
+
+.mr-10{margin-right:10px;}
+.mr-20{margin-right:20px;}
+
+.p-10{padding:10px;}
+.p-15{padding:15px;}
+.p-20{padding:20px;}
+.p-25{padding:25px;}
+.p-30{padding:30px;}
+
+
+/* ============================================================
+   LOADING
+============================================================ */
+
+.loading{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    height:250px;
+
+    color:var(--text-soft);
+
+    font-size:15px;
+
+}
+
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+
+.empty-state{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    height:260px;
+
+    text-align:center;
+
+    color:var(--text-soft);
+
+}
+
+.empty-state i{
+
+    font-size:50px;
+
+    margin-bottom:15px;
+
+    color:var(--primary-light);
+
+}
+
+
+/* ============================================================
+   PAGE TRANSITION
+============================================================ */
+
+.page{
+
+    animation:pageFade .35s ease;
+
+}
+
+@keyframes pageFade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(12px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
