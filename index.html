@@ -1239,8 +1239,20 @@
     }
 
     function generateAutoCode() {
-      document.getElementById("input-kode").value = "BRG-" + Math.floor(1000 + Math.random() * 9000);
-    }
+  let newCode = "";
+  let isDuplicate = true;
+
+  // Lakukan loop acak sampai mendapatkan kode yang belum ada di daftar products
+  while (isDuplicate) {
+    const randomNumber = Math.floor(1000 + Math.random() * 9000);
+    newCode = "BRG-" + randomNumber;
+    
+    // Cek apakah kode sudah dipakai di array products
+    isDuplicate = products.some(p => String(p.kodeQR) === newCode);
+  }
+
+  document.getElementById("input-kode").value = newCode;
+}
 
     function renderQRCode(code, name) {
       const box = document.getElementById("qrcode-box");
