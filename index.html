@@ -338,16 +338,24 @@
         </div>
 
         <div class="lg:col-span-7 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-          <div class="flex justify-between items-center mb-4">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
             <h2 class="font-bold text-slate-900 flex items-center gap-2">
               <i class="fa-solid fa-boxes-packing text-blue-600"></i> Data Stok
             </h2>
-            <div class="flex items-center gap-2">
-              <button onclick="downloadStockPDF()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1">
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <!-- Menu Pencarian Barang di Stok Barang -->
+              <div class="relative flex-1 sm:w-48">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400 text-xs">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="search-stok" oninput="renderStockTable()" placeholder="Cari stok..."
+                  class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-blue-500 focus:outline-none" />
+              </div>
+              <button onclick="downloadStockPDF()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1 shrink-0">
                 <i class="fa-solid fa-file-pdf"></i> Download PDF
               </button>
-              <button onclick="fetchProductsFromSheet()" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-lg font-medium">
-                <i class="fa-solid fa-rotate mr-1"></i> Refresh Data
+              <button onclick="fetchProductsFromSheet()" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-lg font-medium shrink-0">
+                <i class="fa-solid fa-rotate mr-1"></i> Refresh
               </button>
             </div>
           </div>
@@ -408,13 +416,23 @@
         </div>
 
         <div class="lg:col-span-7 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-          <div class="flex justify-between items-center mb-4">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
             <h2 class="font-bold text-slate-900 flex items-center gap-2">
               <i class="fa-solid fa-list-check text-red-600"></i> Riwayat Pengeluaran
             </h2>
-            <button onclick="fetchExpensesFromSheet()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium">
-              <i class="fa-solid fa-rotate mr-1"></i> Refresh
-            </button>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <!-- Menu Pencarian di Menu Pengeluaran -->
+              <div class="relative flex-1 sm:w-48">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400 text-xs">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="search-pengeluaran" oninput="renderExpenseTable()" placeholder="Cari pengeluaran..."
+                  class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-blue-500 focus:outline-none" />
+              </div>
+              <button onclick="fetchExpensesFromSheet()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium shrink-0">
+                <i class="fa-solid fa-rotate mr-1"></i> Refresh
+              </button>
+            </div>
           </div>
 
           <div class="overflow-x-auto max-h-[500px]">
@@ -502,9 +520,19 @@
         <!-- Detail History Transaksi Penjualan & Pengeluaran -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
-              <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> History Transaksi Penjualan
-            </h3>
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> History Transaksi Penjualan
+              </h3>
+              <!-- Search ID Transaksi di Laporan -->
+              <div class="relative w-40 sm:w-48">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400 text-xs">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="search-report-sales" oninput="filterReportTables()" placeholder="Cari ID Trx..."
+                  class="w-full pl-8 pr-2 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-blue-500 focus:outline-none" />
+              </div>
+            </div>
             <div class="overflow-x-auto max-h-[400px]">
               <table class="w-full text-xs text-left">
                 <thead class="bg-slate-50 text-slate-500 uppercase sticky top-0">
@@ -523,9 +551,19 @@
           </div>
 
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
-              <i class="fa-solid fa-file-invoice-dollar text-red-600"></i> History Pengeluaran Operasional
-            </h3>
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-file-invoice-dollar text-red-600"></i> History Pengeluaran Operasional
+              </h3>
+              <!-- Search Pengeluaran di Laporan -->
+              <div class="relative w-40 sm:w-48">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400 text-xs">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="search-report-expenses" oninput="filterReportTables()" placeholder="Cari pengeluaran..."
+                  class="w-full pl-8 pr-2 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-blue-500 focus:outline-none" />
+              </div>
+            </div>
             <div class="overflow-x-auto max-h-[400px]">
               <table class="w-full text-xs text-left">
                 <thead class="bg-slate-50 text-slate-500 uppercase sticky top-0">
@@ -664,6 +702,8 @@
 
     let products = [];
     let expenses = [];
+    let currentReportSales = [];
+    let currentReportExpenses = [];
     let cart = [];
     let html5QrcodeScanner = null;
     let isCameraRunning = false;
@@ -750,7 +790,10 @@
         document.getElementById("stat-operasional").textContent = `Rp ${Number(data.totalOperasional || 0).toLocaleString("id-ID")}`;
         document.getElementById("stat-laba-bersih").textContent = `Rp ${Number(data.labaBersih || 0).toLocaleString("id-ID")}`;
 
-        renderReportTables(data.sales || [], data.expenses || []);
+        currentReportSales = data.sales || [];
+        currentReportExpenses = data.expenses || [];
+
+        renderReportTables(currentReportSales, currentReportExpenses);
       } catch (err) {
         showToast("Gagal menghitung laporan keuangan", "error");
       }
@@ -787,6 +830,22 @@
           </tr>
         `).join("");
       }
+    }
+
+    function filterReportTables() {
+      const qSales = (document.getElementById("search-report-sales")?.value || "").toLowerCase().trim();
+      const qExpenses = (document.getElementById("search-report-expenses")?.value || "").toLowerCase().trim();
+
+      const filteredSales = currentReportSales.filter(s => 
+        (s.idTrx || "").toLowerCase().includes(qSales)
+      );
+
+      const filteredExpenses = currentReportExpenses.filter(e => 
+        (e.keterangan || "").toLowerCase().includes(qExpenses) ||
+        (e.idExp || "").toLowerCase().includes(qExpenses)
+      );
+
+      renderReportTables(filteredSales, filteredExpenses);
     }
 
     // HAPUS HISTORY TRANSAKSI PENJUALAN
@@ -1079,7 +1138,11 @@
           showReceiptModal(trxId);
           cart = [];
           renderCart();
+          
+          // FIX BUG KEMBALIAN: Reset nominal kembalian dan input pembayaran setelah checkout
           document.getElementById("pay-amount").value = "";
+          document.getElementById("pay-change").textContent = "Rp 0";
+
           fetchProductsFromSheet();
         } else {
           showToast(result.message || "Transaksi gagal disimpan", "error");
@@ -1246,12 +1309,20 @@
 
     function renderStockTable() {
       const tbody = document.getElementById("stock-table-body");
-      if (products.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">Tidak ada stok produk.</td></tr>`;
+      const searchVal = (document.getElementById("search-stok")?.value || "").toLowerCase().trim();
+
+      const filteredProducts = products.filter(p => 
+        (p.nama || "").toLowerCase().includes(searchVal) ||
+        (p.kodeQR || "").toLowerCase().includes(searchVal) ||
+        (p.kategori || "").toLowerCase().includes(searchVal)
+      );
+
+      if (filteredProducts.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">Tidak ada stok produk yang sesuai.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = products.map(p => `
+      tbody.innerHTML = filteredProducts.map(p => `
         <tr class="hover:bg-slate-50">
           <td class="px-3 py-3 font-mono text-xs">${p.kodeQR}</td>
           <td class="px-3 py-3 font-medium">${p.nama}</td>
@@ -1278,12 +1349,19 @@
 
     function renderExpenseTable() {
       const tbody = document.getElementById("expense-table-body");
-      if (expenses.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">Belum ada catatan pengeluaran.</td></tr>`;
+      const searchVal = (document.getElementById("search-pengeluaran")?.value || "").toLowerCase().trim();
+
+      const filteredExpenses = expenses.filter(e => 
+        (e.keterangan || "").toLowerCase().includes(searchVal) ||
+        (e.idExp || "").toLowerCase().includes(searchVal)
+      );
+
+      if (filteredExpenses.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">Belum ada catatan pengeluaran yang sesuai.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = expenses.slice().reverse().map(e => `
+      tbody.innerHTML = filteredExpenses.slice().reverse().map(e => `
         <tr class="hover:bg-slate-50">
           <td class="px-3 py-3 font-mono text-xs text-slate-600">${e.idExp}</td>
           <td class="px-3 py-3 text-xs text-slate-500">${e.tanggal ? new Date(e.tanggal).toLocaleDateString("id-ID") : '-'}</td>
