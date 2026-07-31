@@ -323,7 +323,7 @@
             </button>
           </form>
 
-          <!-- FIX: PREVIEW & PRINT LABEL QR (DENGAN TAMPILAN FLEKSIBEL PRINTER) -->
+          <!-- PREVIEW & PRINT LABEL QR -->
           <div id="qr-preview-box" class="hidden mt-6 p-4 border border-dashed border-slate-300 rounded-xl text-center bg-slate-50">
             <p class="text-xs font-semibold text-slate-500 mb-2">Preview Label QR</p>
             <div id="printable-qr-section" class="inline-block bg-white p-4 rounded-lg border shadow-sm">
@@ -789,7 +789,7 @@
       }
     }
 
-    // FUNGSI BARU: HAPUS HISTORY TRANSAKSI PENJUALAN
+    // HAPUS HISTORY TRANSAKSI PENJUALAN
     async function deleteTransaction(idTrx) {
       if (!idTrx) return;
       if (!confirm(`Yakin ingin menghapus history transaksi ${idTrx}?`)) return;
@@ -868,17 +868,36 @@
       });
     }
 
+    // FITUR TAMBAH/EDIT PRODUK DENGAN VALIDASI DUPLIKASI KODE & NAMA
     async function handleAddProduct(e) {
       e.preventDefault();
+      
+      const editIndex = Number(document.getElementById("edit-mode-index").value);
+      const kodeInput = document.getElementById("input-kode").value.trim();
+      const namaInput = document.getElementById("input-nama").value.trim();
+
+      // VALIDASI ANTI-DUPLIKASI (Untuk Mode Tambah Baru / editIndex == -1)
+      if (editIndex < 0) {
+        const kodeExist = products.some(p => String(p.kodeQR).toLowerCase() === kodeInput.toLowerCase());
+        if (kodeExist) {
+          showToast(`Kode Barang "${kodeInput}" sudah terpakai! Gunakan kode lain.`, "warning");
+          return;
+        }
+
+        const namaExist = products.some(p => String(p.nama).toLowerCase() === namaInput.toLowerCase());
+        if (namaExist) {
+          showToast(`Nama Barang "${namaInput}" sudah ada di database! Gunakan nama lain.`, "warning");
+          return;
+        }
+      }
+
       const btn = document.getElementById("btn-submit-product");
       btn.disabled = true;
       btn.textContent = "Menyimpan...";
 
-      const editIndex = Number(document.getElementById("edit-mode-index").value);
-
       const item = {
-        kodeQR: document.getElementById("input-kode").value.trim(),
-        nama: document.getElementById("input-nama").value.trim(),
+        kodeQR: kodeInput,
+        nama: namaInput,
         kategori: document.getElementById("input-kategori").value.trim(),
         satuan: document.getElementById("input-satuan").value,
         hargaBeli: Number(document.getElementById("input-harga-beli").value),
@@ -899,6 +918,8 @@
           renderQRCode(item.kodeQR, item.nama);
           resetProductForm();
           fetchProductsFromSheet();
+        } else {
+          showToast(result.message || "Gagal menyimpan data", "error");
         }
       } catch (err) {
         showToast("Gagal menyambung ke Database", "error");
@@ -1023,6 +1044,7 @@
       document.getElementById("btn-cancel-expense-edit").classList.add("hidden");
     }
 
+    // CHECKOUT DENGAN GENERATE ID TRANSAKSI BEBAS DUPLIKASI (TIMESTAMP + RANDOM STRING)
     async function processCheckout() {
       if (cart.length === 0) return showToast("Keranjang belanja kosong!", "warning");
 
@@ -1036,7 +1058,10 @@
       btn.disabled = true;
       btn.textContent = "Memproses & Mengirim Ke Database...";
 
-      const trxId = "TRX-" + Date.now();
+      // GENERATE ID UNIK BEBAS DUPLIKASI
+      const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+      const trxId = "TRX-" + Date.now() + "-" + randomSuffix;
+
       const payload = {
         idTrx: trxId,
         items: cart.map(item => ({ kodeQR: item.kodeQR, qty: item.qty }))
@@ -1056,12 +1081,14 @@
           renderCart();
           document.getElementById("pay-amount").value = "";
           fetchProductsFromSheet();
+        } else {
+          showToast(result.message || "Transaksi gagal disimpan", "error");
         }
       } catch (err) {
         showToast("Gagal memproses transaksi", "error");
       } finally {
         btn.disabled = false;
-        btn.textContent = "Proses & Simpan";
+        btn.textContent = "BAYAR";
       }
     }
 
@@ -1317,30 +1344,29 @@
       }
     }
 
+    // AUTO GENERATE KODE BEBAS DUPLIKASI
     function generateAutoCode() {
       let newCode = "";
       let isDuplicate = true;
 
       while (isDuplicate) {
-        const randomNumber = Math.floor(1000 + Math.random() * 9000);
-        newCode = "BRG-" + randomNumber;
-        isDuplicate = products.some(p => String(p.kodeQR) === newCode);
+        const timestamp = Date.now().toString().slice(-6);
+        const randomStr = Math.random().toString(36).substring(2, 4).toUpperCase();
+        newCode = "BRG-" + timestamp + randomStr;
+        isDuplicate = products.some(p => String(p.kodeQR).toLowerCase() === newCode.toLowerCase());
       }
 
       document.getElementById("input-kode").value = newCode;
     }
 
-    // FIX: RENDER QR CODE FUNCTION
     function renderQRCode(code, name) {
       const box = document.getElementById("qrcode-box");
-      box.innerHTML = ""; // Clear elemen sebelum menggambar baru
+      box.innerHTML = "";
 
-      // Pastikan elemen preview muncul dahulu agar dimensi QR terhitung
       document.getElementById("qr-preview-box").classList.remove("hidden");
       document.getElementById("qr-label-name").textContent = name;
       document.getElementById("qr-label-code").textContent = code;
 
-      // Render barcode QR
       setTimeout(() => {
         new QRCode(box, {
           text: String(code),
@@ -1351,7 +1377,6 @@
       }, 50);
     }
 
-    // FIX: FUNGSI PRINT DENGAN CLASS SWITCHER (FLEKSIBEL PRINTER)
     function printQRCode() {
       document.body.classList.remove("print-receipt");
       document.body.classList.add("print-qr");
