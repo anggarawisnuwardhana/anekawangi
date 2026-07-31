@@ -26,13 +26,21 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     
-    /* FIX: DUAL MODE PRINTING (STRUK KASIR & LABEL QR) */
+    /* FIX: DUAL MODE PRINTING & PRINTER FLEXIBILITY (STRUK KASIR & LABEL QR) */
     @media print {
+      @page {
+        margin: 0; /* Hilangkan header & footer browser saat cetak */
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background: #fff !important;
+      }
       body * { 
         visibility: hidden; 
       }
       
-      /* Mode 1: Cetak Struk Kasir */
+      /* Mode 1: Cetak Struk Kasir (Fleksibel POS Thermal Printer 58mm/80mm) */
       body.print-receipt #printable-receipt, 
       body.print-receipt #printable-receipt * { 
         visibility: visible; 
@@ -43,9 +51,11 @@
         top: 0; 
         width: 100%; 
         max-width: 80mm; 
+        padding: 10px;
+        box-sizing: border-box;
       }
 
-      /* Mode 2: Cetak Label QR Produk */
+      /* Mode 2: Cetak Label QR Produk (Fleksibel Sticker Printer / Paper) */
       body.print-qr #printable-qr-section, 
       body.print-qr #printable-qr-section * { 
         visibility: visible; 
@@ -57,6 +67,9 @@
         transform: translateX(-50%);
         border: none !important;
         box-shadow: none !important;
+        margin: 0 auto;
+        padding: 10px;
+        text-align: center;
       }
     }
   </style>
@@ -310,13 +323,13 @@
             </button>
           </form>
 
-          <!-- FIX: PREVIEW & PRINT LABEL QR -->
+          <!-- FIX: PREVIEW & PRINT LABEL QR (DENGAN TAMPILAN FLEKSIBEL PRINTER) -->
           <div id="qr-preview-box" class="hidden mt-6 p-4 border border-dashed border-slate-300 rounded-xl text-center bg-slate-50">
             <p class="text-xs font-semibold text-slate-500 mb-2">Preview Label QR</p>
             <div id="printable-qr-section" class="inline-block bg-white p-4 rounded-lg border shadow-sm">
               <div id="qrcode-box" class="flex justify-center mb-2"></div>
-              <p id="qr-label-name" class="font-bold text-sm text-slate-800"></p>
-              <p id="qr-label-code" class="text-xs text-slate-500"></p>
+              <p id="qr-label-name" class="font-bold text-sm text-slate-800 break-words"></p>
+              <p id="qr-label-code" class="text-xs text-slate-500 font-mono"></p>
             </div>
             <button onclick="printQRCode()" class="mt-3 block w-full text-xs bg-slate-800 text-white py-2 rounded-lg font-medium hover:bg-slate-900 transition">
               <i class="fa-solid fa-print mr-1"></i> Cetak Label QR
@@ -499,10 +512,11 @@
                     <th class="px-3 py-2">ID Trx</th>
                     <th class="px-3 py-2">Tanggal</th>
                     <th class="px-3 py-2 text-right">Total (Rp)</th>
+                    <th class="px-3 py-2 text-center pdf-exclude">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="report-sales-table-body" class="divide-y divide-slate-100">
-                  <tr><td colspan="3" class="py-4 text-center text-slate-400">Pilih filter lalu klik Terapkan Filter</td></tr>
+                  <tr><td colspan="4" class="py-4 text-center text-slate-400">Pilih filter lalu klik Terapkan Filter</td></tr>
                 </tbody>
               </table>
             </div>
@@ -611,23 +625,25 @@
         <p class="text-xs text-slate-500">Struk siap dicetak / diunduh</p>
       </div>
 
+      <!-- TEMPLATE STRUK KASIR FLEKSIBEL PRINTER THERMAL (58mm/80mm) -->
       <div id="printable-receipt" class="bg-slate-50 p-4 rounded-xl text-xs space-y-2 border font-mono">
-        <div class="text-center border-b pb-2">
-          <p class="font-bold text-sm">ANEKA WANGI STORE</p>
-          <p class="text-[10px]">Jl. Raya Aneka Wangi</p>
-          <p id="rec-trx-id" class="text-[10px] text-slate-500 mt-1"></p>
+        <div class="text-center border-b border-dashed pb-2">
+          <p class="font-bold text-base text-slate-900">ANEKA WANGI STORE</p>
+          <p class="text-[11px] text-slate-600">Jl. Raya Aneka Wangi</p>
+          <p id="rec-trx-id" class="text-[10px] text-slate-500 mt-1 font-bold"></p>
           <p id="rec-date" class="text-[10px] text-slate-500"></p>
         </div>
-        <div id="rec-items-list" class="space-y-1 border-b pb-2"></div>
-        <div class="space-y-1">
+        <div id="rec-items-list" class="space-y-1.5 border-b border-dashed pb-2 pt-1"></div>
+        <div class="space-y-1 text-slate-800">
           <div class="flex justify-between"><span>Subtotal:</span><span id="rec-subtotal"></span></div>
           <div class="flex justify-between"><span>PPN (12%):</span><span id="rec-ppn"></span></div>
-          <div class="flex justify-between font-bold"><span>Total:</span><span id="rec-total"></span></div>
+          <div class="flex justify-between font-bold text-sm border-t border-dashed pt-1"><span>Total:</span><span id="rec-total"></span></div>
           <div class="flex justify-between"><span>Bayar:</span><span id="rec-pay"></span></div>
           <div class="flex justify-between"><span>Kembali:</span><span id="rec-change"></span></div>
         </div>
-        <div class="text-center pt-2 border-t text-[10px] text-slate-400">
-          *** Terima Kasih ***
+        <div class="text-center pt-3 border-t border-dashed text-[10px] text-slate-500">
+          *** Terima Kasih ***<br/>
+          Barang yang sudah dibeli tidak dapat ditukar/dikembalikan
         </div>
       </div>
 
@@ -743,13 +759,18 @@
     function renderReportTables(sales, reportExpenses) {
       const salesBody = document.getElementById("report-sales-table-body");
       if (!sales || sales.length === 0) {
-        salesBody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-slate-400">Tidak ada data transaksi penjualan.</td></tr>`;
+        salesBody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400">Tidak ada data transaksi penjualan.</td></tr>`;
       } else {
         salesBody.innerHTML = sales.map(s => `
-          <tr>
+          <tr class="hover:bg-slate-50">
             <td class="px-3 py-2 font-mono font-medium">${s.idTrx || '-'}</td>
             <td class="px-3 py-2 text-slate-500">${s.tanggal ? new Date(s.tanggal).toLocaleDateString("id-ID") : '-'}</td>
             <td class="px-3 py-2 text-right font-bold text-blue-600">Rp ${Number(s.total || 0).toLocaleString("id-ID")}</td>
+            <td class="px-3 py-2 text-center pdf-exclude">
+              <button onclick="deleteTransaction('${s.idTrx}')" title="Hapus Transaksi" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-2 py-1 rounded">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
           </tr>
         `).join("");
       }
@@ -759,12 +780,34 @@
         expBody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-slate-400">Tidak ada data pengeluaran.</td></tr>`;
       } else {
         expBody.innerHTML = reportExpenses.map(e => `
-          <tr>
+          <tr class="hover:bg-slate-50">
             <td class="px-3 py-2 text-slate-500">${e.tanggal ? new Date(e.tanggal).toLocaleDateString("id-ID") : '-'}</td>
             <td class="px-3 py-2 font-medium">${e.keterangan}</td>
             <td class="px-3 py-2 text-right font-bold text-red-600">Rp ${Number(e.jumlah || 0).toLocaleString("id-ID")}</td>
           </tr>
         `).join("");
+      }
+    }
+
+    // FUNGSI BARU: HAPUS HISTORY TRANSAKSI PENJUALAN
+    async function deleteTransaction(idTrx) {
+      if (!idTrx) return;
+      if (!confirm(`Yakin ingin menghapus history transaksi ${idTrx}?`)) return;
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "deleteTransaction", payload: { idTrx: idTrx } })
+        });
+        const result = await res.json();
+        if (result.status === "success") {
+          showToast("Transaksi berhasil dihapus", "success");
+          fetchProfitReportFromSheet();
+        } else {
+          showToast(result.message || "Gagal menghapus transaksi", "error");
+        }
+      } catch (err) {
+        showToast("Gagal menghapus transaksi dari database", "error");
       }
     }
 
@@ -778,6 +821,10 @@
     // FITUR DOWNLOAD LAPORAN PDF
     function downloadReportPDF() {
       const element = document.getElementById("pdf-report-content");
+      const excludeElems = element.querySelectorAll('.pdf-exclude');
+      
+      excludeElems.forEach(el => el.style.display = 'none');
+
       const opt = {
         margin:       0.3,
         filename:     `Laporan_Keuangan_${new Date().toISOString().slice(0,10)}.pdf`,
@@ -788,7 +835,11 @@
 
       showToast("Mengekspor Laporan PDF...", "info");
       html2pdf().set(opt).from(element).save().then(() => {
+        excludeElems.forEach(el => el.style.display = '');
         showToast("Laporan PDF berhasil diunduh!", "success");
+      }).catch(err => {
+        excludeElems.forEach(el => el.style.display = '');
+        showToast("Gagal mengunduh Laporan PDF", "error");
       });
     }
 
@@ -1025,9 +1076,9 @@
       document.getElementById("rec-date").textContent = new Date().toLocaleString("id-ID");
 
       document.getElementById("rec-items-list").innerHTML = cart.map(i => `
-        <div class="flex justify-between">
-          <span>${i.nama} x${i.qty} ${i.satuan || 'pcs'}</span>
-          <span>Rp ${(i.hargaJual * i.qty).toLocaleString("id-ID")}</span>
+        <div class="flex justify-between items-start">
+          <span class="pr-2">${i.nama} x${i.qty} ${i.satuan || 'pcs'}</span>
+          <span class="whitespace-nowrap font-medium">Rp ${(i.hargaJual * i.qty).toLocaleString("id-ID")}</span>
         </div>
       `).join("");
 
@@ -1300,7 +1351,7 @@
       }, 50);
     }
 
-    // FIX: FUNGSI PRINT DENGAN CLASS SWITCHER
+    // FIX: FUNGSI PRINT DENGAN CLASS SWITCHER (FLEKSIBEL PRINTER)
     function printQRCode() {
       document.body.classList.remove("print-receipt");
       document.body.classList.add("print-qr");
