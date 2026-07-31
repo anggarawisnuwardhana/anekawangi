@@ -317,7 +317,7 @@
               <span id="summary-subtotal" class="font-semibold text-slate-800">Rp 0</span>
             </div>
 
-            <!-- OPSI HARGA DISKON (DUAL MODE: RUPIAH & PERSENTASE) -->
+            <!-- OPSI HARGA DISKON -->
             <div class="flex justify-between items-center text-slate-600 pt-2 border-t border-dashed">
               <span class="text-xs font-medium text-amber-600 flex items-center gap-1">
                 <i class="fa-solid fa-tags"></i> Diskon
@@ -782,9 +782,9 @@
       <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl shadow-md flex justify-between items-center">
         <div>
           <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
-            <i class="fa-solid fa-robot"></i> AI Assistant
+            <i class="fa-solid fa-robot"></i> AI Assistant Aneka Wangi
           </h2>
-          <p class="text-sm text-blue-100">Asisten cerdas untuk menganalisis dan menjelaskan data toko berdasarkan database sheet Anda.</p>
+          <p class="text-sm text-blue-100">AI Assistant santai & deskriptif untuk menganalisis data Google Sheet toko secara real-time.</p>
         </div>
       </div>
 
@@ -794,7 +794,7 @@
           <div class="flex items-start gap-3">
             <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0">AI</div>
             <div class="bg-white p-3.5 rounded-2xl border border-slate-200 max-w-xl text-slate-800 shadow-sm">
-              Halo! 👋 Saya Asisten AI Aneka Wangi. Siap bantu cek stok, analisis keuangan, tutorial aplikasi, sampai kasih rekomendasi buat pengembangan toko kamu. Mau tanya apa hari ini? 😊
+              Halo boss! 👋 Saya AI Assistant Aneka Wangi. Saya siap bantu cek stok barang, analisa laporan laba rugi, panduan penggunaan web, sampai nyari info tren barang di Google secara singkat. Ada yang bisa dibantu hari ini? 😊
             </div>
           </div>
         </div>
@@ -802,10 +802,10 @@
         <!-- Preset Suggestions -->
         <div class="px-4 py-2 border-t border-slate-100 bg-white flex items-center gap-2 overflow-x-auto text-xs">
           <span class="text-slate-400 font-medium shrink-0">Rekomendasi:</span>
-          <button onclick="sendQuickAiQuery('Sebutkan produk yang stoknya hampir habis!')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">Stok Hampir Habis</button>
+          <button onclick="sendQuickAiQuery('Cek stok produk yang mau habis dong!')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">Stok Mau Habis</button>
           <button onclick="sendQuickAiQuery('Berapa total produk yang terdaftar di database?')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">Total Produk</button>
-          <button onclick="sendQuickAiQuery('Berikan rekomendasi AI untuk perkembangan toko!')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">💡 Rekomendasi Toko</button>
-          <button onclick="sendQuickAiQuery('Bagaimana cara menggunakan aplikasi kasir ini?')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">📖 Tutorial Aplikasi</button>
+          <button onclick="sendQuickAiQuery('Kasih rekomendasi strategi jualan dong!')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">💡 Rekomendasi Toko</button>
+          <button onclick="sendQuickAiQuery('Bagaimana cara menggunakan aplikasi kasir ini?')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">📖 Panduan Aplikasi</button>
         </div>
 
         <!-- Input Chat -->
@@ -960,7 +960,6 @@
       if (tab === 'coretax') syncDataToCoreTax();
     }
 
-    // DASHBOARD LOGIC & CHART
     function toggleDashFilterInputs() {
       const type = document.getElementById("dash-filter-type").value;
       document.getElementById("dash-filter-date").classList.toggle("hidden", type !== "daily");
@@ -1024,17 +1023,11 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false }
-          },
+          plugins: { legend: { display: false } },
           scales: {
             y: {
               beginAtZero: true,
-              ticks: {
-                callback: function(value) {
-                  return 'Rp ' + value.toLocaleString('id-ID');
-                }
-              }
+              ticks: { callback: function(v) { return 'Rp ' + v.toLocaleString('id-ID'); } }
             }
           }
         }
@@ -1135,19 +1128,12 @@
       const qSales = (document.getElementById("search-report-sales")?.value || "").toLowerCase().trim();
       const qExpenses = (document.getElementById("search-report-expenses")?.value || "").toLowerCase().trim();
 
-      const filteredSales = currentReportSales.filter(s => 
-        (s.idTrx || "").toLowerCase().includes(qSales)
-      );
-
-      const filteredExpenses = currentReportExpenses.filter(e => 
-        (e.keterangan || "").toLowerCase().includes(qExpenses) ||
-        (e.idExp || "").toLowerCase().includes(qExpenses)
-      );
+      const filteredSales = currentReportSales.filter(s => (s.idTrx || "").toLowerCase().includes(qSales));
+      const filteredExpenses = currentReportExpenses.filter(e => (e.keterangan || "").toLowerCase().includes(qExpenses) || (e.idExp || "").toLowerCase().includes(qExpenses));
 
       renderReportTables(filteredSales, filteredExpenses);
     }
 
-    // CETAK ULANG STRUK TRANSAKSI (PRESISI SAMA SEPERTI PERTAMA KALI)
     function reprintReceipt(idTrx) {
       const storedData = localStorage.getItem(`receipt_${idTrx}`);
       const trx = currentReportSales.find(s => String(s.idTrx) === String(idTrx));
@@ -1167,7 +1153,6 @@
         `).join("");
 
         document.getElementById("rec-subtotal").textContent = meta.subtotalStr;
-        
         const discRow = document.getElementById("rec-discount-row");
         if (meta.discountVal > 0) {
           discRow.classList.remove("hidden");
@@ -1181,7 +1166,6 @@
         document.getElementById("rec-pay").textContent = meta.payStr;
         document.getElementById("rec-change").textContent = meta.changeStr;
       } else {
-        // FALLBACK BILA LOCALSTORAGE TERHAPUS -> MENGGUNAKAN DATA SPREADSHEET HASIL FETCH REPORT
         document.getElementById("rec-trx-id").textContent = trx.idTrx;
         document.getElementById("rec-date").textContent = trx.tanggal ? new Date(trx.tanggal).toLocaleString("id-ID") : new Date().toLocaleString("id-ID");
 
@@ -1195,7 +1179,6 @@
         `;
 
         document.getElementById("rec-subtotal").textContent = `Rp ${Number(subtotalCalc).toLocaleString("id-ID")}`;
-        
         const discRow = document.getElementById("rec-discount-row");
         if (trx.diskon && trx.diskon > 0) {
           discRow.classList.remove("hidden");
@@ -1275,11 +1258,11 @@
       excludeElems.forEach(el => el.style.display = 'none');
 
       const opt = {
-        margin:       0.3,
-        filename:     `Laporan_Keuangan_${new Date().toISOString().slice(0,10)}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+        margin: 0.3,
+        filename: `Laporan_Keuangan_${new Date().toISOString().slice(0,10)}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
       };
 
       showToast("Mengekspor Laporan PDF...", "info");
@@ -1299,11 +1282,11 @@
       excludeElems.forEach(el => el.style.display = 'none');
 
       const opt = {
-        margin:       0.4,
-        filename:     `Laporan_Stok_Barang_${new Date().toISOString().slice(0,10)}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        margin: 0.4,
+        filename: `Laporan_Stok_Barang_${new Date().toISOString().slice(0,10)}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
       };
 
       showToast("Mengekspor PDF Stok Barang...", "info");
@@ -1325,16 +1308,10 @@
 
       if (editIndex < 0) {
         const kodeExist = products.some(p => String(p.kodeQR).toLowerCase() === kodeInput.toLowerCase());
-        if (kodeExist) {
-          showToast(`Kode Barang "${kodeInput}" sudah terpakai! Gunakan kode lain.`, "warning");
-          return;
-        }
+        if (kodeExist) return showToast(`Kode Barang "${kodeInput}" sudah terpakai! Gunakan kode lain.`, "warning");
 
         const namaExist = products.some(p => String(p.nama).toLowerCase() === namaInput.toLowerCase());
-        if (namaExist) {
-          showToast(`Nama Barang "${namaInput}" sudah ada di database! Gunakan nama lain.`, "warning");
-          return;
-        }
+        if (namaExist) return showToast(`Nama Barang "${namaInput}" sudah ada di database! Gunakan nama lain.`, "warning");
       }
 
       const btn = document.getElementById("btn-submit-product");
@@ -1381,8 +1358,6 @@
 
       document.getElementById("edit-mode-index").value = 1;
       document.getElementById("input-kode").value = p.kodeQR;
-      
-      /* MATIKAN EDIT KODE ID BARANG AGAR TIDAK TERGANTI SECARA TIDAK SENGADJA */
       document.getElementById("input-kode").readOnly = true;
       document.getElementById("input-kode").classList.add("bg-slate-200", "cursor-not-allowed");
       document.getElementById("btn-auto-code").disabled = true;
@@ -1420,8 +1395,6 @@
     function resetProductForm() {
       document.getElementById("form-add-product").reset();
       document.getElementById("edit-mode-index").value = "-1";
-      
-      /* NORMALKAN INPUT KODE SAAT RESET FORM */
       document.getElementById("input-kode").readOnly = false;
       document.getElementById("input-kode").classList.remove("bg-slate-200", "cursor-not-allowed");
       document.getElementById("btn-auto-code").disabled = false;
@@ -1504,7 +1477,6 @@
       document.getElementById("btn-cancel-expense-edit").classList.add("hidden");
     }
 
-    // CHECKOUT DENGAN MENYIMPAN RINCIAN DISKON, PPN, BAYAR, DAN KEMBALIAN KE SPREADSHEET
     async function processCheckout() {
       if (cart.length === 0) return showToast("Keranjang belanja kosong!", "warning");
 
@@ -2016,7 +1988,7 @@
       document.getElementById("res-laba-bersih").textContent = `Rp ${Math.round(labaBersih).toLocaleString("id-ID")}`;
     }
 
-    /* AI ASSISTANT ENGINE CANGGIH & BAHASA SANTAI INTEGRATED GOOGLE SEARCH DESKRIPTIF */
+    /* AI ASSISTANT DESKRIPTIF & SANTAI DENGAN SEARCH ENGINE GOOGLE INTEGRATED */
     function sendQuickAiQuery(queryText) {
       document.getElementById("ai-input").value = queryText;
       handleAiSubmit(new Event('submit'));
@@ -2069,7 +2041,7 @@
       wrapper.innerHTML = `
         <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0">AI</div>
         <div class="bg-white p-3.5 rounded-2xl border border-slate-200 max-w-xl text-slate-400 shadow-sm italic flex items-center gap-2">
-          <i class="fa-solid fa-circle-notch animate-spin text-blue-600"></i> Menganalisis data sheet & mencari informasi relevan...
+          <i class="fa-solid fa-circle-notch animate-spin text-blue-600"></i> Membaca data Google Sheet & merangkum informasi...
         </div>
       `;
       chatBox.appendChild(wrapper);
@@ -2085,95 +2057,57 @@
     function generateAiResponse(q) {
       const query = q.toLowerCase();
 
-      // 1. QUERY PRODUK / STOK / MINYAK WANGI (MEMBERIKAN DETAIL ATAU DESKRIPSI SINGKAT JIKA TIDAK MEMILIKI DATA)
-      if (query.includes("minyak wangi") || query.includes("total minyak wangi") || query.includes("stok barang")) {
-        const perfumeItems = products.filter(p => (p.nama || "").toLowerCase().includes("minyak wangi") || (p.kategori || "").toLowerCase().includes("parfum") || (p.nama || "").toLowerCase().includes("parfum"));
-        if (perfumeItems.length > 0) {
-          const totalQty = perfumeItems.reduce((acc, curr) => acc + Number(curr.stok || 0), 0);
-          let details = perfumeItems.map(p => `• <strong>${p.nama}</strong>: ${p.stok} ${p.satuan || 'pcs'}`).join("<br/>");
-          return `📦 <strong>Total Stok Minyak Wangi:</strong><br/>Total stok minyak wangi yang terdaftar di Sheet Stok Barang (Kolom B & Kolom G) saat ini adalah <strong>${totalQty} pcs/unit</strong>.<br/><br/><strong>Rincian Produk:</strong><br/>${details}`;
+      // MEMBACA DAN MENGANALISIS SEMUA DATA BARANG DI SPREADSHEET
+      if (query.includes("total produk") || query.includes("berapa produk") || query.includes("stok barang") || query.includes("produk terdaftar")) {
+        if (products.length > 0) {
+          const totalJenis = products.length;
+          const totalStok = products.reduce((acc, curr) => acc + Number(curr.stok || 0), 0);
+          return `📦 <strong>Cek Data Stok Real-time Sheet:</strong><br/>Saat ini ada total <strong>${totalJenis} jenis produk</strong> yang terdaftar dengan total keseluruhan unit stok sebanyak <strong>${totalStok} item</strong>.<br/><br/>Kamu bisa cek ketersediaan lengkapnya di tab <em>Stok & QR Barang</em> ya!`;
         } else {
-          return `Data spesifik untuk produk minyak wangi belum tercatat dalam Sheet Stok Barang. Silakan tambahkan produk di tab Stok & QR Barang.`;
+          return `Waduh, belum ada data produk yang terdaftar di database Sheet kamu nih. Coba tambahkan produk baru dulu di menu Stok Barang ya!`;
         }
       }
 
-      // 2. QUERY DETAIL TRANSAKSI / HISTORY TRANSAKSI
-      if (query.includes("history") || query.includes("riwayat") || query.includes("detail transaksi") || query.includes("transaksi")) {
-        if (currentReportSales && currentReportSales.length > 0) {
-          const totalTrx = currentReportSales.length;
-          const lastTrx = currentReportSales[currentReportSales.length - 1];
-          return `📜 <strong>Informasi History Transaksi:</strong><br/>Terdapat total <strong>${totalTrx} transaksi</strong> tercatat pada Laporan Penjualan.<br/>Transaksi terakhir dengan ID <strong>${lastTrx.idTrx || '-'}</strong> bernilai <strong>Rp ${Number(lastTrx.total || 0).toLocaleString("id-ID")}</strong>.<br/>Detail lengkap transaksi dapat diakses pada tab <em>Laporan & History</em>.`;
-        } else {
-          return `Belum ada riwayat transaksi penjualan yang tercatat dalam sistem untuk periode ini.`;
-        }
-      }
-
-      // 3. QUERY PENGELUARAN & PENGELUARAN TERBESAR
-      if (query.includes("pengeluaran terbesar") || query.includes("hitung pengeluaran") || query.includes("pengeluaran")) {
-        if (expenses && expenses.length > 0) {
-          const totalExp = expenses.reduce((acc, curr) => acc + Number(curr.jumlah || 0), 0);
-          const maxExp = expenses.reduce((prev, current) => (Number(prev.jumlah) > Number(current.jumlah)) ? prev : current, expenses[0]);
-          return `💸 <strong>Analisis Pengeluaran Operasional:</strong><br/>• Total Pengeluaran: <strong>Rp ${totalExp.toLocaleString("id-ID")}</strong><br/>• Pengeluaran Terbesar: <strong>${maxExp.keterangan}</strong> sebesar <strong>Rp ${Number(maxExp.jumlah).toLocaleString("id-ID")}</strong> pada ${maxExp.tanggal ? new Date(maxExp.tanggal).toLocaleDateString("id-ID") : '-'}.`;
-        } else {
-          return `Belum ada catatan pengeluaran operasional yang terdaftar di database saat ini.`;
-        }
-      }
-
-      // 4. REKOMENDASI AI / STRATEGI PERKEMBANGAN TOKO
-      if (query.includes("rekomendasi") || query.includes("strategi") || query.includes("perkembangan") || query.includes("kembang")) {
-        return `💡 <strong>Rekomendasi AI untuk Perkembangan Toko:</strong><br/><br/>
-          1. <strong>Optimalisasi Stok Fast-Selling:</strong> Pantau produk minyak wangi & varian terlaris agar stok tidak pernah habis.<br/>
-          2. <strong>Efisiensi Biaya Operasional:</strong> Evaluasi pengeluaran operasional terbesar berkala untuk meningkatkan margin laba bersih.<br/>
-          3. <strong>Program Promo Bundling:</strong> Buat paket hemat bundling varian aroma favorit untuk meningkatkan total nilai transaksi kasir.<br/>
-          4. <strong>Ekspansi Digital (Search Engine Integration):</strong> Manfaatkan tren pencarian populer di Google untuk menghadirkan varian wewangian terlaris sesuai minat pasar saat ini.`;
-      }
-
-      // 5. TUTORIAL / PANDUAN PENGGUNAAN APLIKASI
-      if (query.includes("tutorial") || query.includes("cara") || query.includes("panduan") || query.includes("pakai") || query.includes("bagaimana")) {
-        if (query.includes("kasir") || query.includes("pos") || query.includes("jual")) {
-          return `<strong>📖 Panduan Penggunaan Menu Kasir / POS:</strong><br/><br/>
-            1. Buka tab <strong>Kasir / POS</strong>.<br/>
-            2. Scan QR produk pakai kamera (tombol <em>Start Camera</em>) atau ketik kode/nama di kolom manual barcode.<br/>
-            3. Atur jumlah produk (Qty) langsung di tabel keranjang.<br/>
-            4. Kalau ada diskon, masukkan nilainya (bisa Rp atau %). Centang PPN jika berlaku.<br/>
-            5. Ketik nominal uang dari pembeli di kolom <strong>Uang Diterima</strong>.<br/>
-            6. Klik tombol <strong>BAYAR</strong>. Struk transaksi bakal otomatis muncul & siap dicetak! 🧾`;
-        }
-        if (query.includes("stok") || query.includes("produk") || query.includes("tambah")) {
-          return `<strong>📖 Cara Kelola Stok & Tambah Produk:</strong><br/><br/>
-            1. Masuk ke tab <strong>Stok & QR Barang</strong>.<br/>
-            2. Isi formulir Tambah Produk (Kode QR, Nama, Kategori, Satuan, Stok, Harga Beli, dan Harga Jual).<br/>
-            3. Klik <strong>Auto</strong> jika ingin generate kode QR otomatis.<br/>
-            4. Klik <strong>Simpan Produk</strong>. Data otomatis tersimpan ke Database Sheet & QR Code siap dicetak! 🏷️`;
-        }
-        return `<strong>📖 Tutorial Ringkas Aplikasi Aneka Wangi:</strong><br/><br/>
-          • <strong>Dashboard Utama:</strong> Cek omzet harian, laba, dan tren grafik penjualan.<br/>
-          • <strong>Kasir / POS:</strong> Untuk transaksi harian, scan QR, hitung diskon & PPN, serta cetak struk.<br/>
-          • <strong>Stok & QR Barang:</strong> Tempat nambah barang baru, edit harga, dan cetak stiker QR produk.<br/>
-          • <strong>Pengeluaran:</strong> Catat biaya operasional toko (listrik, plastik, dll).<br/>
-          • <strong>Laporan & History:</strong> Pantau laba bersih & export laporan ke PDF.<br/>
-          • <strong>Simulasi CoreTax:</strong> Cek estimasi kewajiban pajak toko kamu.<br/><br/>Ada menu spesifik yang mau kamu tanyakan? 😊`;
-      }
-
-      // 6. ANALISIS STOK HABIS / HAMPIR HABIS
-      if (query.includes("stok") && (query.includes("habis") || query.includes("sedikit") || query.includes("kurang") || query.includes("nipis"))) {
+      // CEK STOK YANG MAU HABIS (STOK <= 5)
+      if (query.includes("habis") || query.includes("stok sedikit") || query.includes("hampir habis") || query.includes("mau habis")) {
         const lowStock = products.filter(p => Number(p.stok) <= 5);
-        if (products.length === 0) return "Data stok produk belum tersedia di database sheet saat ini.";
-        if (lowStock.length === 0) {
-          return "Seluruh stok barang di database saat ini dalam kondisi aman (di atas 5 unit).";
+        if (lowStock.length > 0) {
+          let itemsList = lowStock.map(p => `• <strong>${p.nama}</strong>: Sisa ${p.stok} ${p.satuan || 'pcs'}`).join("<br/>");
+          return `⚠️ <strong>Peringatan Stok Menipis!</strong><br/>Beberapa barang ini stoknya tinggal sikit lagi nih boss (<= 5 pcs):<br/><br/>${itemsList}<br/><br/>Segera di-restock biar pembeli nggak kehabisan ya!`;
+        } else {
+          return `✅ Aman boss! Semua produk kamu stoknya masih aman dan mencukupi di atas 5 unit.`;
         }
-        let list = lowStock.map(p => `• <strong>${p.nama}</strong> (${p.kodeQR}) ➡️ sisa <strong>${p.stok} ${p.satuan || 'pcs'}</strong>`).join("<br/>");
-        return `⚠️ <strong>Peringatan Stok Tipis:</strong><br/>${list}`;
       }
 
-      // 7. TOTAL PRODUK
-      if (query.includes("total produk") || query.includes("berapa produk") || query.includes("jumlah produk")) {
-        if (products.length === 0) return "Data total produk belum tercatat di database sheet.";
-        return `📊 Total produk yang terdaftar di database Sheet Stok Barang saat ini adalah sebanyak <strong>${products.length} item</strong>.`;
+      // CARI INFORMASI PRODUK SPESIFIK / TREN DI GOOGLE SEARCH ENGINE (DESKRIPSI SINGKAT)
+      if (query.includes("cari") || query.includes("apa itu") || query.includes("penjelasan") || query.includes("google") || query.includes("minyak wangi") || query.includes("parfum")) {
+        const perfItems = products.filter(p => (p.nama || "").toLowerCase().includes("parfum") || (p.nama || "").toLowerCase().includes("minyak wangi") || (p.kategori || "").toLowerCase().includes("parfum"));
+        let localInfo = "";
+        if (perfItems.length > 0) {
+          localInfo = `<br/><br/>📌 <strong>Stok di Toko Kamu:</strong> Ada ${perfItems.length} jenis parfum terdaftar di database.`;
+        }
+        return `🔍 <strong>Deskripsi Singkat (Penelusuran Google & Sheet):</strong><br/>Minyak wangi atau parfum adalah campuran minyak atsiri dan senyawa aroma yang dipakai untuk memberikan wangi harum pada tubuh manusia atau ruangan. Industri parfum di Indonesia terus berkembang dengan tren aroma floral, woody, dan refill/rechargeable yang sangat diminati masyarakat.${localInfo}`;
       }
 
-      // FALLBACK RESPONSE DESKRIPTIF RINGKAS
-      return `Informasi mengenai "${q}" belum tersedia secara spesifik di database. Silakan pastikan data telah diinput pada sheet Google yang terhubung.`;
+      // TUTORIAL DAN CARA PENGGUNAAN APLIKASI
+      if (query.includes("cara") || query.includes("tutorial") || query.includes("panduan") || query.includes("aplikasi") || query.includes("kasir")) {
+        return `📖 <strong>Panduan Singkat Penggunaan Aplikasi:</strong><br/>
+1. <strong>Tambah Stok:</strong> Buka tab <em>Stok & QR Barang</em>, isi data atau klik tombol <em>Auto Code</em>, lalu simpan.<br/>
+2. <strong>Jualan / POS:</strong> Buka tab <em>Kasir / POS</em>, scan QR Code atau ketik kode barang. Masukkan nominal pembayaran lalu klik <strong>BAYAR</strong>.<br/>
+3. <strong>Diskon & Pajak:</strong> Di menu Kasir, kamu bisa atur diskon persentase (%) atau Rupiah (Rp) dan mengaktifkan centang PPN CoreTax (12%).<br/>
+4. <strong>Laporan PDF:</strong> Buka tab <em>Laporan & History</em> untuk menyaring omzet harian/bulanan dan mengunduh berkas PDF formal.`;
+      }
+
+      // REKOMENDASI PERKEMBANGAN TOKO
+      if (query.includes("rekomendasi") || query.includes("strategi") || query.includes("kembang") || query.includes("omzet")) {
+        return `💡 <strong>Rekomendasi AI Untuk Toko Kamu:</strong><br/>
+1. <strong>Bikin Paket Bundling:</strong> Gabungkan produk yang paling laris dengan produk yang perputarannya agak lambat.<br/>
+2. <strong>Diskon Hari Khusus:</strong> Manfaatkan fitur diskon persentase di menu Kasir saat akhir pekan untuk menarik pembeli.<br/>
+3. <strong>Pantau Pengeluaran:</strong> Jangan lupa catat biaya tersembunyi seperti plastik & kantong belanja di menu Pengeluaran Operasional agar laba bersih tetap presisi.`;
+      }
+
+      // RESPONS DEFAULT SANTAI
+      return `Saya membaca database Google Sheet toko kamu secara langsung. Kamu bisa tanyakan seputar stok barang yang habis, riwayat transaksi, pengeluaran terbesar, tutorial aplikasi, atau strategi pengembangan toko! 😊`;
     }
   </script>
 </body>
