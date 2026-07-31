@@ -16,6 +16,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- html2pdf Library for PDF Export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- Chart.js Library for Dashboard Visuals -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
@@ -26,10 +28,10 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     
-    /* FIX: DUAL MODE PRINTING & PRINTER FLEXIBILITY (STRUK KASIR & LABEL QR) */
+    /* DUAL MODE PRINTING & PRINTER FLEXIBILITY */
     @media print {
       @page {
-        margin: 0; /* Hilangkan header & footer browser saat cetak */
+        margin: 0;
       }
       body {
         margin: 0;
@@ -40,7 +42,7 @@
         visibility: hidden; 
       }
       
-      /* Mode 1: Cetak Struk Kasir (Fleksibel POS Thermal Printer 58mm/80mm) */
+      /* Mode 1: Cetak Struk Kasir */
       body.print-receipt #printable-receipt, 
       body.print-receipt #printable-receipt * { 
         visibility: visible; 
@@ -55,7 +57,7 @@
         box-sizing: border-box;
       }
 
-      /* Mode 2: Cetak Label QR Produk (Fleksibel Sticker Printer / Paper) */
+      /* Mode 2: Cetak Label QR Produk */
       body.print-qr #printable-qr-section, 
       body.print-qr #printable-qr-section * { 
         visibility: visible; 
@@ -120,7 +122,10 @@
     <!-- TAB NAVIGATION -->
     <nav class="bg-white border-t border-slate-100 px-4 sm:px-6 lg:px-8">
       <div class="max-w-7xl mx-auto flex space-x-8 overflow-x-auto text-sm">
-        <button onclick="switchTab('kasir')" id="tab-kasir" class="py-3 px-1 active-tab flex items-center space-x-2 shrink-0">
+        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="py-3 px-1 active-tab flex items-center space-x-2 shrink-0">
+          <i class="fa-solid fa-chart-pie"></i><span>Dashboard Utama</span>
+        </button>
+        <button onclick="switchTab('kasir')" id="tab-kasir" class="py-3 px-1 text-slate-500 hover:text-slate-700 flex items-center space-x-2 shrink-0">
           <i class="fa-solid fa-cash-register"></i><span>Kasir / POS</span>
         </button>
         <button onclick="switchTab('stok')" id="tab-stok" class="py-3 px-1 text-slate-500 hover:text-slate-700 flex items-center space-x-2 shrink-0">
@@ -144,8 +149,96 @@
 
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2"></div>
 
+    <!-- TAB 0: DASHBOARD UTAMA -->
+    <section id="sec-dashboard" class="space-y-6">
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h2 class="font-bold text-lg text-slate-900">Dashboard Performa Toko</h2>
+          <p class="text-xs text-slate-500">Ringkasan statistik penjualan, pengeluaran, laba, dan grafik omzet harian</p>
+        </div>
+
+        <!-- Filter Dashboard -->
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="dash-filter-type" onchange="toggleDashFilterInputs()" class="text-xs px-3 py-2 border rounded-xl bg-slate-50 font-medium">
+            <option value="all">Seluruh Waktu</option>
+            <option value="daily">Per Tanggal</option>
+            <option value="monthly">Per Bulan</option>
+            <option value="yearly">Per Tahun</option>
+          </select>
+
+          <input type="date" id="dash-filter-date" class="hidden text-xs px-3 py-2 border rounded-xl bg-slate-50" />
+          <input type="month" id="dash-filter-month" class="hidden text-xs px-3 py-2 border rounded-xl bg-slate-50" />
+          <select id="dash-filter-year" class="hidden text-xs px-3 py-2 border rounded-xl bg-slate-50">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026" selected>2026</option>
+          </select>
+
+          <button onclick="loadDashboardData()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-filter"></i> Filter
+          </button>
+        </div>
+      </div>
+
+      <!-- Stat Cards Dashboard -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+          <div class="bg-blue-50 text-blue-600 p-3.5 rounded-xl text-xl">
+            <i class="fa-solid fa-money-bill-wave"></i>
+          </div>
+          <div>
+            <p class="text-xs font-medium text-slate-500">Total Penjualan / Omzet</p>
+            <p id="dash-stat-omzet" class="text-lg font-bold text-blue-600">Rp 0</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+          <div class="bg-red-50 text-red-600 p-3.5 rounded-xl text-xl">
+            <i class="fa-solid fa-arrow-trend-down"></i>
+          </div>
+          <div>
+            <p class="text-xs font-medium text-slate-500">Total Pengeluaran</p>
+            <p id="dash-stat-pengeluaran" class="text-lg font-bold text-red-600">Rp 0</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+          <div class="bg-amber-50 text-amber-600 p-3.5 rounded-xl text-xl">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <div>
+            <p class="text-xs font-medium text-slate-500">Laba Kotor</p>
+            <p id="dash-stat-labakotor" class="text-lg font-bold text-amber-600">Rp 0</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+          <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-xl text-xl">
+            <i class="fa-solid fa-sack-dollar"></i>
+          </div>
+          <div>
+            <p class="text-xs font-medium text-slate-500">Laba Bersih</p>
+            <p id="dash-stat-lababersih" class="text-lg font-bold text-emerald-600">Rp 0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRAFIK OMZET PENJUALAN SETIAP HARI -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-slate-900 flex items-center gap-2 text-sm sm:text-base">
+            <i class="fa-solid fa-chart-area text-blue-600"></i> Grafik Omzet Penjualan Harian
+          </h3>
+          <span class="text-xs text-slate-400">Tren penjualan per hari</span>
+        </div>
+        <div class="relative w-full h-72 sm:h-80">
+          <canvas id="salesChart"></canvas>
+        </div>
+      </div>
+    </section>
+
     <!-- TAB 1: KASIR / POS -->
-    <section id="sec-kasir" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <section id="sec-kasir" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
       <div class="lg:col-span-7 space-y-6">
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-3">
@@ -220,6 +313,16 @@
               <span>Subtotal Produk</span>
               <span id="summary-subtotal" class="font-semibold text-slate-800">Rp 0</span>
             </div>
+
+            <!-- OPSI HARGA DISKON -->
+            <div class="flex justify-between items-center text-slate-600 pt-2 border-t border-dashed">
+              <span class="text-xs font-medium text-amber-600 flex items-center gap-1">
+                <i class="fa-solid fa-tags"></i> Diskon (Rp)
+              </span>
+              <input type="number" id="cart-discount" oninput="calculateCartTotal()" min="0" placeholder="0"
+                class="w-28 text-right px-2 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-blue-500 focus:outline-none font-semibold text-amber-600" />
+            </div>
+
             <div class="flex justify-between items-center text-slate-600 pt-2 border-t border-dashed">
               <div class="flex items-center gap-1.5">
                 <input type="checkbox" id="ppn-toggle" onchange="calculateCartTotal()" class="rounded text-blue-600 focus:ring-blue-500 h-4 w-4" checked />
@@ -343,7 +446,6 @@
               <i class="fa-solid fa-boxes-packing text-blue-600"></i> Data Stok
             </h2>
             <div class="flex items-center gap-2 w-full sm:w-auto">
-              <!-- Menu Pencarian Barang di Stok Barang -->
               <div class="relative flex-1 sm:w-48">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400 text-xs">
                   <i class="fa-solid fa-magnifying-glass"></i>
@@ -421,7 +523,6 @@
               <i class="fa-solid fa-list-check text-red-600"></i> Riwayat Pengeluaran
             </h2>
             <div class="flex items-center gap-2 w-full sm:w-auto">
-              <!-- Menu Pencarian di Menu Pengeluaran -->
               <div class="relative flex-1 sm:w-48">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400 text-xs">
                   <i class="fa-solid fa-magnifying-glass"></i>
@@ -462,7 +563,6 @@
         <div>
           <div class="flex items-center gap-2">
             <h2 class="font-bold text-lg text-slate-900">Laporan Keuangan & History Real-Time</h2>
-            <!-- Tag Date / Tanggal Laporan di Web -->
             <span id="report-date-tag" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
               <i class="fa-regular fa-calendar-days mr-1"></i><span id="report-date-val">Semua Waktu</span>
             </span>
@@ -470,7 +570,6 @@
           <p class="text-xs text-slate-500">Filter transaksi & pengeluaran berdasarkan rentang periode waktu tertentu</p>
         </div>
 
-        <!-- Filter Laporan Periode & Tombol Download PDF -->
         <div class="flex flex-wrap items-center gap-2">
           <select id="report-filter-type" onchange="toggleFilterInputs()" class="text-xs px-3 py-2 border rounded-xl bg-slate-50 font-medium">
             <option value="all">Semua Waktu</option>
@@ -491,7 +590,6 @@
             <i class="fa-solid fa-filter"></i> Terapkan Filter
           </button>
 
-          <!-- Fitur Download PDF -->
           <button onclick="downloadReportPDF()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
             <i class="fa-solid fa-file-pdf"></i> Download PDF
           </button>
@@ -499,7 +597,6 @@
       </div>
 
       <div id="pdf-report-content" class="space-y-6">
-        <!-- Tag Date khusus Tampilan PDF -->
         <div class="flex justify-between items-center border-b pb-2 mb-2 text-xs text-slate-600">
           <div class="flex items-center gap-2">
             <span class="font-bold text-slate-800">Laporan Keuangan - Aneka Wangi</span>
@@ -539,7 +636,6 @@
               <h3 class="font-bold text-slate-900 flex items-center gap-2">
                 <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> History Transaksi Penjualan
               </h3>
-              <!-- Search ID Transaksi di Laporan -->
               <div class="relative w-40 sm:w-48">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400 text-xs">
                   <i class="fa-solid fa-magnifying-glass"></i>
@@ -570,7 +666,6 @@
               <h3 class="font-bold text-slate-900 flex items-center gap-2">
                 <i class="fa-solid fa-file-invoice-dollar text-red-600"></i> History Pengeluaran Operasional
               </h3>
-              <!-- Search Pengeluaran di Laporan -->
               <div class="relative w-40 sm:w-48">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400 text-xs">
                   <i class="fa-solid fa-magnifying-glass"></i>
@@ -597,7 +692,6 @@
           </div>
         </div>
 
-        <!-- Footer watermark PDF -->
         <div class="mt-8 pt-3 border-t border-slate-200 text-center text-xs text-slate-500 font-medium italic">
           Powered by djati Application
         </div>
@@ -680,11 +774,11 @@
   <div id="receipt-modal" class="hidden fixed inset-0 bg-slate-900/50 flex items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-xl">
       <div class="text-center border-b pb-3">
-        <h3 class="font-bold text-lg text-slate-900">Transaksi Berhasil!</h3>
+        <h3 class="font-bold text-lg text-slate-900">Struk Transaksi</h3>
         <p class="text-xs text-slate-500">Struk siap dicetak / diunduh</p>
       </div>
 
-      <!-- TEMPLATE STRUK KASIR FLEKSIBEL PRINTER THERMAL (58mm/80mm) -->
+      <!-- TEMPLATE STRUK KASIR THERMAL (58mm/80mm) -->
       <div id="printable-receipt" class="bg-slate-50 p-4 rounded-xl text-xs space-y-2 border font-mono">
         <div class="text-center border-b border-dashed pb-2">
           <p class="font-bold text-base text-slate-900">ANEKA WANGI STORE</p>
@@ -694,11 +788,12 @@
         </div>
         <div id="rec-items-list" class="space-y-1.5 border-b border-dashed pb-2 pt-1"></div>
         <div class="space-y-1 text-slate-800">
-          <div class="flex justify-between"><span>Subtotal:</span><span id="rec-subtotal"></span></div>
-          <div class="flex justify-between"><span>PPN (12%):</span><span id="rec-ppn"></span></div>
-          <div class="flex justify-between font-bold text-sm border-t border-dashed pt-1"><span>Total:</span><span id="rec-total"></span></div>
-          <div class="flex justify-between"><span>Bayar:</span><span id="rec-pay"></span></div>
-          <div class="flex justify-between"><span>Kembali:</span><span id="rec-change"></span></div>
+          <div class="flex justify-between"><span>Subtotal:</span><span id="rec-subtotal">Rp 0</span></div>
+          <div id="rec-discount-row" class="flex justify-between text-amber-600 hidden"><span>Diskon:</span><span id="rec-discount">Rp 0</span></div>
+          <div class="flex justify-between"><span>PPN (12%):</span><span id="rec-ppn">Rp 0</span></div>
+          <div class="flex justify-between font-bold text-sm border-t border-dashed pt-1"><span>Total:</span><span id="rec-total">Rp 0</span></div>
+          <div class="flex justify-between"><span>Bayar:</span><span id="rec-pay">Rp 0</span></div>
+          <div class="flex justify-between"><span>Kembali:</span><span id="rec-change">Rp 0</span></div>
         </div>
         <div class="text-center pt-3 border-t border-dashed text-[10px] text-slate-500">
           *** Terima Kasih ***<br/>
@@ -728,11 +823,13 @@
     let cart = [];
     let html5QrcodeScanner = null;
     let isCameraRunning = false;
+    let salesChartInstance = null;
 
     window.addEventListener("DOMContentLoaded", () => {
       fetchProductsFromSheet();
       fetchExpensesFromSheet();
       updateDateTags();
+      loadDashboardData();
     });
 
     function updateDateTags() {
@@ -794,7 +891,7 @@
     }
 
     function switchTab(tab) {
-      const tabs = ['kasir', 'stok', 'pengeluaran', 'laporan', 'coretax'];
+      const tabs = ['dashboard', 'kasir', 'stok', 'pengeluaran', 'laporan', 'coretax'];
       tabs.forEach(t => {
         document.getElementById(`sec-${t}`).classList.add("hidden");
         document.getElementById(`tab-${t}`).classList.remove("active-tab");
@@ -805,8 +902,90 @@
       document.getElementById(`tab-${tab}`).classList.add("active-tab");
       document.getElementById(`tab-${tab}`).classList.remove("text-slate-500");
 
+      if (tab === 'dashboard') loadDashboardData();
       if (tab === 'laporan') fetchProfitReportFromSheet();
       if (tab === 'coretax') syncDataToCoreTax();
+    }
+
+    // DASHBOARD LOGIC & CHART
+    function toggleDashFilterInputs() {
+      const type = document.getElementById("dash-filter-type").value;
+      document.getElementById("dash-filter-date").classList.toggle("hidden", type !== "daily");
+      document.getElementById("dash-filter-month").classList.toggle("hidden", type !== "monthly");
+      document.getElementById("dash-filter-year").classList.toggle("hidden", type !== "yearly");
+    }
+
+    async function loadDashboardData() {
+      const type = document.getElementById("dash-filter-type").value;
+      let filterVal = "";
+      if (type === "daily") filterVal = document.getElementById("dash-filter-date").value;
+      if (type === "monthly") filterVal = document.getElementById("dash-filter-month").value;
+      if (type === "yearly") filterVal = document.getElementById("dash-filter-year").value;
+
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=getReport&filterType=${type}&filterVal=${filterVal}`);
+        const data = await res.json();
+
+        document.getElementById("dash-stat-omzet").textContent = `Rp ${Number(data.totalOmzet || 0).toLocaleString("id-ID")}`;
+        document.getElementById("dash-stat-pengeluaran").textContent = `Rp ${Number(data.totalOperasional || 0).toLocaleString("id-ID")}`;
+        document.getElementById("dash-stat-labakotor").textContent = `Rp ${Number(data.totalLabaKotor || 0).toLocaleString("id-ID")}`;
+        document.getElementById("dash-stat-lababersih").textContent = `Rp ${Number(data.labaBersih || 0).toLocaleString("id-ID")}`;
+
+        renderSalesChart(data.sales || []);
+      } catch (err) {
+        showToast("Gagal memuat data Dashboard", "error");
+      }
+    }
+
+    function renderSalesChart(sales) {
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      
+      const salesByDate = {};
+      sales.forEach(s => {
+        if (!s.tanggal) return;
+        const d = new Date(s.tanggal).toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
+        salesByDate[d] = (salesByDate[d] || 0) + Number(s.total || 0);
+      });
+
+      const labels = Object.keys(salesByDate);
+      const values = Object.values(salesByDate);
+
+      if (salesChartInstance) salesChartInstance.destroy();
+
+      salesChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels.length ? labels : ['Tidak Ada Data'],
+          datasets: [{
+            label: 'Omzet Penjualan (Rp)',
+            data: values.length ? values : [0],
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            fill: true,
+            tension: 0.3,
+            borderWidth: 2,
+            pointRadius: 4,
+            pointBackgroundColor: '#2563eb'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return 'Rp ' + value.toLocaleString('id-ID');
+                }
+              }
+            }
+          }
+        }
+      });
     }
 
     async function fetchProductsFromSheet() {
@@ -831,7 +1010,6 @@
       }
     }
 
-    // LAPORAN & HISTORY DENGAN FILTER TANGGAL, BULAN, TAHUN
     async function fetchProfitReportFromSheet() {
       const type = document.getElementById("report-filter-type").value;
       let filterVal = "";
@@ -869,7 +1047,10 @@
             <td class="px-3 py-2 font-mono font-medium">${s.idTrx || '-'}</td>
             <td class="px-3 py-2 text-slate-500">${s.tanggal ? new Date(s.tanggal).toLocaleDateString("id-ID") : '-'}</td>
             <td class="px-3 py-2 text-right font-bold text-blue-600">Rp ${Number(s.total || 0).toLocaleString("id-ID")}</td>
-            <td class="px-3 py-2 text-center pdf-exclude">
+            <td class="px-3 py-2 text-center pdf-exclude space-x-1">
+              <button onclick="reprintReceipt('${s.idTrx}')" title="Cetak Ulang Struk" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-2 py-1 rounded">
+                <i class="fa-solid fa-print"></i>
+              </button>
               <button onclick="deleteTransaction('${s.idTrx}')" title="Hapus Transaksi" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-2 py-1 rounded">
                 <i class="fa-solid fa-trash"></i>
               </button>
@@ -913,7 +1094,31 @@
       renderReportTables(filteredSales, filteredExpenses);
     }
 
-    // HAPUS HISTORY TRANSAKSI PENJUALAN
+    // CETAK ULANG STRUK TRANSAKSI
+    function reprintReceipt(idTrx) {
+      const trx = currentReportSales.find(s => String(s.idTrx) === String(idTrx));
+      if (!trx) return showToast("Data transaksi tidak ditemukan", "error");
+
+      document.getElementById("rec-trx-id").textContent = trx.idTrx;
+      document.getElementById("rec-date").textContent = trx.tanggal ? new Date(trx.tanggal).toLocaleString("id-ID") : new Date().toLocaleString("id-ID");
+
+      document.getElementById("rec-items-list").innerHTML = `
+        <div class="flex justify-between items-start">
+          <span class="pr-2">Transaksi Penjualan (${trx.idTrx})</span>
+          <span class="whitespace-nowrap font-medium">Rp ${Number(trx.total || 0).toLocaleString("id-ID")}</span>
+        </div>
+      `;
+
+      document.getElementById("rec-subtotal").textContent = `Rp ${Number(trx.total || 0).toLocaleString("id-ID")}`;
+      document.getElementById("rec-discount-row").classList.add("hidden");
+      document.getElementById("rec-ppn").textContent = `Rp 0`;
+      document.getElementById("rec-total").textContent = `Rp ${Number(trx.total || 0).toLocaleString("id-ID")}`;
+      document.getElementById("rec-pay").textContent = `Rp ${Number(trx.total || 0).toLocaleString("id-ID")}`;
+      document.getElementById("rec-change").textContent = `Rp 0`;
+
+      document.getElementById("receipt-modal").classList.remove("hidden");
+    }
+
     async function deleteTransaction(idTrx) {
       if (!idTrx) return;
       if (!confirm(`Yakin ingin menghapus history transaksi ${idTrx}?`)) return;
@@ -927,6 +1132,7 @@
         if (result.status === "success") {
           showToast("Transaksi berhasil dihapus", "success");
           fetchProfitReportFromSheet();
+          loadDashboardData();
         } else {
           showToast(result.message || "Gagal menghapus transaksi", "error");
         }
@@ -935,7 +1141,6 @@
       }
     }
 
-    // HAPUS PENGELUARAN DARI MENU LAPORAN
     async function deleteExpenseFromReport(idExp) {
       if (!idExp) return;
       if (!confirm(`Yakin ingin menghapus pengeluaran ini dari laporan?`)) return;
@@ -950,6 +1155,7 @@
           showToast("Pengeluaran berhasil dihapus", "success");
           fetchProfitReportFromSheet();
           fetchExpensesFromSheet();
+          loadDashboardData();
         } else {
           showToast(result.message || "Gagal menghapus pengeluaran", "error");
         }
@@ -966,7 +1172,6 @@
       updateDateTags();
     }
 
-    // FITUR DOWNLOAD LAPORAN PDF
     function downloadReportPDF() {
       updateDateTags();
       const element = document.getElementById("pdf-report-content");
@@ -992,7 +1197,6 @@
       });
     }
 
-    // FITUR DOWNLOAD LAPORAN STOK PDF
     function downloadStockPDF() {
       const element = document.getElementById("pdf-stock-container");
       const excludeElems = element.querySelectorAll('.pdf-exclude');
@@ -1017,7 +1221,6 @@
       });
     }
 
-    // FITUR TAMBAH/EDIT PRODUK DENGAN VALIDASI DUPLIKASI KODE & NAMA
     async function handleAddProduct(e) {
       e.preventDefault();
       
@@ -1025,7 +1228,6 @@
       const kodeInput = document.getElementById("input-kode").value.trim();
       const namaInput = document.getElementById("input-nama").value.trim();
 
-      // VALIDASI ANTI-DUPLIKASI (Untuk Mode Tambah Baru / editIndex == -1)
       if (editIndex < 0) {
         const kodeExist = products.some(p => String(p.kodeQR).toLowerCase() === kodeInput.toLowerCase());
         if (kodeExist) {
@@ -1147,6 +1349,7 @@
           showToast(result.message || "Pengeluaran berhasil disimpan", "success");
           resetExpenseForm();
           fetchExpensesFromSheet();
+          loadDashboardData();
         }
       } catch (err) {
         showToast("Gagal mencatat pengeluaran", "error");
@@ -1180,6 +1383,7 @@
         if (result.status === "success") {
           showToast("Pengeluaran berhasil dihapus", "success");
           fetchExpensesFromSheet();
+          loadDashboardData();
         }
       } catch (err) {
         showToast("Gagal menghapus pengeluaran", "error");
@@ -1193,9 +1397,17 @@
       document.getElementById("btn-cancel-expense-edit").classList.add("hidden");
     }
 
-    // CHECKOUT DENGAN GENERATE ID TRANSAKSI BEBAS DUPLIKASI (TIMESTAMP + RANDOM STRING)
+    // CHECKOUT DENGAN VALIDASI STOK & DISKON
     async function processCheckout() {
       if (cart.length === 0) return showToast("Keranjang belanja kosong!", "warning");
+
+      // Validasi Akhir Stok Sebelum Checkout
+      for (let item of cart) {
+        const prod = products.find(p => p.kodeQR === item.kodeQR);
+        if (prod && item.qty > prod.stok) {
+          return showToast(`Stok barang kurang! Stok ${item.nama} tersisa ${prod.stok}`, "warning");
+        }
+      }
 
       const payAmount = Number(document.getElementById("pay-amount").value) || 0;
       const grandTotalStr = document.getElementById("summary-grandtotal").textContent.replace(/[^0-9]/g, '');
@@ -1207,7 +1419,6 @@
       btn.disabled = true;
       btn.textContent = "Memproses & Mengirim Ke Database...";
 
-      // GENERATE ID UNIK BEBAS DUPLIKASI
       const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
       const trxId = "TRX-" + Date.now() + "-" + randomSuffix;
 
@@ -1227,13 +1438,14 @@
           showToast("Transaksi berhasil!", "success");
           showReceiptModal(trxId);
           cart = [];
+          document.getElementById("cart-discount").value = "";
           renderCart();
           
-          // FIX BUG KEMBALIAN: Reset nominal kembalian dan input pembayaran setelah checkout
           document.getElementById("pay-amount").value = "";
           document.getElementById("pay-change").textContent = "Rp 0";
 
           fetchProductsFromSheet();
+          loadDashboardData();
         } else {
           showToast(result.message || "Transaksi gagal disimpan", "error");
         }
@@ -1247,6 +1459,7 @@
 
     function showReceiptModal(trxId) {
       const subtotalStr = document.getElementById("summary-subtotal").textContent;
+      const discountVal = Number(document.getElementById("cart-discount").value) || 0;
       const ppnStr = document.getElementById("summary-ppn").textContent;
       const grandTotalStr = document.getElementById("summary-grandtotal").textContent;
       const payStr = `Rp ${Number(document.getElementById("pay-amount").value || 0).toLocaleString("id-ID")}`;
@@ -1263,6 +1476,15 @@
       `).join("");
 
       document.getElementById("rec-subtotal").textContent = subtotalStr;
+      
+      const discRow = document.getElementById("rec-discount-row");
+      if (discountVal > 0) {
+        discRow.classList.remove("hidden");
+        document.getElementById("rec-discount").textContent = `Rp ${discountVal.toLocaleString("id-ID")}`;
+      } else {
+        discRow.classList.add("hidden");
+      }
+
       document.getElementById("rec-ppn").textContent = ppnStr;
       document.getElementById("rec-total").textContent = grandTotalStr;
       document.getElementById("rec-pay").textContent = payStr;
@@ -1275,16 +1497,21 @@
       document.getElementById("receipt-modal").classList.add("hidden");
     }
 
+    // VALIDASI STOK SAAT TAMBAH ITEM KE KERANJANG (ANTI STOK MINUS)
     function addItemToCartByCode(code) {
       const product = products.find(p => String(p.kodeQR) === String(code));
       if (!product) return showToast(`Barang dengan kode "${code}" tidak ditemukan!`, "error");
 
       const existing = cart.find(item => item.kodeQR === code);
+      const currentCartQty = existing ? existing.qty : 0;
+
+      if (currentCartQty + 1 > product.stok) {
+        return showToast(`Stok barang kurang! ${product.nama} tersisa ${product.stok}`, "warning");
+      }
+
       if (existing) {
-        if (existing.qty + 1 > product.stok) return showToast(`Stok ${product.nama} tidak mencukupi!`, "warning");
         existing.qty += 1;
       } else {
-        if (product.stok < 1) return showToast(`Stok ${product.nama} habis!`, "warning");
         cart.push({
           kodeQR: product.kodeQR,
           nama: product.nama,
@@ -1301,7 +1528,7 @@
     function renderCart() {
       const tbody = document.getElementById("cart-table-body");
       if (cart.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">Keranjang masih kosong.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">Keranjang masih kosong. Scan QR atau ketik kode barang.</td></tr>`;
       } else {
         tbody.innerHTML = cart.map(item => {
           const subtotal = item.hargaJual * item.qty;
@@ -1335,7 +1562,9 @@
       const product = products.find(p => p.kodeQR === code);
       const newQty = item.qty + delta;
 
-      if (product && newQty > product.stok) return showToast(`Stok ${product.nama} tidak mencukupi!`, "warning");
+      if (product && newQty > product.stok) {
+        return showToast(`Stok barang kurang! Stok ${product.nama} tersisa ${product.stok}`, "warning");
+      }
       
       if (newQty <= 0) {
         updateCartQty(code, 0);
@@ -1358,7 +1587,7 @@
       }
 
       if (product && parsedVal > product.stok) {
-        showToast(`Stok ${product.nama} terbatas (${product.stok})!`, "warning");
+        showToast(`Stok barang kurang! Stok ${product.nama} tersisa ${product.stok}`, "warning");
         item.qty = product.stok;
       } else {
         item.qty = Number(parsedVal.toFixed(2));
@@ -1374,16 +1603,21 @@
 
     function clearCart() {
       cart = [];
+      document.getElementById("cart-discount").value = "";
       renderCart();
     }
 
+    // MEMPERHITUNGKAN KAN HARGA DISKON
     function calculateCartTotal() {
-      const subtotal = cart.reduce((sum, item) => sum + (item.hargaJual * item.qty), 0);
+      const rawSubtotal = cart.reduce((sum, item) => sum + (item.hargaJual * item.qty), 0);
+      const discountVal = Number(document.getElementById("cart-discount").value) || 0;
+      
+      const subtotalAfterDiscount = Math.max(0, rawSubtotal - discountVal);
       const ppnChecked = document.getElementById("ppn-toggle").checked;
-      const ppn = ppnChecked ? Math.round(subtotal * 0.12) : 0;
-      const grandTotal = subtotal + ppn;
+      const ppn = ppnChecked ? Math.round(subtotalAfterDiscount * 0.12) : 0;
+      const grandTotal = subtotalAfterDiscount + ppn;
 
-      document.getElementById("summary-subtotal").textContent = `Rp ${subtotal.toLocaleString("id-ID")}`;
+      document.getElementById("summary-subtotal").textContent = `Rp ${rawSubtotal.toLocaleString("id-ID")}`;
       document.getElementById("summary-ppn").textContent = `Rp ${ppn.toLocaleString("id-ID")}`;
       document.getElementById("summary-grandtotal").textContent = `Rp ${grandTotal.toLocaleString("id-ID")}`;
       calculateChange();
@@ -1512,7 +1746,6 @@
       }
     }
 
-    // AUTO GENERATE KODE BEBAS DUPLIKASI
     function generateAutoCode() {
       let newCode = "";
       let isDuplicate = true;
@@ -1581,8 +1814,8 @@
     }
 
     function syncDataToCoreTax() {
-      const omzetStr = document.getElementById("stat-omzet").textContent.replace(/[^0-9]/g, '');
-      const labaStr = document.getElementById("stat-laba-kotor").textContent.replace(/[^0-9]/g, '');
+      const omzetStr = document.getElementById("dash-stat-omzet").textContent.replace(/[^0-9]/g, '');
+      const labaStr = document.getElementById("dash-stat-labakotor").textContent.replace(/[^0-9]/g, '');
 
       document.getElementById("coretax-omzet").value = Number(omzetStr) || 0;
       document.getElementById("coretax-laba-kotor").value = Number(labaStr) || 0;
