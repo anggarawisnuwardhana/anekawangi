@@ -2079,16 +2079,6 @@
         }
       }
 
-      // CARI INFORMASI PRODUK SPESIFIK / TREN DI GOOGLE SEARCH ENGINE (DESKRIPSI SINGKAT)
-      if (query.includes("cari") || query.includes("apa itu") || query.includes("penjelasan") || query.includes("google") || query.includes("minyak wangi") || query.includes("parfum")) {
-        const perfItems = products.filter(p => (p.nama || "").toLowerCase().includes("parfum") || (p.nama || "").toLowerCase().includes("minyak wangi") || (p.kategori || "").toLowerCase().includes("parfum"));
-        let localInfo = "";
-        if (perfItems.length > 0) {
-          localInfo = `<br/><br/>📌 <strong>Stok di Toko Kamu:</strong> Ada ${perfItems.length} jenis parfum terdaftar di database.`;
-        }
-        return `🔍 <strong>Deskripsi Singkat (Penelusuran Google & Sheet):</strong><br/>Minyak wangi atau parfum adalah campuran minyak atsiri dan senyawa aroma yang dipakai untuk memberikan wangi harum pada tubuh manusia atau ruangan. Industri parfum di Indonesia terus berkembang dengan tren aroma floral, woody, dan refill/rechargeable yang sangat diminati masyarakat.${localInfo}`;
-      }
-
       // TUTORIAL DAN CARA PENGGUNAAN APLIKASI
       if (query.includes("cara") || query.includes("tutorial") || query.includes("panduan") || query.includes("aplikasi") || query.includes("kasir")) {
         return `📖 <strong>Panduan Singkat Penggunaan Aplikasi:</strong><br/>
