@@ -138,7 +138,7 @@
           </form>
         </div>
 
-        <!-- 1. KERANJANG BELANJA DENGAN TOMBOL EDIT +- & INPUT MANUAL -->
+        <!-- KERANJANG BELANJA -->
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-4">
             <h2 class="font-bold text-slate-800 flex items-center gap-2">
@@ -213,7 +213,7 @@
       </div>
     </section>
 
-    <!-- TAB 2: STOK & QR BARANG (DENGAN EDITABLE EDIT/HAPUS & PILIHAN SATUAN PCS, ML, KG) -->
+    <!-- TAB 2: STOK & QR BARANG -->
     <section id="sec-stok" class="hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-5 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
@@ -249,7 +249,6 @@
                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:outline-none" />
               </div>
               
-              <!-- 6. SATUAN ITEM (PCS, ML, KG) -->
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">Satuan</label>
                 <select id="input-satuan" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:outline-none">
@@ -297,7 +296,6 @@
           </div>
         </div>
 
-        <!-- 5. MENU EDITABLE UNTUK STOK GUDANG (EDIT QTY, HAPUS) -->
         <div class="lg:col-span-7 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-4">
             <h2 class="font-bold text-slate-900 flex items-center gap-2">
@@ -332,13 +330,18 @@
     <section id="sec-pengeluaran" class="hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- Form Tambah Pengeluaran -->
+        <!-- Form Tambah/Edit Pengeluaran -->
         <div class="lg:col-span-5 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-          <h2 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-receipt text-red-600"></i> Catat Pengeluaran Baru
-          </h2>
+          <div class="flex justify-between items-center mb-4">
+            <h2 id="form-expense-title" class="font-bold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-receipt text-red-600"></i> <span id="form-expense-title-text">Catat Pengeluaran Baru</span>
+            </h2>
+            <button id="btn-cancel-expense-edit" onclick="resetExpenseForm()" class="hidden text-xs text-red-500 hover:underline">Batal Edit</button>
+          </div>
 
           <form id="form-add-expense" onsubmit="handleAddExpense(event)" class="space-y-4 text-sm">
+            <input type="hidden" id="expense-id-edit" value="" />
+            
             <div>
               <label class="block text-xs font-medium text-slate-600 mb-1">Keterangan / Deskripsi</label>
               <input type="text" id="expense-keterangan" required placeholder="Contoh: Bayar Listrik, Beli Plastik"
@@ -357,7 +360,7 @@
           </form>
         </div>
 
-        <!-- Tabel Riwayat Pengeluaran -->
+        <!-- Tabel Riwayat Pengeluaran (dengan Opsi Edit & Hapus) -->
         <div class="lg:col-span-7 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-4">
             <h2 class="font-bold text-slate-900 flex items-center gap-2">
@@ -376,10 +379,11 @@
                   <th class="px-3 py-2.5">Tanggal</th>
                   <th class="px-3 py-2.5">Keterangan</th>
                   <th class="px-3 py-2.5 text-right">Jumlah (Rp)</th>
+                  <th class="px-3 py-2.5 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody id="expense-table-body" class="divide-y divide-slate-100">
-                <tr><td colspan="4" class="py-6 text-center text-slate-400">Memuat data pengeluaran...</td></tr>
+                <tr><td colspan="5" class="py-6 text-center text-slate-400">Memuat data pengeluaran...</td></tr>
               </tbody>
             </table>
           </div>
@@ -388,12 +392,12 @@
       </div>
     </section>
 
-    <!-- 2. TAB 4: LAPORAN & HISTORY DENGAN FILTER TANGGAL, BULAN, TAHUN, SEMUA WAKTU -->
+    <!-- TAB 4: LAPORAN & HISTORY (FITUR FILTER LENGKAP) -->
     <section id="sec-laporan" class="hidden space-y-6">
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 class="font-bold text-lg text-slate-900">Laporan Keuangan Real-Time</h2>
-          <p class="text-xs text-slate-500">Filter berdasarkan rentang periode waktu tertentu</p>
+          <h2 class="font-bold text-lg text-slate-900">Laporan Keuangan & History Real-Time</h2>
+          <p class="text-xs text-slate-500">Filter transaksi & pengeluaran berdasarkan rentang periode waktu tertentu</p>
         </div>
 
         <!-- Filter Laporan Periode -->
@@ -442,9 +446,54 @@
           <p id="stat-laba-bersih" class="text-lg font-bold text-emerald-600">Rp 0</p>
         </div>
       </div>
+
+      <!-- Detail History Transaksi Penjualan & Pengeluaran -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- History Penjualan -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> History Transaksi Penjualan
+          </h3>
+          <div class="overflow-x-auto max-h-[400px]">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-500 uppercase sticky top-0">
+                <tr>
+                  <th class="px-3 py-2">ID Trx</th>
+                  <th class="px-3 py-2">Tanggal</th>
+                  <th class="px-3 py-2 text-right">Total (Rp)</th>
+                </tr>
+              </thead>
+              <tbody id="report-sales-table-body" class="divide-y divide-slate-100">
+                <tr><td colspan="3" class="py-4 text-center text-slate-400">Pilih filter lalu klik Terapkan Filter</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- History Pengeluaran dalam Laporan -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-file-invoice-dollar text-red-600"></i> History Pengeluaran Operasional
+          </h3>
+          <div class="overflow-x-auto max-h-[400px]">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-500 uppercase sticky top-0">
+                <tr>
+                  <th class="px-3 py-2">Tanggal</th>
+                  <th class="px-3 py-2">Keterangan</th>
+                  <th class="px-3 py-2 text-right">Jumlah (Rp)</th>
+                </tr>
+              </thead>
+              <tbody id="report-expense-table-body" class="divide-y divide-slate-100">
+                <tr><td colspan="3" class="py-4 text-center text-slate-400">Pilih filter lalu klik Terapkan Filter</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- 3. TAB 5: SIMULASI CORETAX DENGAN OPSIONAL PERATURAN TERBARU INDONESIA -->
+    <!-- TAB 5: SIMULASI CORETAX -->
     <section id="sec-coretax" class="hidden space-y-6">
       <div class="bg-gradient-to-r from-blue-900 to-indigo-800 text-white p-6 rounded-2xl shadow-md">
         <h2 class="text-xl font-bold mb-1">Simulasi CoreTax Indonesia</h2>
@@ -516,7 +565,7 @@
 
   </main>
 
-  <!-- 4. MODAL PRINT STRUK CETAK OTOMATIS -->
+  <!-- MODAL PRINT STRUK CETAK OTOMATIS -->
   <div id="receipt-modal" class="hidden fixed inset-0 bg-slate-900/50 flex items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-xl">
       <div class="text-center border-b pb-3">
@@ -558,9 +607,6 @@
 
   <!-- JAVASCRIPT INTEGRATION LOGIC -->
   <script>
-    // =========================================================
-    // PASTIKAN MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
-    // =========================================================
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzPm_wxX7kh6_P_821-MpVMdyJQ_NpFibZyHTSPRrJjCEjfUaaCGQKQ23qZsRHbCeHOuA/exec"; 
 
     let products = [];
@@ -643,7 +689,7 @@
       }
     }
 
-    // 2. FETCH REPORT DENGAN FILTER TANGGAL, BULAN, TAHUN
+    // LAPORAN & HISTORY DENGAN FILTER TANGGAL, BULAN, TAHUN, SEMUA WAKTU
     async function fetchProfitReportFromSheet() {
       if (SCRIPT_URL.includes("GANTI_DENGAN_URL")) return;
 
@@ -662,8 +708,38 @@
         document.getElementById("stat-laba-kotor").textContent = `Rp ${Number(data.totalLabaKotor || 0).toLocaleString("id-ID")}`;
         document.getElementById("stat-operasional").textContent = `Rp ${Number(data.totalOperasional || 0).toLocaleString("id-ID")}`;
         document.getElementById("stat-laba-bersih").textContent = `Rp ${Number(data.labaBersih || 0).toLocaleString("id-ID")}`;
+
+        renderReportTables(data.sales || [], data.expenses || []);
       } catch (err) {
-        showToast("Gagal menghitung laporan keuntungan", "error");
+        showToast("Gagal menghitung laporan keuangan", "error");
+      }
+    }
+
+    function renderReportTables(sales, reportExpenses) {
+      const salesBody = document.getElementById("report-sales-table-body");
+      if (!sales || sales.length === 0) {
+        salesBody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-slate-400">Tidak ada data transaksi penjualan.</td></tr>`;
+      } else {
+        salesBody.innerHTML = sales.map(s => `
+          <tr>
+            <td class="px-3 py-2 font-mono font-medium">${s.idTrx || '-'}</td>
+            <td class="px-3 py-2 text-slate-500">${s.tanggal ? new Date(s.tanggal).toLocaleDateString("id-ID") : '-'}</td>
+            <td class="px-3 py-2 text-right font-bold text-blue-600">Rp ${Number(s.total || 0).toLocaleString("id-ID")}</td>
+          </tr>
+        `).join("");
+      }
+
+      const expBody = document.getElementById("report-expense-table-body");
+      if (!reportExpenses || reportExpenses.length === 0) {
+        expBody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-slate-400">Tidak ada data pengeluaran.</td></tr>`;
+      } else {
+        expBody.innerHTML = reportExpenses.map(e => `
+          <tr>
+            <td class="px-3 py-2 text-slate-500">${e.tanggal ? new Date(e.tanggal).toLocaleDateString("id-ID") : '-'}</td>
+            <td class="px-3 py-2 font-medium">${e.keterangan}</td>
+            <td class="px-3 py-2 text-right font-bold text-red-600">Rp ${Number(e.jumlah || 0).toLocaleString("id-ID")}</td>
+          </tr>
+        `).join("");
       }
     }
 
@@ -674,7 +750,7 @@
       document.getElementById("filter-year-input").classList.toggle("hidden", type !== "yearly");
     }
 
-    // 5 & 6. ADD / UPDATE / EDIT PRODUCT TO GOOGLE SHEETS
+    // MANAJEMEN PRODUK (PCS, ML, KG)
     async function handleAddProduct(e) {
       e.preventDefault();
       const btn = document.getElementById("btn-submit-product");
@@ -759,28 +835,31 @@
       document.getElementById("btn-cancel-edit").classList.add("hidden");
     }
 
-    // ADD EXPENSE TO GOOGLE SHEETS
+    // MANAJEMEN PENGELUARAN (DENGAN EDIT NAMA & JUMLAH, SERTA HAPUS)
     async function handleAddExpense(e) {
       e.preventDefault();
       const btn = document.getElementById("btn-submit-expense");
       btn.disabled = true;
       btn.textContent = "Menyimpan...";
 
+      const idExp = document.getElementById("expense-id-edit").value;
       const item = {
+        idExp: idExp || undefined,
         keterangan: document.getElementById("expense-keterangan").value.trim(),
         jumlah: Number(document.getElementById("expense-jumlah").value)
       };
 
       try {
+        const actionType = idExp ? "updateExpense" : "addExpense";
         const res = await fetch(SCRIPT_URL, {
           method: "POST",
-          body: JSON.stringify({ action: "addExpense", payload: item })
+          body: JSON.stringify({ action: actionType, payload: item })
         });
         const result = await res.json();
 
         if (result.status === "success") {
-          showToast(result.message, "success");
-          document.getElementById("form-add-expense").reset();
+          showToast(result.message || "Pengeluaran berhasil disimpan", "success");
+          resetExpenseForm();
           fetchExpensesFromSheet();
         }
       } catch (err) {
@@ -791,7 +870,44 @@
       }
     }
 
-    // 4. CHECKOUT PROCESS & OTOMATIS TAMPILKAN STRUK
+    function editExpense(idExp) {
+      const exp = expenses.find(e => String(e.idExp) === String(idExp));
+      if (!exp) return;
+
+      document.getElementById("expense-id-edit").value = exp.idExp;
+      document.getElementById("expense-keterangan").value = exp.keterangan;
+      document.getElementById("expense-jumlah").value = exp.jumlah;
+
+      document.getElementById("form-expense-title-text").textContent = "Edit Pengeluaran";
+      document.getElementById("btn-cancel-expense-edit").classList.remove("hidden");
+    }
+
+    async function deleteExpense(idExp) {
+      if (!confirm(`Yakin ingin menghapus pengeluaran ini?`)) return;
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "deleteExpense", payload: { idExp: idExp } })
+        });
+        const result = await res.json();
+        if (result.status === "success") {
+          showToast("Pengeluaran berhasil dihapus", "success");
+          fetchExpensesFromSheet();
+        }
+      } catch (err) {
+        showToast("Gagal menghapus pengeluaran", "error");
+      }
+    }
+
+    function resetExpenseForm() {
+      document.getElementById("form-add-expense").reset();
+      document.getElementById("expense-id-edit").value = "";
+      document.getElementById("form-expense-title-text").textContent = "Catat Pengeluaran Baru";
+      document.getElementById("btn-cancel-expense-edit").classList.add("hidden");
+    }
+
+    // PROCESS CHECKOUT & PRINT RECEIPT
     async function processCheckout() {
       if (cart.length === 0) return showToast("Keranjang belanja kosong!", "warning");
 
@@ -834,7 +950,6 @@
       }
     }
 
-    // 4. PRINT RECEIPT DIALOG MODAL
     function showReceiptModal(trxId) {
       const subtotalStr = document.getElementById("summary-subtotal").textContent;
       const ppnStr = document.getElementById("summary-ppn").textContent;
@@ -865,7 +980,7 @@
       document.getElementById("receipt-modal").classList.add("hidden");
     }
 
-    // 1. CART & SCANNER UI LOGIC DENGAN EDIT +- Serta MANUAL EDIT QTY
+    // CART LOGIC
     function addItemToCartByCode(code) {
       const product = products.find(p => String(p.kodeQR) === String(code));
       if (!product) return showToast(`Barang dengan kode "${code}" tidak ditemukan!`, "error");
@@ -988,7 +1103,7 @@
       document.getElementById("pay-change").textContent = `Rp ${Math.max(0, change).toLocaleString("id-ID")}`;
     }
 
-    // 5. STOK TABEL DENGAN TOMBOL EDIT EDITABLE DAN HAPUS
+    // RENDER TABLE STOK
     function renderStockTable() {
       const tbody = document.getElementById("stock-table-body");
       if (products.length === 0) {
@@ -1021,19 +1136,28 @@
       `).join("");
     }
 
+    // RENDER TABLE PENGELUARAN (DENGAN EDIT & HAPUS)
     function renderExpenseTable() {
       const tbody = document.getElementById("expense-table-body");
       if (expenses.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400">Belum ada catatan pengeluaran.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">Belum ada catatan pengeluaran.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = expenses.slice().reverse().map(e => `
         <tr class="hover:bg-slate-50">
           <td class="px-3 py-3 font-mono text-xs text-slate-600">${e.idExp}</td>
-          <td class="px-3 py-3 text-xs text-slate-500">${new Date(e.tanggal).toLocaleDateString("id-ID")}</td>
+          <td class="px-3 py-3 text-xs text-slate-500">${e.tanggal ? new Date(e.tanggal).toLocaleDateString("id-ID") : '-'}</td>
           <td class="px-3 py-3 font-medium text-slate-800">${e.keterangan}</td>
           <td class="px-3 py-3 text-right font-bold text-red-600">Rp ${Number(e.jumlah).toLocaleString("id-ID")}</td>
+          <td class="px-3 py-3 text-center space-x-1">
+            <button onclick="editExpense('${e.idExp}')" title="Edit Pengeluaran" class="text-xs bg-amber-50 text-amber-600 hover:bg-amber-100 px-2 py-1 rounded">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button onclick="deleteExpense('${e.idExp}')" title="Hapus Pengeluaran" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-2 py-1 rounded">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
         </tr>
       `).join("");
     }
@@ -1118,7 +1242,7 @@
       }
     }
 
-    // 3. CORETAX RULES SIMULATOR ACCORDING TO INDONESIAN LAWS
+    // CORETAX SIMULATOR
     function syncDataToCoreTax() {
       const omzetStr = document.getElementById("stat-omzet").textContent.replace(/[^0-9]/g, '');
       const labaStr = document.getElementById("stat-laba-kotor").textContent.replace(/[^0-9]/g, '');
