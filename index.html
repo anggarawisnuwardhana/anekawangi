@@ -464,7 +464,7 @@
             <h2 class="font-bold text-lg text-slate-900">Laporan Keuangan & History Real-Time</h2>
             <!-- Tag Date / Tanggal Laporan di Web -->
             <span id="report-date-tag" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-              <i class="fa-regular fa-calendar-days mr-1"></i><span id="report-date-val">-</span>
+              <i class="fa-regular fa-calendar-days mr-1"></i><span id="report-date-val">Semua Waktu</span>
             </span>
           </div>
           <p class="text-xs text-slate-500">Filter transaksi & pengeluaran berdasarkan rentang periode waktu tertentu</p>
@@ -501,8 +501,11 @@
       <div id="pdf-report-content" class="space-y-6">
         <!-- Tag Date khusus Tampilan PDF -->
         <div class="flex justify-between items-center border-b pb-2 mb-2 text-xs text-slate-600">
-          <span class="font-bold text-slate-800">Laporan Keuangan - Aneka Wangi</span>
-          <span>Dicetak Tanggal: <strong id="pdf-date-tag">-</strong></span>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-800">Laporan Keuangan - Aneka Wangi</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800">Periode: <strong id="pdf-filter-tag">Semua Waktu</strong></span>
+          </div>
+          <span>Diunduh/Dicetak: <strong id="pdf-date-tag">-</strong></span>
         </div>
 
         <!-- Stat Cards -->
@@ -592,6 +595,11 @@
               </table>
             </div>
           </div>
+        </div>
+
+        <!-- Footer watermark PDF -->
+        <div class="mt-8 pt-3 border-t border-slate-200 text-center text-xs text-slate-500 font-medium italic">
+          Powered by djati Application
         </div>
       </div>
     </section>
@@ -728,16 +736,40 @@
     });
 
     function updateDateTags() {
-      const currentDateStr = new Date().toLocaleDateString("id-ID", {
+      const now = new Date();
+      const printTimeStr = now.toLocaleDateString("id-ID", {
         day: "numeric",
         month: "long",
         year: "numeric"
-      });
+      }) + " " + now.toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' });
+
+      const type = document.getElementById("report-filter-type").value;
+      let filterTagText = "Semua Waktu";
+
+      if (type === "daily") {
+        const val = document.getElementById("filter-date-input").value;
+        if (val) {
+          filterTagText = new Date(val).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+        }
+      } else if (type === "monthly") {
+        const val = document.getElementById("filter-month-input").value;
+        if (val) {
+          const [year, month] = val.split("-");
+          const dateObj = new Date(year, month - 1);
+          filterTagText = dateObj.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+        }
+      } else if (type === "yearly") {
+        const val = document.getElementById("filter-year-input").value;
+        filterTagText = `Tahun ${val}`;
+      }
+
       const webDateTag = document.getElementById("report-date-val");
       const pdfDateTag = document.getElementById("pdf-date-tag");
+      const pdfFilterTag = document.getElementById("pdf-filter-tag");
 
-      if (webDateTag) webDateTag.textContent = currentDateStr;
-      if (pdfDateTag) pdfDateTag.textContent = currentDateStr;
+      if (webDateTag) webDateTag.textContent = filterTagText;
+      if (pdfFilterTag) pdfFilterTag.textContent = filterTagText;
+      if (pdfDateTag) pdfDateTag.textContent = printTimeStr;
     }
 
     function showToast(message, type = "info") {
@@ -931,6 +963,7 @@
       document.getElementById("filter-date-input").classList.toggle("hidden", type !== "daily");
       document.getElementById("filter-month-input").classList.toggle("hidden", type !== "monthly");
       document.getElementById("filter-year-input").classList.toggle("hidden", type !== "yearly");
+      updateDateTags();
     }
 
     // FITUR DOWNLOAD LAPORAN PDF
