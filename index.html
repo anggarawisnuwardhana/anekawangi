@@ -512,47 +512,41 @@
         }
 
         async function processCheckout() {
-            if (cart.length === 0) {
-                showToast("Keranjang belanja masih kosong!", "warning");
-                return;
-            }
+  if (cart.length === 0) return showToast("Keranjang belanja kosong!", "warning");
+  const url = getGasUrl();
+  if (!url) return showToast("URL Google Script belum diisi", "error");
 
-            const url = getGasUrl();
-            if (!url) {
-                showToast("Konfigurasi Google Web App URL belum diisi", "error");
-                return;
-            }
+  const payload = {
+    action: "checkout",
+    payload: {
+      idTrx: "TRX-" + Date.now(),
+      items: cart.map(i => ({ kodeQR: i.kodeQR, qty: i.qty }))
+    }
+  };
 
-            const payload = {
-                action: "checkout",
-                payload: {
-                    idTrx: "TRX-" + Date.now(),
-                    items: cart.map(i => ({ kodeQR: i.kodeQR, qty: i.qty }))
-                }
-            };
+  try {
+    showToast("Memproses transaksi...", "info");
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+      redirect: "follow"
+    });
+    const result = await res.json();
 
-            try {
-                showToast("Memproses transaksi...", "info");
-                const res = await fetch(url, {
-                    method: "POST",
-                    body: JSON.stringify(payload)
-                });
-                const result = await res.json();
-
-                if (result.status === "success") {
-                    showToast("Transaksi berhasil diproses!", "success");
-                    cart = [];
-                    renderCart();
-                    loadProducts();
-                } else {
-                    showToast(result.message || "Gagal memproses transaksi", "error");
-                }
-            } catch (err) {
-                console.error(err);
-                showToast("Terjadi kesalahan jaringan", "error");
-            }
-        }
-
+    if (result.status === "success") {
+      showToast("Transaksi berhasil!", "success");
+      cart = [];
+      renderCart();
+      loadProducts();
+    } else {
+      showToast(result.message || "Gagal checkout", "error");
+    }
+  } catch (err) {
+    console.error(err);
+    showToast("Terjadi kesalahan koneksi", "error");
+  }
+}
         // --- Scanner Logic ---
         function toggleScanner() {
             const wrapper = document.getElementById("reader-wrapper");
@@ -591,41 +585,48 @@
         }
 
         async function handleAddProduct(e) {
-            e.preventDefault();
-            const url = getGasUrl();
-            if (!url) return showToast("Konfigurasi URL Google Script belum diisi", "error");
+  e.preventDefault();
+  const url = getGasUrl();
+  if (!url) return showToast("Konfigurasi URL Google Script belum diisi", "error");
 
-            const kode = document.getElementById("input-kode").value.trim();
-            const nama = document.getElementById("input-nama").value.trim();
-            const kategori = document.getElementById("input-kategori").value.trim();
-            const hargaBeli = document.getElementById("input-harga-beli").value;
-            const hargaJual = document.getElementById("input-harga-jual").value;
-            const stok = document.getElementById("input-stok").value;
+  const kode = document.getElementById("input-kode").value.trim();
+  const nama = document.getElementById("input-nama").value.trim();
+  const kategori = document.getElementById("input-kategori").value.trim();
+  const hargaBeli = document.getElementById("input-harga-beli").value;
+  const hargaJual = document.getElementById("input-harga-jual").value;
+  const stok = document.getElementById("input-stok").value;
 
-            const payload = {
-                action: "addStock",
-                payload: { kodeQR: kode, nama, kategori, hargaBeli, hargaJual, stok }
-            };
+  const payload = {
+    action: "addStock",
+    payload: { kodeQR: kode, nama, kategori, hargaBeli, hargaJual, stok }
+  };
 
-            try {
-                showToast("Menyimpan produk ke Google Sheets...", "info");
-                const res = await fetch(url, { method: "POST", body: JSON.stringify(payload) });
-                const result = await res.json();
+  try {
+    showToast("Menyimpan produk ke Google Sheets...", "info");
+    
+    // Perbaikan fetch dengan text/plain & redirect
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+      redirect: "follow"
+    });
+    
+    const result = await res.json();
 
-                if (result.status === "success") {
-                    showToast(result.message, "success");
-                    renderQRCode(kode, nama);
-                    document.getElementById("form-add-product").reset();
-                    loadProducts();
-                } else {
-                    showToast("Gagal menyimpan produk", "error");
-                }
-            } catch (err) {
-                console.error(err);
-                showToast("Terjadi kesalahan koneksi", "error");
-            }
-        }
-
+    if (result.status === "success") {
+      showToast(result.message, "success");
+      renderQRCode(kode, nama);
+      document.getElementById("form-add-product").reset();
+      loadProducts();
+    } else {
+      showToast(result.message || "Gagal menyimpan produk", "error");
+    }
+  } catch (err) {
+    console.error(err);
+    showToast("Terjadi kesalahan koneksi. Periksa kembali URL Web App atau Pengaturan Akses.", "error");
+  }
+}
         function renderQRCode(code = null, name = null) {
             const qrText = code || document.getElementById("input-qr-preview").value.trim() || "BRG-SAMPLE";
             const box = document.getElementById("qrcode-box");
