@@ -1,1657 +1,699 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>SmartPOS Indonesia</title>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet"
-          href="css/bootstrap.min.css">
-
-    <!-- ==========================
-         SMARTPOS CSS FRAMEWORK
-    =========================== -->
-
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/responsive.css">
-
-    <link 
-rel="stylesheet" 
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Kasir & Manajemen Stok Gudang</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Code Libraries -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        .active-tab {
+            border-bottom: 3px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        #reader video {
+            border-radius: 0.5rem;
+            width: 100% !important;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-qr-section, #printable-qr-section * {
+                visibility: visible;
+            }
+            #printable-qr-section {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen flex flex-col">
 
-<body>
-
-<div class="wrapper">
-
-    <!-- =======================================
-            SIDEBAR
-    ======================================== -->
-
-    <aside class="sidebar" id="sidebar">
-
-        <div class="sidebar-logo">
-
-            <div class="logo-icon">
-
-                <i class="fas fa-store"></i>
-
+    <!-- Header / Navbar -->
+    <header class="bg-slate-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-store text-blue-400 text-2xl"></i>
+                <h1 class="text-xl font-bold tracking-wide">POS & Stok Gudang</h1>
             </div>
-
-            <div class="logo-text">
-
-                <h2>SmartPOS</h2>
-
-                <span>Indonesia</span>
-
+            
+            <!-- Apps Script URL Configuration -->
+            <div class="flex items-center gap-2 w-full md:w-auto">
+                <div class="relative w-full md:w-80">
+                    <input type="password" id="gas-url-input" 
+                           placeholder="Masukkan Web App URL (Google Script)..." 
+                           class="w-full pl-9 pr-3 py-1.5 text-xs text-slate-900 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-100 placeholder-slate-400">
+                    <i class="fa-solid fa-key absolute left-3 top-2.5 text-xs text-slate-400"></i>
+                </div>
+                <button onclick="saveGasUrl()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition-colors">
+                    Simpan
+                </button>
             </div>
-
         </div>
 
-        <ul class="sidebar-menu">
-
-            <li class="active">
-
-                <a href="#dashboard">
-
-                    <i class="fas fa-home"></i>
-
-                    <span>Dashboard</span>
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="#penjualan">
-
-                    <i class="fas fa-cash-register"></i>
-
-                    <span>Penjualan</span>
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="#barang">
-
-                    <i class="fas fa-box"></i>
-
-                    <span>Barang</span>
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="#pembelian">
-
-                    <i class="fas fa-shopping-cart"></i>
-
-                    <span>Pembelian</span>
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="#stok">
-
-                    <i class="fas fa-warehouse"></i>
-
-                    <span>Stok</span>
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="#keuangan">
-
-                    <i class="fas fa-wallet"></i>
-
-                    <span>Keuangan</span>
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="#pajak">
-
-                    <i class="fas fa-file-invoice-dollar"></i>
-
-                    <span>Pajak</span>
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="#laporan">
-
-                    <i class="fas fa-chart-line"></i>
-
-                    <span>Laporan</span>
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="#pengaturan">
-
-                    <i class="fas fa-cogs"></i>
-
-                    <span>Pengaturan</span>
-
-                </a>
-
-            </li>
-
-        </ul>
-
-<div class="sidebar-user">
-
-    <div class="avatar">
-        <i class="fas fa-user"></i>
-    </div>
-
-    <div>
-        <strong>Administrator</strong>
-        <span>Super Admin</span>
-    </div>
-
-</div>
-        
-    </aside>
-
-    <!-- =======================================
-            CONTENT
-    ======================================== -->
-
-    <div class="main">
-
-        <!-- HEADER -->
-
-        <header class="header">
-
-            <div class="header-left">
-
-                <button class="menu-toggle"
-                        id="menuToggle">
-
-                    <i class="fas fa-bars"></i>
-
-                </button>
-
-                <div class="page-title">
-
-                    <h2>Dashboard</h2>
-                    <span>Kelola Bisnis Anda</span>
+        <!-- Navigation Tabs -->
+        <div class="max-w-7xl mx-auto px-4 flex gap-6 text-sm border-t border-slate-800 text-slate-400">
+            <button id="tab-btn-kasir" onclick="switchTab('kasir')" class="py-3 px-2 active-tab flex items-center gap-2 hover:text-blue-400 transition-colors">
+                <i class="fa-solid fa-cash-register"></i> Kasir / POS
+            </button>
+            <button id="tab-btn-stok" onclick="switchTab('stok')" class="py-3 px-2 flex items-center gap-2 hover:text-blue-400 transition-colors">
+                <i class="fa-solid fa-boxes-stacked"></i> Input Stok & QR
+            </button>
+            <button id="tab-btn-laporan" onclick="switchTab('laporan')" class="py-3 px-2 flex items-center gap-2 hover:text-blue-400 transition-colors">
+                <i class="fa-solid fa-chart-line"></i> Laporan Laba Rugi
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
+
+        <!-- Notification Toast -->
+        <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+        <!-- ================= TAB 1: KASIR / POS ================= -->
+        <section id="tab-kasir" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Side: Scanner & Product Picker -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+                <!-- Scanner Box -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="font-bold text-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-qrcode text-blue-600"></i> Scanner QR Barang
+                        </h2>
+                        <button id="btn-toggle-scanner" onclick="toggleScanner()" class="px-3 py-1.5 text-xs bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition">
+                            <i class="fa-solid fa-camera mr-1"></i> Buka Kamera
+                        </button>
+                    </div>
+                    <div id="reader-wrapper" class="hidden">
+                        <div id="reader" class="overflow-hidden bg-slate-900 rounded-lg"></div>
+                        <p class="text-xs text-center text-slate-500 mt-2">Arahkan QR Code barang ke dalam kotak scanner</p>
+                    </div>
                 </div>
 
-            </div>
-
-            <div class="header-center">
-
-                <div class="search-box">
-
-                    <i class="fas fa-search"></i>
-
-                    <input
-                        type="text"
-                        placeholder="Cari transaksi, barang, pelanggan...">
-
+                <!-- Product Catalog List -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex-1 flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="font-bold text-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-box text-blue-600"></i> Daftar Barang
+                        </h2>
+                        <input type="text" id="search-product" onkeyup="filterProducts()" placeholder="Cari barang..." class="px-3 py-1.5 border border-slate-200 rounded-lg text-xs w-48 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="overflow-y-auto max-h-80 flex-1 border rounded-lg border-slate-100">
+                        <table class="w-full text-left text-xs text-slate-600">
+                            <thead class="bg-slate-50 text-slate-700 font-semibold sticky top-0 border-b">
+                                <tr>
+                                    <th class="p-3">Kode</th>
+                                    <th class="p-3">Nama</th>
+                                    <th class="p-3">Harga</th>
+                                    <th class="p-3">Stok</th>
+                                    <th class="p-3 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="catalog-table-body" class="divide-y divide-slate-100">
+                                <tr><td colspan="5" class="p-4 text-center text-slate-400">Loading data produk...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
             </div>
 
-            <div class="header-right">
+            <!-- Right Side: Cart & Checkout -->
+            <div class="lg:col-span-5">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 sticky top-6">
+                    <h2 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-blue-600"></i> Keranjang Belanja
+                    </h2>
 
-                <button class="notification-btn">
-
-                    <i class="fas fa-bell"></i>
-
-                    <span class="badge">3</span>
-
-                </button>
-
-                <button class="notification-btn">
-
-                    <i class="fas fa-envelope"></i>
-
-                    <span class="badge">5</span>
-
-                </button>
-
-                <div class="header-user">
-
-                    <div class="user-avatar">
-
-<i class="fa-solid fa-cash-register"></i>
-
-</div>
-
-                    <div class="user-info">
-
-                        <h4>Administrator</h4>
-
-                        <span>Super Admin</span>
-
+                    <!-- Cart Table -->
+                    <div class="overflow-y-auto max-h-64 mb-4 border rounded-lg border-slate-100">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 text-slate-700 font-semibold border-b">
+                                <tr>
+                                    <th class="p-2.5">Item</th>
+                                    <th class="p-2.5 text-center">Qty</th>
+                                    <th class="p-2.5 text-right">Subtotal</th>
+                                    <th class="p-2.5"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-table-body" class="divide-y divide-slate-100">
+                                <tr id="empty-cart-row"><td colspan="4" class="p-6 text-center text-slate-400">Keranjang masih kosong</td></tr>
+                            </tbody>
+                        </table>
                     </div>
 
-                    <i class="fas fa-chevron-down"></i>
+                    <!-- Cart Summary -->
+                    <div class="border-t pt-3 space-y-2 text-sm">
+                        <div class="flex justify-between font-bold text-base text-slate-800">
+                            <span>Total Penjualan:</span>
+                            <span id="cart-total" class="text-blue-600">Rp 0</span>
+                        </div>
+                    </div>
 
+                    <button onclick="processCheckout()" class="w-full mt-5 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-xl shadow transition flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Proses Transaksi
+                    </button>
                 </div>
+            </div>
+        </section>
 
+        <!-- ================= TAB 2: INPUT STOK & GENERATE QR ================= -->
+        <section id="tab-stok" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Form Input Barang -->
+            <div class="lg:col-span-5 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle text-blue-600"></i> Input / Tambah Stok Barang
+                </h2>
+                <form id="form-add-product" onsubmit="handleAddProduct(event)" class="space-y-4 text-xs">
+                    <div>
+                        <label class="block font-medium text-slate-700 mb-1">Kode QR / Barang</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="input-kode" required placeholder="Contoh: BRG-101" class="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <button type="button" onclick="generateAutoCode()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-600 font-medium">Auto</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-700 mb-1">Nama Barang</label>
+                        <input type="text" id="input-nama" required placeholder="Contoh: Kopi Robusta 250g" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-700 mb-1">Kategori</label>
+                        <input type="text" id="input-kategori" placeholder="Contoh: Minuman" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-medium text-slate-700 mb-1">Harga Beli (HPP)</label>
+                            <input type="number" id="input-harga-beli" required min="0" placeholder="0" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-slate-700 mb-1">Harga Jual</label>
+                            <input type="number" id="input-harga-jual" required min="0" placeholder="0" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-700 mb-1">Jumlah Stok</label>
+                        <input type="number" id="input-stok" required min="1" placeholder="10" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg transition shadow">
+                        Simpan ke Google Sheets
+                    </button>
+                </form>
             </div>
 
-        </header>
-
-        <!-- MAIN -->
-
-        <div class="main-content">
-
-            <div class="dashboard">
-
-                <!-- ==========================================
-     WELCOME BANNER
-========================================== -->
-
-<section class="welcome-card">
-
-    <div class="welcome-content">
-
-        <div>
-
-            <h1 class="welcome-title">
-
-                Selamat Datang 👋
-
-            </h1>
-
-            <p class="welcome-description">
-
-                Selamat bekerja, Administrator.
-                Berikut ringkasan operasional toko Anda hari ini.
-
-            </p>
-
-        </div>
-
-        <div class="welcome-info">
-
-            <div class="welcome-item">
-
-                <i class="fas fa-calendar-day"></i>
-
+            <!-- Preview & Print QR Code -->
+            <div class="lg:col-span-7 bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
                 <div>
+                    <h2 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-print text-blue-600"></i> Cetak QR Code Barang
+                    </h2>
+                    <p class="text-xs text-slate-500 mb-4">Pilih kode barang atau ketik secara manual untuk men-generate label QR Code yang siap dicetak.</p>
+                    
+                    <div class="flex gap-2 mb-6">
+                        <input type="text" id="input-qr-preview" placeholder="Ketik Kode QR..." class="px-3 py-2 border rounded-lg text-xs flex-1 outline-none focus:ring-2 focus:ring-blue-500">
+                        <button onclick="renderQRCode()" class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700">Generate</button>
+                    </div>
 
-                    <strong>22 Juli 2026</strong>
-
-                    <span>Kamis</span>
-
+                    <!-- Printable Container -->
+                    <div id="printable-qr-section" class="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
+                        <div id="qrcode-box" class="p-2 bg-white rounded shadow-sm"></div>
+                        <p id="qr-label-code" class="mt-3 font-mono font-bold text-slate-800 text-sm">BRG-SAMPLE</p>
+                        <p id="qr-label-name" class="text-xs text-slate-500">Prinjau Label QR</p>
+                    </div>
                 </div>
 
-            </div>
-
-            <div class="welcome-item">
-
-                <i class="fas fa-store"></i>
-
-                <div>
-
-                    <strong>Cabang Utama</strong>
-
-                    <span>Surabaya</span>
-
+                <div class="mt-6 flex justify-end">
+                    <button onclick="window.print()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-print"></i> Cetak QR Code
+                    </button>
                 </div>
-
             </div>
-
-        </div>
-
-    </div>
-
-    <div class="welcome-illustration">
-
-        <i class="fas fa-chart-line"></i>
-
-    </div>
-
-</section>
-
-
-
-<!-- ==========================================
-     KPI CARD
-========================================== -->
-
-<section class="kpi-grid">
-
-    <div class="kpi-card">
-
-        <div class="kpi-top">
-
-            <div class="kpi-icon">
-
-                <i class="fas fa-wallet"></i>
-
-            </div>
-
-            <span class="badge-success">
-
-                +12%
-
-            </span>
-
-        </div>
-
-        <div class="kpi-content">
-
-            <span class="kpi-label">
-
-                Omzet Hari Ini
-
-            </span>
-
-            <h2 class="kpi-value">
-
-                Rp0
-
-            </h2>
-
-            <small>
-
-                Belum ada transaksi
-
-            </small>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="kpi-card">
-
-        <div class="kpi-top">
-
-            <div class="kpi-icon">
-
-                <i class="fas fa-receipt"></i>
-
-            </div>
-
-            <span class="badge-primary">
-
-                0
-
-            </span>
-
-        </div>
-
-        <div class="kpi-content">
-
-            <span class="kpi-label">
-
-                Total Transaksi
-
-            </span>
-
-            <h2 class="kpi-value">
-
-                0
-
-            </h2>
-
-            <small>
-
-                Hari ini
-
-            </small>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="kpi-card">
-
-        <div class="kpi-top">
-
-            <div class="kpi-icon">
-
-                <i class="fas fa-boxes"></i>
-
-            </div>
-
-            <span class="badge-warning">
-
-                5
-
-            </span>
-
-        </div>
-
-        <div class="kpi-content">
-
-            <span class="kpi-label">
-
-                Stok Menipis
-
-            </span>
-
-            <h2 class="kpi-value">
-
-                5
-
-            </h2>
-
-            <small>
-
-                Perlu Restock
-
-            </small>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="kpi-card">
-
-        <div class="kpi-top">
-
-            <div class="kpi-icon">
-
-                <i class="fas fa-file-invoice-dollar"></i>
-
-            </div>
-
-            <span class="badge-danger">
-
-                PKP
-
-            </span>
-
-        </div>
-
-        <div class="kpi-content">
-
-            <span class="kpi-label">
-
-                Simulasi PPN
-
-            </span>
-
-            <h2 class="kpi-value">
-
-                Rp0
-
-            </h2>
-
-            <small>
-
-                Belum ada penjualan
-
-            </small>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- ==========================================
-     QUICK ACTION
-========================================== -->
-
-<section class="quick-action">
-
-    <div class="quick-card">
-
-        <div class="quick-icon">
-
-            <i class="fas fa-cash-register"></i>
-
-        </div>
-
-        <h4>
-
-            Penjualan Baru
-
-        </h4>
-
-        <p>
-
-            Membuat transaksi penjualan.
-
-        </p>
-
-    </div>
-
-
-
-    <div class="quick-card">
-
-        <div class="quick-icon">
-
-            <i class="fas fa-barcode"></i>
-
-        </div>
-
-        <h4>
-
-            Tambah Barang
-
-        </h4>
-
-        <p>
-
-            Menambah produk baru.
-
-        </p>
-
-    </div>
-
-
-
-    <div class="quick-card">
-
-        <div class="quick-icon">
-
-            <i class="fas fa-shopping-cart"></i>
-
-        </div>
-
-        <h4>
-
-            Input Pembelian
-
-        </h4>
-
-        <p>
-
-            Mencatat pembelian supplier.
-
-        </p>
-
-    </div>
-
-
-
-    <div class="quick-card">
-
-        <div class="quick-icon">
-
-            <i class="fas fa-chart-pie"></i>
-
-        </div>
-
-        <h4>
-
-            Laporan
-
-        </h4>
-
-        <p>
-
-            Melihat laporan penjualan.
-
-        </p>
-
-    </div>
-
-</section>
-                <!-- ==========================================
-     DASHBOARD GRID
-========================================== -->
-
-<div class="dashboard-grid">
-
-    <!-- ======================================
-         LEFT COLUMN
-    ======================================= -->
-
-    <div class="dashboard-column">
-
-        <!-- Sales Chart -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <div>
-
-                    <h3 class="widget-title">
-
-                        Grafik Penjualan
-
-                    </h3>
-
-                    <span class="widget-subtitle">
-
-                        Penjualan 30 hari terakhir
-
-                    </span>
-
-                </div>
-
-                <button class="btn btn-primary">
-
-                    Bulan Ini
-
+        </section>
+
+        <!-- ================= TAB 3: LAPORAN LABA RUGI ================= -->
+        <section id="tab-laporan" class="hidden space-y-6">
+            <!-- Refresh & Filter Header -->
+            <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="font-bold text-slate-700 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-blue-600"></i> Ringkasan Keuangan
+                </h2>
+                <button onclick="loadFinancialReport()" class="px-4 py-2 bg-blue-50 text-blue-600 border border-blue-200 text-xs font-semibold rounded-lg hover:bg-blue-100 transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrows-rotate"></i> Refresh Data
                 </button>
-
             </div>
 
-            <div class="chart-container">
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Total Omzet -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <p class="text-xs text-slate-500 font-medium">Total Omzet (Penjualan)</p>
+                    <h3 id="stat-omzet" class="text-xl font-extrabold text-slate-800 mt-2">Rp 0</h3>
+                </div>
 
-                <canvas id="salesChart"></canvas>
+                <!-- Total HPP -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <p class="text-xs text-slate-500 font-medium">Total HPP (Harga Beli)</p>
+                    <h3 id="stat-hpp" class="text-xl font-extrabold text-amber-600 mt-2">Rp 0</h3>
+                </div>
 
+                <!-- Laba Kotor -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <p class="text-xs text-slate-500 font-medium">Laba Kotor</p>
+                    <h3 id="stat-laba-kotor" class="text-xl font-extrabold text-blue-600 mt-2">Rp 0</h3>
+                </div>
+
+                <!-- Laba Bersih -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 bg-emerald-50/50 border-emerald-100">
+                    <p class="text-xs text-emerald-600 font-medium">Laba Bersih Akhir</p>
+                    <h3 id="stat-laba-bersih" class="text-2xl font-extrabold text-emerald-600 mt-2">Rp 0</h3>
+                </div>
             </div>
 
-        </div>
-
-
-        <!-- Revenue Summary -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Ringkasan Pendapatan
-
+            <!-- Operational Expenses Form & Section -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="font-bold text-slate-700 text-sm mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-file-invoice-dollar text-slate-500"></i> Catat Pengeluaran Operasional
                 </h3>
-
+                <form onsubmit="handleAddExpense(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                    <input type="text" id="input-exp-desc" required placeholder="Keterangan (misal: Biaya Listrik / Sewa)" class="px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="number" id="input-exp-amount" required min="0" placeholder="Jumlah (Rp)" class="px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2 rounded-lg transition">
+                        Tambah Pengeluaran
+                    </button>
+                </form>
             </div>
+        </section>
 
-            <div class="revenue-summary">
+    </main>
 
-                <div class="summary-card">
-
-                    <h4>Pendapatan</h4>
-
-                    <h2>Rp0</h2>
-                    <span>Hari Ini</span>
-
-                </div>
-
-                <div class="summary-card">
-
-                    <h4>Modal</h4>
-
-                    <h2>Rp0</h2>
-                    <span>Hari Ini</span>
-
-                </div>
-
-                <div class="summary-card">
-
-                    <h4>Laba Kotor</h4>
-
-                    <h2>Rp0</h2>
-                    <span>Hari Ini</span>
-
-                </div>
-
-                <div class="summary-card">
-
-                    <h4>PPN Keluaran</h4>
-
-                    <h2>Rp0</h2>
-                    <span>Simulasi Coretax</span>
-
-                </div>
-
-            </div>
-
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
+            Sistem Kasir Gudang &copy; 2026. Powered by GitHub Pages & Google Apps Script.
         </div>
-
-
-        <!-- Cash Flow -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Arus Kas Hari Ini
-
-                </h3>
-
-            </div>
-
-            <div class="cash-flow">
-
-                <div class="cash-item">
-
-                    <div class="cash-left">
-
-                        <div class="cash-icon success">
-
-                            <i class="fas fa-arrow-down"></i>
-
-                        </div>
-
-                        <div>
-
-                            <h4>Pemasukan</h4>
-
-                            <span>Penjualan</span>
-
-                        </div>
-
-                    </div>
-
-                    <strong>Rp0</strong>
-
-                </div>
-
-
-                <div class="cash-item">
-
-                    <div class="cash-left">
-
-                        <div class="cash-icon danger">
-
-                            <i class="fas fa-arrow-up"></i>
-
-                        </div>
-
-                        <div>
-
-                            <h4>Pengeluaran</h4>
-
-                            <span>Operasional</span>
-
-                        </div>
-
-                    </div>
-
-                    <strong>Rp0</strong>
-
-                </div>
-
-
-                <div class="cash-item">
-
-                    <div class="cash-left">
-
-                        <div class="cash-icon primary">
-
-                            <i class="fas fa-wallet"></i>
-
-                        </div>
-
-                        <div>
-
-                            <h4>Saldo Kas</h4>
-
-                            <span>Realtime</span>
-
-                        </div>
-
-                    </div>
-
-                    <strong>Rp0</strong>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- ======================================
-         RIGHT COLUMN
-    ======================================= -->
-
-    <div class="dashboard-column">
-
-        <!-- Payment Summary -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Metode Pembayaran
-
-                </h3>
-
-            </div>
-
-            <div class="payment-summary">
-
-                <div class="payment-item">
-
-                    <div class="payment-icon">
-
-                        <i class="fas fa-money-bill-wave"></i>
-
-                    </div>
-
-                    <div>
-
-                        <div class="payment-title">
-
-                            Tunai
-
-                        </div>
-
-                        <div class="payment-value">
-
-                            Rp0
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="payment-item">
-
-                    <div class="payment-icon">
-
-                        <i class="fas fa-qrcode"></i>
-
-                    </div>
-
-                    <div>
-
-                        <div class="payment-title">
-
-                            QRIS
-
-                        </div>
-
-                        <div class="payment-value">
-
-                            Rp0
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="payment-item">
-
-                    <div class="payment-icon">
-
-                        <i class="fas fa-credit-card"></i>
-
-                    </div>
-
-                    <div>
-
-                        <div class="payment-title">
-
-                            Debit / Kredit
-
-                        </div>
-
-                        <div class="payment-value">
-
-                            Rp0
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="payment-item">
-
-                    <div class="payment-icon">
-
-                        <i class="fas fa-university"></i>
-
-                    </div>
-
-                    <div>
-
-                        <div class="payment-title">
-
-                            Transfer
-
-                        </div>
-
-                        <div class="payment-value">
-
-                            Rp0
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Sales Target -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Target Penjualan
-
-                </h3>
-
-            </div>
-
-            <div class="sales-target">
-
-                <div class="target-header">
-
-                    <span class="target-title">
-
-                        Progress
-
-                    </span>
-
-                    <span class="target-percent">
-
-                        0%
-
-                    </span>
-
-                </div>
-
-                <div class="target-progress">
-
-                    <div class="target-progress-bar"
-                         style="width:0%;">
-
-                    </div>
-
-                </div>
-
-                <div class="target-footer">
-
-                    <span>
-
-                        Rp0
-
-                    </span>
-
-                    <span>
-
-                        Target Rp10.000.000
-
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-                <!-- =====================================================
-     OPERATION GRID
-====================================================== -->
-
-<div class="dashboard-grid">
-
-    <!-- ==========================================
-         LEFT COLUMN
-    =========================================== -->
-
-    <div class="dashboard-column">
-
-        <!-- ======================================
-             RECENT TRANSACTION
-        ======================================= -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Transaksi Terbaru
-
-                </h3>
-
-                <a href="#penjualan"
-                   class="btn btn-light">
-
-                    Lihat Semua
-
-                </a>
-
-            </div>
-
-            <div class="transaction-list">
-
-                <div class="transaction-item">
-
-                    <div class="transaction-left">
-
-                        <div class="transaction-icon">
-
-                            <i class="fas fa-shopping-cart"></i>
-
-                        </div>
-
-                        <div class="transaction-info">
-
-                            <h4>INV-000001</h4>
-
-                            <p>Belum ada transaksi</p>
-
-                        </div>
-
-                    </div>
-
-                    <div class="transaction-right">
-
-                        <div class="transaction-total">
-
-                            Rp0
-
-                        </div>
-
-                        <div class="transaction-time">
-
-                            --
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ======================================
-             STOCK ALERT
-        ======================================= -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Stok Menipis
-
-                </h3>
-
-            </div>
-
-            <div class="stock-alert">
-
-                <div class="stock-item">
-
-                    <div class="stock-left">
-
-                        <div class="stock-image">
-
-                            <i class="fa-solid fa-box"></i>
-
-                        </div>
-
-                        <div>
-
-                            <div class="stock-name">
-
-                                Belum ada data
-
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- State Management ---
+        let products = [];
+        let cart = [];
+        let html5QrCodeScanner = null;
+        let qrCodeGenerator = null;
+
+        // --- Init App ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedUrl = localStorage.getItem("gas_app_url");
+            if (savedUrl) {
+                document.getElementById("gas-url-input").value = savedUrl;
+                loadProducts();
+            } else {
+                showToast("Silakan masukkan Google Web App URL terlebih dahulu", "warning");
+            }
+            
+            // Init default QR preview
+            renderQRCode("BRG-SAMPLE");
+        });
+
+        // --- Helper Functions ---
+        function getGasUrl() {
+            return localStorage.getItem("gas_app_url") || "";
+        }
+
+        function saveGasUrl() {
+            const url = document.getElementById("gas-url-input").value.trim();
+            if (!url) {
+                showToast("URL tidak boleh kosong!", "error");
+                return;
+            }
+            localStorage.setItem("gas_app_url", url);
+            showToast("Google Script URL berhasil disimpan!", "success");
+            loadProducts();
+        }
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(number);
+        }
+
+        function showToast(message, type = "info") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            
+            const bgClass = type === "success" ? "bg-emerald-600" : type === "error" ? "bg-red-600" : type === "warning" ? "bg-amber-500" : "bg-slate-800";
+            toast.className = `${bgClass} text-white text-xs px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 pointer-events-auto transition-all transform duration-300 translate-y-2 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove("translate-y-2", "opacity-0"), 10);
+            setTimeout(() => {
+                toast.classList.add("opacity-0");
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function switchTab(tabName) {
+            ["kasir", "stok", "laporan"].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add("hidden");
+                document.getElementById(`tab-btn-${t}`).classList.remove("active-tab");
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.remove("hidden");
+            document.getElementById(`tab-btn-${tabName}`).classList.add("active-tab");
+
+            if (tabName === "kasir" && products.length === 0) loadProducts();
+            if (tabName === "laporan") loadFinancialReport();
+        }
+
+        // --- API Requests ---
+        async function loadProducts() {
+            const url = getGasUrl();
+            if (!url) return;
+
+            try {
+                const res = await fetch(`${url}?action=getProducts`);
+                const data = await res.json();
+                products = data;
+                renderCatalogTable();
+            } catch (err) {
+                console.error(err);
+                showToast("Gagal memuat produk dari Google Sheets", "error");
+            }
+        }
+
+        // --- Tab Kasir Logic ---
+        function renderCatalogTable() {
+            const tbody = document.getElementById("catalog-table-body");
+            if (products.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada barang tersedia.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = products.map(p => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-mono font-semibold text-slate-700">${p.kodeQR}</td>
+                    <td class="p-3 font-medium">${p.nama}</td>
+                    <td class="p-3">${formatRupiah(p.hargaJual)}</td>
+                    <td class="p-3">${p.stok > 0 ? `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-semibold">${p.stok}</span>` : `<span class="px-2 py-0.5 rounded bg-red-100 text-red-600 font-semibold">Habis</span>`}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="addToCart('${p.kodeQR}')" ${p.stok <= 0 ? 'disabled' : ''} class="px-2.5 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join("");
+        }
+
+        function filterProducts() {
+            const query = document.getElementById("search-product").value.toLowerCase();
+            const filtered = products.filter(p => p.nama.toLowerCase().includes(query) || p.kodeQR.toLowerCase().includes(query));
+            
+            const tbody = document.getElementById("catalog-table-body");
+            tbody.innerHTML = filtered.map(p => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-mono font-semibold text-slate-700">${p.kodeQR}</td>
+                    <td class="p-3 font-medium">${p.nama}</td>
+                    <td class="p-3">${formatRupiah(p.hargaJual)}</td>
+                    <td class="p-3">${p.stok}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="addToCart('${p.kodeQR}')" class="px-2.5 py-1 bg-blue-600 text-white rounded hover:bg-blue-500">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join("");
+        }
+
+        function addToCart(kodeQR) {
+            const product = products.find(p => p.kodeQR === kodeQR);
+            if (!product) {
+                showToast("Barang tidak ditemukan!", "error");
+                return;
+            }
+
+            const existing = cart.find(item => item.kodeQR === kodeQR);
+            if (existing) {
+                if (existing.qty + 1 > product.stok) {
+                    showToast("Jumlah melebihi stok yang tersedia!", "warning");
+                    return;
+                }
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            renderCart();
+            showToast(`${product.nama} ditambahkan`, "success");
+        }
+
+        function updateCartQty(kodeQR, delta) {
+            const item = cart.find(i => i.kodeQR === kodeQR);
+            if (!item) return;
+
+            const product = products.find(p => p.kodeQR === kodeQR);
+            if (delta > 0 && item.qty + delta > product.stok) {
+                showToast("Stok tidak mencukupi!", "warning");
+                return;
+            }
+
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(i => i.kodeQR !== kodeQR);
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const tbody = document.getElementById("cart-table-body");
+            if (cart.length === 0) {
+                tbody.innerHTML = `<tr id="empty-cart-row"><td colspan="4" class="p-6 text-center text-slate-400">Keranjang masih kosong</td></tr>`;
+                document.getElementById("cart-total").innerText = "Rp 0";
+                return;
+            }
+
+            let total = 0;
+            tbody.innerHTML = cart.map(item => {
+                const subtotal = item.hargaJual * item.qty;
+                total += subtotal;
+                return `
+                    <tr>
+                        <td class="p-2.5">
+                            <div class="font-medium text-slate-800">${item.nama}</div>
+                            <div class="text-[10px] text-slate-400 font-mono">${item.kodeQR}</div>
+                        </td>
+                        <td class="p-2.5 text-center">
+                            <div class="inline-flex items-center gap-1 bg-slate-100 rounded px-1 py-0.5">
+                                <button onclick="updateCartQty('${item.kodeQR}', -1)" class="w-5 h-5 flex items-center justify-center text-slate-600 hover:bg-slate-200 rounded">-</button>
+                                <span class="px-1 text-xs font-semibold">${item.qty}</span>
+                                <button onclick="updateCartQty('${item.kodeQR}', 1)" class="w-5 h-5 flex items-center justify-center text-slate-600 hover:bg-slate-200 rounded">+</button>
                             </div>
-
-                            <div class="stock-code">
-
-                                SKU-00000
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="stock-qty">
-
-                        0
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ======================================
-             TOP PRODUCT
-        ======================================= -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Produk Terlaris
-
-                </h3>
-
-            </div>
-
-            <div class="top-product">
-
-                <div class="top-product-item">
-
-                    <div class="stock-left">
-
-                        <div class="stock-image">
-
-                            <i class="fa-solid fa-box"></i>
-
-                        </div>
-
-                        <div>
-
-                            <div class="stock-name">
-
-                                Belum ada penjualan
-
-                            </div>
-
-                            <div class="stock-code">
-
-                                0 Terjual
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="top-product-right">
-
-                        Rp0
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- ==========================================
-         RIGHT COLUMN
-    =========================================== -->
-
-    <div class="dashboard-column">
-
-        <!-- ======================================
-             ACTIVITY TIMELINE
-        ======================================= -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Aktivitas Hari Ini
-
-                </h3>
-
-            </div>
-
-            <div class="timeline">
-
-                <div class="timeline-item">
-
-                    <div class="timeline-dot"></div>
-
-                    <div class="timeline-content">
-
-                        <div class="timeline-title">
-
-                            Sistem Siap Digunakan
-
-                        </div>
-
-                        <div class="timeline-text">
-
-                            Dashboard SmartPOS berhasil dimuat.
-
-                        </div>
-
-                        <div class="timeline-time">
-
-                            Baru saja
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ======================================
-             NOTIFICATION
-        ======================================= -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Notifikasi
-
-                </h3>
-
-            </div>
-
-            <div class="notification-list">
-
-                <div class="notification-item">
-
-                    <div class="notification-icon">
-
-                        <i class="fas fa-bell"></i>
-
-                    </div>
-
-                    <div class="notification-content">
-
-                        <div class="notification-title">
-
-                            Selamat Datang
-
-                        </div>
-
-                        <div class="notification-message">
-
-                            SmartPOS berhasil dijalankan.
-
-                        </div>
-
-                        <div class="notification-date">
-
-                            Hari ini
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ======================================
-             MINI CALENDAR
-        ======================================= -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Kalender
-
-                </h3>
-
-            </div>
-
-            <div class="mini-calendar">
-
-                <div class="calendar-header">
-
-                    <div class="calendar-month">
-
-                        Juli 2026
-
-                    </div>
-
-                </div>
-
-                <div class="calendar-grid">
-
-                    <div class="calendar-day">M</div>
-                    <div class="calendar-day">S</div>
-                    <div class="calendar-day">S</div>
-                    <div class="calendar-day">R</div>
-                    <div class="calendar-day">K</div>
-                    <div class="calendar-day">J</div>
-                    <div class="calendar-day">S</div>
-
-                    <div class="calendar-date">20</div>
-                    <div class="calendar-date">21</div>
-                    <div class="calendar-date today">22</div>
-                    <div class="calendar-date">23</div>
-                    <div class="calendar-date">24</div>
-                    <div class="calendar-date">25</div>
-                    <div class="calendar-date">26</div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ======================================
-             REMINDER
-        ======================================= -->
-
-        <div class="dashboard-widget">
-
-            <div class="widget-header">
-
-                <h3 class="widget-title">
-
-                    Reminder
-
-                </h3>
-
-            </div>
-
-            <div class="reminder-list">
-
-                <div class="reminder-item">
-
-                    <div class="reminder-icon">
-
-                        <i class="fas fa-clock"></i>
-
-                    </div>
-
-                    <div>
-
-                        <div class="reminder-title">
-
-                            Tidak ada pengingat
-
-                        </div>
-
-                        <div class="reminder-date">
-
-                            Semua tugas telah selesai.
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-                            <!-- ==========================================
-                 DASHBOARD FOOTER
-            =========================================== -->
-
-            <footer class="dashboard-footer">
-
-                <div>
-
-                    <strong>SmartPOS Indonesia Enterprise</strong>
-
-                    <br>
-
-                    <small>
-
-                        © 2026 SmartPOS Indonesia. All Rights Reserved.
-
-                    </small>
-
-                </div>
-
-                <div>
-
-                    <small>
-
-                        Version 1.0.0 Enterprise
-
-                    </small>
-
-                </div>
-
-            </footer>
-
-        </main>
-
-    </div>
-
-</div>
-
-<!-- ==========================================
-     SIDEBAR OVERLAY
-========================================== -->
-
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<!-- ==========================================
-     FLOATING ACTION BUTTON
-========================================== -->
-
-<button class="dashboard-fab"
-        id="fabButton"
-        title="Transaksi Baru">
-
-    <i class="fas fa-plus"></i>
-
-</button>
-
-<!-- ==========================================
-     GLOBAL LOADING
-========================================== -->
-
-<div class="loading-screen"
-     id="loadingScreen">
-
-    <div class="loading-content">
-
-        <div class="spinner-border text-primary"
-             role="status">
-
-            <span class="visually-hidden">
-
-                Loading...
-
-            </span>
-
-        </div>
-
-        <h4 class="mt-3">
-
-            SmartPOS Indonesia
-
-        </h4>
-
-        <p>
-
-            Memuat aplikasi...
-
-        </p>
-
-    </div>
-
-</div>
-
-<!-- ==========================================
-     GLOBAL MODAL
-========================================== -->
-
-<div class="modal fade"
-     id="globalModal"
-     tabindex="-1">
-
-    <div class="modal-dialog modal-lg">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h5 class="modal-title">
-
-                    SmartPOS
-
-                </h5>
-
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-
-                </button>
-
-            </div>
-
-            <div class="modal-body"
-                 id="modalBody">
-
-            </div>
-
-            <div class="modal-footer">
-
-                <button class="btn btn-secondary"
-                        data-bs-dismiss="modal">
-
-                    Tutup
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ==========================================
-     OFFCANVAS DRAWER
-========================================== -->
-
-<div class="drawer"
-     id="drawer">
-
-    <div class="drawer-header">
-
-        <h4>
-
-            SmartPOS
-
-        </h4>
-
-        <button id="closeDrawer">
-
-            <i class="fas fa-times"></i>
-
-        </button>
-
-    </div>
-
-    <div class="drawer-body">
-
-    </div>
-
-</div>
-
-<!-- ==========================================
-     TOAST CONTAINER
-========================================== -->
-
-<div class="toast-container
-            position-fixed
-            bottom-0
-            end-0
-            p-3">
-
-</div>
-
-<!-- ==========================================
-     JAVASCRIPT LIBRARY
-========================================== -->
-
-<script src="js/bootstrap.bundle.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- ==========================================
-     SMARTPOS SCRIPT
-========================================== -->
-
-<script src="js/app.js"></script>
-
-<script src="js/dashboard.js"></script>
-
+                        </td>
+                        <td class="p-2.5 text-right font-medium">${formatRupiah(subtotal)}</td>
+                        <td class="p-2.5 text-center">
+                            <button onclick="updateCartQty('${item.kodeQR}', -${item.qty})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash-can"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+
+            document.getElementById("cart-total").innerText = formatRupiah(total);
+        }
+
+        async function processCheckout() {
+            if (cart.length === 0) {
+                showToast("Keranjang belanja masih kosong!", "warning");
+                return;
+            }
+
+            const url = getGasUrl();
+            if (!url) {
+                showToast("Konfigurasi Google Web App URL belum diisi", "error");
+                return;
+            }
+
+            const payload = {
+                action: "checkout",
+                payload: {
+                    idTrx: "TRX-" + Date.now(),
+                    items: cart.map(i => ({ kodeQR: i.kodeQR, qty: i.qty }))
+                }
+            };
+
+            try {
+                showToast("Memproses transaksi...", "info");
+                const res = await fetch(url, {
+                    method: "POST",
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+
+                if (result.status === "success") {
+                    showToast("Transaksi berhasil diproses!", "success");
+                    cart = [];
+                    renderCart();
+                    loadProducts();
+                } else {
+                    showToast(result.message || "Gagal memproses transaksi", "error");
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Terjadi kesalahan jaringan", "error");
+            }
+        }
+
+        // --- Scanner Logic ---
+        function toggleScanner() {
+            const wrapper = document.getElementById("reader-wrapper");
+            const btn = document.getElementById("btn-toggle-scanner");
+
+            if (wrapper.classList.contains("hidden")) {
+                wrapper.classList.remove("hidden");
+                btn.innerHTML = `<i class="fa-solid fa-camera-rotate mr-1"></i> Tutup Kamera`;
+                
+                html5QrCodeScanner = new Html5Qrcode("reader");
+                html5QrCodeScanner.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 220, height: 220 } },
+                    (decodedText) => {
+                        addToCart(decodedText);
+                    },
+                    (errorMessage) => { /* Ignore frame read errors */ }
+                ).catch(err => {
+                    showToast("Akses kamera ditolak / tidak tersedia", "error");
+                    wrapper.classList.add("hidden");
+                });
+            } else {
+                if (html5QrCodeScanner) {
+                    html5QrCodeScanner.stop().then(() => {
+                        wrapper.classList.add("hidden");
+                        btn.innerHTML = `<i class="fa-solid fa-camera mr-1"></i> Buka Kamera`;
+                    });
+                }
+            }
+        }
+
+        // --- Tab Stok & QR Logic ---
+        function generateAutoCode() {
+            const randomId = "BRG-" + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById("input-kode").value = randomId;
+        }
+
+        async function handleAddProduct(e) {
+            e.preventDefault();
+            const url = getGasUrl();
+            if (!url) return showToast("Konfigurasi URL Google Script belum diisi", "error");
+
+            const kode = document.getElementById("input-kode").value.trim();
+            const nama = document.getElementById("input-nama").value.trim();
+            const kategori = document.getElementById("input-kategori").value.trim();
+            const hargaBeli = document.getElementById("input-harga-beli").value;
+            const hargaJual = document.getElementById("input-harga-jual").value;
+            const stok = document.getElementById("input-stok").value;
+
+            const payload = {
+                action: "addStock",
+                payload: { kodeQR: kode, nama, kategori, hargaBeli, hargaJual, stok }
+            };
+
+            try {
+                showToast("Menyimpan produk ke Google Sheets...", "info");
+                const res = await fetch(url, { method: "POST", body: JSON.stringify(payload) });
+                const result = await res.json();
+
+                if (result.status === "success") {
+                    showToast(result.message, "success");
+                    renderQRCode(kode, nama);
+                    document.getElementById("form-add-product").reset();
+                    loadProducts();
+                } else {
+                    showToast("Gagal menyimpan produk", "error");
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Terjadi kesalahan koneksi", "error");
+            }
+        }
+
+        function renderQRCode(code = null, name = null) {
+            const qrText = code || document.getElementById("input-qr-preview").value.trim() || "BRG-SAMPLE";
+            const box = document.getElementById("qrcode-box");
+            box.innerHTML = "";
+
+            qrCodeGenerator = new QRCode(box, {
+                text: qrText,
+                width: 140,
+                height: 140,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            document.getElementById("qr-label-code").innerText = qrText;
+            document.getElementById("qr-label-name").innerText = name || "Label Produk";
+        }
+
+        // --- Tab Laporan Logic ---
+        async function loadFinancialReport() {
+            const url = getGasUrl();
+            if (!url) return showToast("Konfigurasi URL Google Script belum diisi", "error");
+
+            try {
+                showToast("Mengambil data laporan...", "info");
+                const res = await fetch(`${url}?action=getReport`);
+                const data = await res.json();
+
+                document.getElementById("stat-omzet").innerText = formatRupiah(data.totalOmzet || 0);
+                document.getElementById("stat-hpp").innerText = formatRupiah(data.totalHPP || 0);
+                document.getElementById("stat-laba-kotor").innerText = formatRupiah(data.totalLabaKotor || 0);
+                document.getElementById("stat-laba-bersih").innerText = formatRupiah(data.labaBersih || 0);
+
+            } catch (err) {
+                console.error(err);
+                showToast("Gagal memuat laporan keuangan", "error");
+            }
+        }
+
+        async function handleAddExpense(e) {
+            e.preventDefault();
+            const url = getGasUrl();
+            if (!url) return showToast("Konfigurasi URL Google Script belum diisi", "error");
+
+            const keterangan = document.getElementById("input-exp-desc").value.trim();
+            const jumlah = document.getElementById("input-exp-amount").value;
+
+            const payload = {
+                action: "addExpense",
+                payload: { keterangan, jumlah }
+            };
+
+            try {
+                showToast("Menyimpan pengeluaran...", "info");
+                const res = await fetch(url, { method: "POST", body: JSON.stringify(payload) });
+                const result = await res.json();
+
+                if (result.status === "success") {
+                    showToast("Pengeluaran operasional dicatat", "success");
+                    document.getElementById("input-exp-desc").value = "";
+                    document.getElementById("input-exp-amount").value = "";
+                    loadFinancialReport();
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Gagal menyimpan pengeluaran", "error");
+            }
+        }
+    </script>
 </body>
-
-
 </html>
