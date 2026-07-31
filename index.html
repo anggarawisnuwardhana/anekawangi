@@ -308,7 +308,7 @@
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 sticky top-24 space-y-5">
           <h2 class="font-bold text-lg text-slate-900 border-b pb-3 flex items-center justify-between">
             <span>Ringkasan Pembayaran</span>
-            <span class="text-xs font-normal text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">CoreTax Included</span>
+            <span class="text-xs font-normal text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">CoreTax Ready</span>
           </h2>
 
           <div class="space-y-3 text-sm">
@@ -332,13 +332,21 @@
               </div>
             </div>
 
+            <!-- OPSI PPN INCLUDE / EXCLUDE -->
             <div class="flex justify-between items-center text-slate-600 pt-2 border-t border-dashed">
-              <div class="flex items-center gap-1.5">
-                <input type="checkbox" id="ppn-toggle" onchange="calculateCartTotal()" class="rounded text-blue-600 focus:ring-blue-500 h-4 w-4" checked />
-                <label for="ppn-toggle" class="text-xs font-medium text-slate-700">PPN CoreTax (12%)</label>
+              <div class="flex flex-col gap-1 w-full max-w-[150px]">
+                <select id="ppn-type" onchange="calculateCartTotal()" class="text-xs border border-slate-200 bg-slate-50 rounded-lg px-2 py-1 focus:outline-none focus:bg-white text-slate-700">
+                  <option value="none">Tanpa PPN</option>
+                  <option value="exclude" selected>PPN 12% (Belum Termasuk / Exclude)</option>
+                  <option value="include">PPN 12% (Sudah Termasuk / Include)</option>
+                </select>
               </div>
-              <span id="summary-ppn" class="font-semibold text-slate-800">Rp 0</span>
+              <div class="text-right">
+                <div class="text-[10px] text-slate-400">DPP: <span id="summary-dpp">Rp 0</span></div>
+                <span id="summary-ppn" class="font-semibold text-slate-800">Rp 0</span>
+              </div>
             </div>
+
             <div class="flex justify-between items-center text-lg font-bold text-slate-900 pt-3 border-t">
               <span>TOTAL AKHIR</span>
               <span id="summary-grandtotal" class="text-blue-600">Rp 0</span>
@@ -714,27 +722,63 @@
         <p class="text-sm text-blue-100">Penghitungan pajak sesuai Peraturan CoreTax Dirjen Pajak RI.</p>
       </div>
 
+      <!-- FITUR FILTER WAKTU (Menjawab Poin 3) -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center gap-2">
+        <span class="text-sm font-semibold text-slate-700 mr-2"><i class="fa-solid fa-filter mr-1"></i> Periode Tarik Data:</span>
+        <select id="coretax-filter-type" onchange="toggleCoreTaxFilterInputs()" class="text-xs px-3 py-2 border rounded-xl bg-slate-50 font-medium">
+          <option value="all">Seluruh Waktu</option>
+          <option value="daily">Per Tanggal</option>
+          <option value="monthly">Per Bulan</option>
+          <option value="yearly">Per Tahun</option>
+        </select>
+        <input type="date" id="coretax-filter-date" class="hidden text-xs px-3 py-2 border rounded-xl bg-slate-50" />
+        <input type="month" id="coretax-filter-month" class="hidden text-xs px-3 py-2 border rounded-xl bg-slate-50" />
+        <select id="coretax-filter-year" class="hidden text-xs px-3 py-2 border rounded-xl bg-slate-50">
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026" selected>2026</option>
+        </select>
+        <button onclick="syncDataToCoreTax()" id="btn-sync-coretax" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition ml-auto">
+          <i class="fa-solid fa-arrows-rotate"></i> Tarik Data Real dari Data Sheet
+        </button>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
           <h3 class="font-bold text-slate-900 border-b pb-3">Parameter Tax Rules CoreTax</h3>
 
           <div>
             <label class="block text-xs font-medium text-slate-600 mb-1">Skema Pajak Penghasilan (PPh)</label>
+            <!-- (Menjawab Poin 2: Penambahan opsi PPh) -->
             <select id="coretax-pph-scheme" onchange="runCoreTaxSim()" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none">
-              <option value="umkm_05">PPh Final UMKM PP 55/2022 (0.5% dari Omzet)</option>
+              <option value="badan">PPh Badan (Tarif Normal 22%)</option>
+              <option value="op">PPh Orang Pribadi (Estimasi/Progressive 5%)</option>
+              <option value="umkm_05" selected>PPh Final UMKM PP 55/2022 (0.5% dari Omzet)</option>
+              <option value="pasal_25">Angsuran PPh Pasal 25 (Estimasi)</option>
+              <option value="pasal_21">PPh Pasal 21 Pegawai (Estimasi TER/Progressive 5%)</option>
               <option value="pasal_22">PPh Pasal 22 Pemungutan (1.5% dari DPP)</option>
               <option value="pasal_23">PPh Pasal 23 Jasa/Sewa (2.0% dari DPP)</option>
               <option value="bebas">Bebas PPh / PTKP Khusus</option>
             </select>
           </div>
 
-          <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">Tarif PPN CoreTax</label>
-            <select id="coretax-ppn-rate" onchange="runCoreTaxSim()" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none">
-              <option value="0.12">12% (Tarif Standard PPN CoreTax)</option>
-              <option value="0.11">11% (Tarif Transisi)</option>
-              <option value="0">0% (Fasilitas PPN Dibebaskan/Non-PKP)</option>
-            </select>
+          <!-- (Menjawab Poin 4: Opsi Include/Exclude PPN agar penghitungan jelas) -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">Tarif PPN CoreTax</label>
+              <select id="coretax-ppn-rate" onchange="runCoreTaxSim()" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none">
+                <option value="0.12">12% (Standard PPN)</option>
+                <option value="0.11">11% (Tarif Transisi)</option>
+                <option value="0">0% (Dibebaskan/Non-PKP)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">Sistem PPN</label>
+              <select id="coretax-ppn-status" onchange="runCoreTaxSim()" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none">
+                <option value="exclude">Belum Termasuk PPN (Exclude)</option>
+                <option value="include">Sudah Termasuk PPN (Include)</option>
+              </select>
+            </div>
           </div>
 
           <div class="grid grid-cols-2 gap-3">
@@ -747,29 +791,25 @@
               <input type="number" id="coretax-laba-kotor" oninput="runCoreTaxSim()" placeholder="0" class="w-full px-3 py-2 font-semibold bg-slate-50 border rounded-xl" />
             </div>
           </div>
-
-          <button onclick="syncDataToCoreTax()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium py-2 rounded-xl">
-            <i class="fa-solid fa-arrows-rotate mr-1"></i> Tarik Data Real dari Data Base Aneka Wangi
-          </button>
         </div>
 
         <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
           <h3 class="font-bold text-slate-900 border-b pb-3">Hasil Estimasi CoreTax</h3>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between py-1 border-b">
-              <span>Dasar Pengenaan Pajak (DPP)</span>
-              <span id="res-dpp" class="font-semibold">Rp 0</span>
+              <span>Dasar Pengenaan Pajak (DPP) PPN</span>
+              <span id="res-dpp" class="font-semibold text-slate-700">Rp 0</span>
             </div>
             <div class="flex justify-between py-1 border-b">
-              <span>Simulasi PPN</span>
+              <span>Simulasi PPN <span id="label-ppn-status" class="text-[10px] bg-slate-100 px-1 rounded text-slate-500"></span></span>
               <span id="res-ppn" class="font-semibold text-blue-600">Rp 0</span>
             </div>
             <div class="flex justify-between py-1 border-b">
               <span>Estimasi PPh Terutang</span>
               <span id="res-pph" class="font-semibold text-amber-600">Rp 0</span>
             </div>
-            <div class="flex justify-between py-2 bg-emerald-50 px-3 rounded-xl">
-              <span class="font-semibold text-emerald-900">Estimasi Bersih Setelah Pajak</span>
+            <div class="flex justify-between py-2 bg-emerald-50 px-3 rounded-xl mt-4">
+              <span class="font-semibold text-emerald-900">Estimasi Bersih Setelah PPh Terutang</span>
               <span id="res-laba-bersih" class="font-bold text-emerald-700">Rp 0</span>
             </div>
           </div>
@@ -957,7 +997,6 @@
 
       if (tab === 'dashboard') loadDashboardData();
       if (tab === 'laporan') fetchProfitReportFromSheet();
-      if (tab === 'coretax') syncDataToCoreTax();
     }
 
     function toggleDashFilterInputs() {
@@ -965,6 +1004,13 @@
       document.getElementById("dash-filter-date").classList.toggle("hidden", type !== "daily");
       document.getElementById("dash-filter-month").classList.toggle("hidden", type !== "monthly");
       document.getElementById("dash-filter-year").classList.toggle("hidden", type !== "yearly");
+    }
+
+    function toggleCoreTaxFilterInputs() {
+      const type = document.getElementById("coretax-filter-type").value;
+      document.getElementById("coretax-filter-date").classList.toggle("hidden", type !== "daily");
+      document.getElementById("coretax-filter-month").classList.toggle("hidden", type !== "monthly");
+      document.getElementById("coretax-filter-year").classList.toggle("hidden", type !== "yearly");
     }
 
     async function loadDashboardData() {
@@ -1240,14 +1286,6 @@
       } catch (err) {
         showToast("Gagal menghapus pengeluaran dari database", "error");
       }
-    }
-
-    function toggleFilterInputs() {
-      const type = document.getElementById("report-filter-type").value;
-      document.getElementById("filter-date-input").classList.toggle("hidden", type !== "daily");
-      document.getElementById("filter-month-input").classList.toggle("hidden", type !== "monthly");
-      document.getElementById("filter-year-input").classList.toggle("hidden", type !== "yearly");
-      updateDateTags();
     }
 
     function downloadReportPDF() {
@@ -1758,13 +1796,30 @@
       }
 
       const subtotalAfterDiscount = Math.max(0, rawSubtotal - calculatedDiscount);
-      const ppnChecked = document.getElementById("ppn-toggle").checked;
-      const ppn = ppnChecked ? Math.round(subtotalAfterDiscount * 0.12) : 0;
-      const grandTotal = subtotalAfterDiscount + ppn;
+      const ppnType = document.getElementById("ppn-type").value;
+      
+      let dpp = 0;
+      let ppn = 0;
+      let grandTotal = 0;
+
+      if (ppnType === "include") {
+        dpp = subtotalAfterDiscount / 1.12;
+        ppn = subtotalAfterDiscount - dpp;
+        grandTotal = subtotalAfterDiscount;
+      } else if (ppnType === "exclude") {
+        dpp = subtotalAfterDiscount;
+        ppn = dpp * 0.12;
+        grandTotal = subtotalAfterDiscount + ppn;
+      } else {
+        dpp = subtotalAfterDiscount;
+        ppn = 0;
+        grandTotal = subtotalAfterDiscount;
+      }
 
       document.getElementById("summary-subtotal").textContent = `Rp ${rawSubtotal.toLocaleString("id-ID")}`;
-      document.getElementById("summary-ppn").textContent = `Rp ${ppn.toLocaleString("id-ID")}`;
-      document.getElementById("summary-grandtotal").textContent = `Rp ${grandTotal.toLocaleString("id-ID")}`;
+      document.getElementById("summary-dpp").textContent = `Rp ${Math.round(dpp).toLocaleString("id-ID")}`;
+      document.getElementById("summary-ppn").textContent = `Rp ${Math.round(ppn).toLocaleString("id-ID")}`;
+      document.getElementById("summary-grandtotal").textContent = `Rp ${Math.round(grandTotal).toLocaleString("id-ID")}`;
       calculateChange();
     }
 
@@ -1958,13 +2013,31 @@
       }
     }
 
-    function syncDataToCoreTax() {
-      const omzetStr = document.getElementById("dash-stat-omzet").textContent.replace(/[^0-9]/g, '');
-      const labaStr = document.getElementById("dash-stat-labakotor").textContent.replace(/[^0-9]/g, '');
+    async function syncDataToCoreTax() {
+      const type = document.getElementById("coretax-filter-type").value;
+      let filterVal = "";
+      if (type === "daily") filterVal = document.getElementById("coretax-filter-date").value;
+      if (type === "monthly") filterVal = document.getElementById("coretax-filter-month").value;
+      if (type === "yearly") filterVal = document.getElementById("coretax-filter-year").value;
 
-      document.getElementById("coretax-omzet").value = Number(omzetStr) || 0;
-      document.getElementById("coretax-laba-kotor").value = Number(labaStr) || 0;
-      runCoreTaxSim();
+      const btn = document.getElementById("btn-sync-coretax");
+      const oldHtml = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Menarik Data...`;
+
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=getReport&filterType=${type}&filterVal=${filterVal}`);
+        const data = await res.json();
+        
+        document.getElementById("coretax-omzet").value = Number(data.totalOmzet || 0);
+        document.getElementById("coretax-laba-kotor").value = Number(data.totalLabaKotor || 0);
+        
+        runCoreTaxSim();
+        showToast("Data riwayat sesuai filter berhasil ditarik!", "success");
+      } catch (err) {
+        showToast("Gagal menarik data dari sheet", "error");
+      } finally {
+        btn.innerHTML = oldHtml;
+      }
     }
 
     function runCoreTaxSim() {
@@ -1972,17 +2045,40 @@
       const labaKotor = Number(document.getElementById("coretax-laba-kotor").value) || 0;
       const ppnRate = Number(document.getElementById("coretax-ppn-rate").value) || 0;
       const pphScheme = document.getElementById("coretax-pph-scheme").value;
+      const ppnStatus = document.getElementById("coretax-ppn-status").value;
 
+      let dpp = 0;
+      let ppn = 0;
+
+      // Hitung DPP & PPN
+      if (ppnStatus === "include") {
+        dpp = omzet / (1 + ppnRate);
+        ppn = omzet - dpp;
+        document.getElementById("label-ppn-status").textContent = "(Include - Diambil dari Omzet)";
+      } else {
+        dpp = omzet;
+        ppn = dpp * ppnRate;
+        document.getElementById("label-ppn-status").textContent = "(Exclude - Ditambahkan ke DPP)";
+      }
+
+      // Hitung PPh (Perkiraan / Simulasi)
       let pphRate = 0;
       if (pphScheme === "umkm_05") pphRate = 0.005;
+      else if (pphScheme === "badan") pphRate = 0.22;
+      else if (pphScheme === "op") pphRate = 0.05; // Base simulasi tarif
+      else if (pphScheme === "pasal_25") pphRate = 0.02; // Base angsuran simulasi
+      else if (pphScheme === "pasal_21") pphRate = 0.05; // Base simulasi tarif
       else if (pphScheme === "pasal_22") pphRate = 0.015;
       else if (pphScheme === "pasal_23") pphRate = 0.02;
 
-      const ppn = omzet * ppnRate;
-      const pph = omzet * pphRate;
+      let basePenghitunganPph = dpp;
+      if (pphScheme === "umkm_05") basePenghitunganPph = dpp; // UMKM dihitung dari omzet
+      else if (pphScheme === "badan") basePenghitunganPph = labaKotor; // Badan biasanya dari Laba
+
+      const pph = basePenghitunganPph * pphRate;
       const labaBersih = labaKotor - pph;
 
-      document.getElementById("res-dpp").textContent = `Rp ${Math.round(omzet).toLocaleString("id-ID")}`;
+      document.getElementById("res-dpp").textContent = `Rp ${Math.round(dpp).toLocaleString("id-ID")}`;
       document.getElementById("res-ppn").textContent = `Rp ${Math.round(ppn).toLocaleString("id-ID")}`;
       document.getElementById("res-pph").textContent = `Rp ${Math.round(pph).toLocaleString("id-ID")}`;
       document.getElementById("res-laba-bersih").textContent = `Rp ${Math.round(labaBersih).toLocaleString("id-ID")}`;
@@ -2084,7 +2180,7 @@
         return `📖 <strong>Panduan Singkat Penggunaan Aplikasi:</strong><br/>
 1. <strong>Tambah Stok:</strong> Buka tab <em>Stok & QR Barang</em>, isi data atau klik tombol <em>Auto Code</em>, lalu simpan.<br/>
 2. <strong>Jualan / POS:</strong> Buka tab <em>Kasir / POS</em>, scan QR Code atau ketik kode barang. Masukkan nominal pembayaran lalu klik <strong>BAYAR</strong>.<br/>
-3. <strong>Diskon & Pajak:</strong> Di menu Kasir, kamu bisa atur diskon persentase (%) atau Rupiah (Rp) dan mengaktifkan centang PPN CoreTax (12%).<br/>
+3. <strong>Diskon & Pajak:</strong> Di menu Kasir, kamu bisa atur diskon persentase (%) atau Rupiah (Rp) dan mengaktifkan pengaturan PPN CoreTax (Include/Exclude 12%).<br/>
 4. <strong>Laporan PDF:</strong> Buka tab <em>Laporan & History</em> untuk menyaring omzet harian/bulanan dan mengunduh berkas PDF formal.`;
       }
 
