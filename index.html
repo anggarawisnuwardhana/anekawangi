@@ -25,6 +25,13 @@
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    /* Thermal Receipt Printing Style */
+    @media print {
+      body * { visibility: hidden; }
+      #printable-receipt, #printable-receipt * { visibility: visible; }
+      #printable-receipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 80mm; }
+    }
   </style>
 </head>
 <body class="text-slate-800 flex flex-col min-h-screen">
@@ -131,6 +138,7 @@
           </form>
         </div>
 
+        <!-- 1. KERANJANG BELANJA DENGAN TOMBOL EDIT +- & INPUT MANUAL -->
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-4">
             <h2 class="font-bold text-slate-800 flex items-center gap-2">
@@ -147,7 +155,7 @@
                 <tr>
                   <th class="px-3 py-2.5">Produk</th>
                   <th class="px-3 py-2.5 text-right">Harga</th>
-                  <th class="px-3 py-2.5 text-center">Qty</th>
+                  <th class="px-3 py-2.5 text-center">Qty / Satuan</th>
                   <th class="px-3 py-2.5 text-right">Subtotal</th>
                   <th class="px-3 py-2.5 text-center">Aksi</th>
                 </tr>
@@ -205,17 +213,20 @@
       </div>
     </section>
 
-    <!-- TAB 2: STOK & QR BARANG -->
+    <!-- TAB 2: STOK & QR BARANG (DENGAN EDITABLE EDIT/HAPUS & PILIHAN SATUAN PCS, ML, KG) -->
     <section id="sec-stok" class="hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-5 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-4">
             <h2 id="form-product-title" class="font-bold text-slate-900 flex items-center gap-2">
-              <i class="fa-solid fa-square-plus text-blue-600"></i> Tambah / Edit Produk
+              <i class="fa-solid fa-square-plus text-blue-600"></i> <span id="form-title-text">Tambah Produk</span>
             </h2>
+            <button id="btn-cancel-edit" onclick="resetProductForm()" class="hidden text-xs text-red-500 hover:underline">Batal Edit</button>
           </div>
 
           <form id="form-add-product" onsubmit="handleAddProduct(event)" class="space-y-4 text-sm">
+            <input type="hidden" id="edit-mode-index" value="-1">
+            
             <div>
               <label class="block text-xs font-medium text-slate-600 mb-1">Kode QR / Barcode Unique</label>
               <div class="flex gap-2">
@@ -231,15 +242,26 @@
                 class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:outline-none" />
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-3 gap-3">
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">Kategori</label>
-                <input type="text" id="input-kategori" placeholder="Makanan, dll..."
+                <input type="text" id="input-kategori" placeholder="Makanan..."
                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:outline-none" />
               </div>
+              
+              <!-- 6. SATUAN ITEM (PCS, ML, KG) -->
+              <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1">Satuan</label>
+                <select id="input-satuan" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:outline-none">
+                  <option value="pcs">pcs</option>
+                  <option value="ml">ml</option>
+                  <option value="kg">kg</option>
+                </select>
+              </div>
+
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">Jumlah Stok</label>
-                <input type="number" id="input-stok" required min="0" placeholder="0"
+                <input type="number" step="any" id="input-stok" required min="0" placeholder="0"
                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:outline-none" />
               </div>
             </div>
@@ -275,6 +297,7 @@
           </div>
         </div>
 
+        <!-- 5. MENU EDITABLE UNTUK STOK GUDANG (EDIT QTY, HAPUS) -->
         <div class="lg:col-span-7 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-4">
             <h2 class="font-bold text-slate-900 flex items-center gap-2">
@@ -365,16 +388,35 @@
       </div>
     </section>
 
-    <!-- TAB 4: LAPORAN & HISTORY REAL DATA SHEET -->
+    <!-- 2. TAB 4: LAPORAN & HISTORY DENGAN FILTER TANGGAL, BULAN, TAHUN, SEMUA WAKTU -->
     <section id="sec-laporan" class="hidden space-y-6">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center">
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 class="font-bold text-lg text-slate-900">Laporan Keuangan Real-Time</h2>
-          <p class="text-xs text-slate-500">Data dihitung langsung dari Google Sheets</p>
+          <p class="text-xs text-slate-500">Filter berdasarkan rentang periode waktu tertentu</p>
         </div>
-        <button onclick="fetchProfitReportFromSheet()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-arrows-rotate"></i> Hitung Ulang Laporan
-        </button>
+
+        <!-- Filter Laporan Periode -->
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="report-filter-type" onchange="toggleFilterInputs()" class="text-xs px-3 py-2 border rounded-xl bg-slate-50 font-medium">
+            <option value="all">Semua Waktu</option>
+            <option value="daily">Per Tanggal</option>
+            <option value="monthly">Per Bulan</option>
+            <option value="yearly">Per Tahun</option>
+          </select>
+
+          <input type="date" id="filter-date-input" class="hidden text-xs px-3 py-2 border rounded-xl bg-slate-50" />
+          <input type="month" id="filter-month-input" class="hidden text-xs px-3 py-2 border rounded-xl bg-slate-50" />
+          <select id="filter-year-input" class="hidden text-xs px-3 py-2 border rounded-xl bg-slate-50">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026" selected>2026</option>
+          </select>
+
+          <button onclick="fetchProfitReportFromSheet()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-filter"></i> Terapkan Filter
+          </button>
+        </div>
       </div>
 
       <!-- Stat Cards -->
@@ -402,25 +444,45 @@
       </div>
     </section>
 
-    <!-- TAB 5: SIMULASI CORETAX -->
+    <!-- 3. TAB 5: SIMULASI CORETAX DENGAN OPSIONAL PERATURAN TERBARU INDONESIA -->
     <section id="sec-coretax" class="hidden space-y-6">
       <div class="bg-gradient-to-r from-blue-900 to-indigo-800 text-white p-6 rounded-2xl shadow-md">
         <h2 class="text-xl font-bold mb-1">Simulasi CoreTax Indonesia</h2>
-        <p class="text-sm text-blue-100">Proyeksi PPN 12% dan PPh UMKM dari data aktual Google Sheet.</p>
+        <p class="text-sm text-blue-100">Penghitungan pajak sesuai Peraturan CoreTax Dirjen Pajak RI terupdate.</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
-          <h3 class="font-bold text-slate-900 border-b pb-3">Parameter Perpajakan</h3>
+          <h3 class="font-bold text-slate-900 border-b pb-3">Parameter Tax Rules CoreTax</h3>
 
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">Total Omzet Bruto (Rp)</label>
-            <input type="number" id="coretax-omzet" oninput="runCoreTaxSim()" placeholder="0" class="w-full px-3 py-2 font-semibold bg-slate-50 border rounded-xl" />
+            <label class="block text-xs font-medium text-slate-600 mb-1">Skema Pajak Penghasilan (PPh)</label>
+            <select id="coretax-pph-scheme" onchange="runCoreTaxSim()" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none">
+              <option value="umkm_05">PPh Final UMKM PP 55/2022 (0.5% dari Omzet)</option>
+              <option value="pasal_22">PPh Pasal 22 Pemungutan (1.5% dari DPP)</option>
+              <option value="pasal_23">PPh Pasal 23 Jasa/Sewa (2.0% dari DPP)</option>
+              <option value="bebas">Bebas PPh / PTKP Khusus</option>
+            </select>
           </div>
 
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">Total Laba Kotor (Rp)</label>
-            <input type="number" id="coretax-laba-kotor" oninput="runCoreTaxSim()" placeholder="0" class="w-full px-3 py-2 font-semibold bg-slate-50 border rounded-xl" />
+            <label class="block text-xs font-medium text-slate-600 mb-1">Tarif PPN CoreTax</label>
+            <select id="coretax-ppn-rate" onchange="runCoreTaxSim()" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none">
+              <option value="0.12">12% (Tarif Standard PPN CoreTax)</option>
+              <option value="0.11">11% (Tarif Transisi)</option>
+              <option value="0">0% (Fasilitas PPN Dibebaskan/Non-PKP)</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">Total Omzet Bruto (Rp)</label>
+              <input type="number" id="coretax-omzet" oninput="runCoreTaxSim()" placeholder="0" class="w-full px-3 py-2 font-semibold bg-slate-50 border rounded-xl" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">Total Laba Kotor (Rp)</label>
+              <input type="number" id="coretax-laba-kotor" oninput="runCoreTaxSim()" placeholder="0" class="w-full px-3 py-2 font-semibold bg-slate-50 border rounded-xl" />
+            </div>
           </div>
 
           <button onclick="syncDataToCoreTax()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium py-2 rounded-xl">
@@ -432,19 +494,19 @@
           <h3 class="font-bold text-slate-900 border-b pb-3">Hasil Estimasi CoreTax</h3>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between py-1 border-b">
-              <span>DPP PPN</span>
+              <span>Dasar Pengenaan Pajak (DPP)</span>
               <span id="res-dpp" class="font-semibold">Rp 0</span>
             </div>
             <div class="flex justify-between py-1 border-b">
-              <span>PPN (12%)</span>
+              <span>Simulasi PPN</span>
               <span id="res-ppn" class="font-semibold text-blue-600">Rp 0</span>
             </div>
             <div class="flex justify-between py-1 border-b">
-              <span>PPh Final UMKM (0.5%)</span>
+              <span>Estimasi PPh Terutang</span>
               <span id="res-pph" class="font-semibold text-amber-600">Rp 0</span>
             </div>
             <div class="flex justify-between py-2 bg-emerald-50 px-3 rounded-xl">
-              <span class="font-semibold text-emerald-900">Estimasi Laba Bersih Setelah Pajak</span>
+              <span class="font-semibold text-emerald-900">Estimasi Bersih Setelah Pajak</span>
               <span id="res-laba-bersih" class="font-bold text-emerald-700">Rp 0</span>
             </div>
           </div>
@@ -453,6 +515,46 @@
     </section>
 
   </main>
+
+  <!-- 4. MODAL PRINT STRUK CETAK OTOMATIS -->
+  <div id="receipt-modal" class="hidden fixed inset-0 bg-slate-900/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+      <div class="text-center border-b pb-3">
+        <h3 class="font-bold text-lg text-slate-900">Transaksi Berhasil!</h3>
+        <p class="text-xs text-slate-500">Struk siap dicetak / diunduh</p>
+      </div>
+
+      <!-- Thermal Printable Receipt Area -->
+      <div id="printable-receipt" class="bg-slate-50 p-4 rounded-xl text-xs space-y-2 border font-mono">
+        <div class="text-center border-b pb-2">
+          <p class="font-bold text-sm">DJATI STORE</p>
+          <p class="text-[10px]">Jl. Raya Djati Group Indonesia</p>
+          <p id="rec-trx-id" class="text-[10px] text-slate-500 mt-1"></p>
+          <p id="rec-date" class="text-[10px] text-slate-500"></p>
+        </div>
+        <div id="rec-items-list" class="space-y-1 border-b pb-2"></div>
+        <div class="space-y-1">
+          <div class="flex justify-between"><span>Subtotal:</span><span id="rec-subtotal"></span></div>
+          <div class="flex justify-between"><span>PPN (12%):</span><span id="rec-ppn"></span></div>
+          <div class="flex justify-between font-bold"><span>Total:</span><span id="rec-total"></span></div>
+          <div class="flex justify-between"><span>Bayar:</span><span id="rec-pay"></span></div>
+          <div class="flex justify-between"><span>Kembali:</span><span id="rec-change"></span></div>
+        </div>
+        <div class="text-center pt-2 border-t text-[10px] text-slate-400">
+          *** Terima Kasih ***
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="window.print()" class="flex-1 bg-blue-600 text-white font-medium py-2 rounded-xl text-xs hover:bg-blue-700">
+          <i class="fa-solid fa-print mr-1"></i> Cetak Struk
+        </button>
+        <button onclick="closeReceiptModal()" class="bg-slate-100 text-slate-600 font-medium px-4 py-2 rounded-xl text-xs hover:bg-slate-200">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- JAVASCRIPT INTEGRATION LOGIC -->
   <script>
@@ -541,11 +643,18 @@
       }
     }
 
+    // 2. FETCH REPORT DENGAN FILTER TANGGAL, BULAN, TAHUN
     async function fetchProfitReportFromSheet() {
       if (SCRIPT_URL.includes("GANTI_DENGAN_URL")) return;
 
+      const type = document.getElementById("report-filter-type").value;
+      let filterVal = "";
+      if (type === "daily") filterVal = document.getElementById("filter-date-input").value;
+      if (type === "monthly") filterVal = document.getElementById("filter-month-input").value;
+      if (type === "yearly") filterVal = document.getElementById("filter-year-input").value;
+
       try {
-        const res = await fetch(`${SCRIPT_URL}?action=getReport`);
+        const res = await fetch(`${SCRIPT_URL}?action=getReport&filterType=${type}&filterVal=${filterVal}`);
         const data = await res.json();
 
         document.getElementById("stat-omzet").textContent = `Rp ${Number(data.totalOmzet || 0).toLocaleString("id-ID")}`;
@@ -558,33 +667,44 @@
       }
     }
 
-    // ADD / UPDATE PRODUCT TO GOOGLE SHEETS
+    function toggleFilterInputs() {
+      const type = document.getElementById("report-filter-type").value;
+      document.getElementById("filter-date-input").classList.toggle("hidden", type !== "daily");
+      document.getElementById("filter-month-input").classList.toggle("hidden", type !== "monthly");
+      document.getElementById("filter-year-input").classList.toggle("hidden", type !== "yearly");
+    }
+
+    // 5 & 6. ADD / UPDATE / EDIT PRODUCT TO GOOGLE SHEETS
     async function handleAddProduct(e) {
       e.preventDefault();
       const btn = document.getElementById("btn-submit-product");
       btn.disabled = true;
       btn.textContent = "Menyimpan ke Sheet...";
 
+      const editIndex = Number(document.getElementById("edit-mode-index").value);
+
       const item = {
         kodeQR: document.getElementById("input-kode").value.trim(),
         nama: document.getElementById("input-nama").value.trim(),
         kategori: document.getElementById("input-kategori").value.trim(),
+        satuan: document.getElementById("input-satuan").value,
         hargaBeli: Number(document.getElementById("input-harga-beli").value),
         hargaJual: Number(document.getElementById("input-harga-jual").value),
         stok: Number(document.getElementById("input-stok").value)
       };
 
       try {
+        const actionType = editIndex >= 0 ? "updateStock" : "addStock";
         const res = await fetch(SCRIPT_URL, {
           method: "POST",
-          body: JSON.stringify({ action: "addStock", payload: item })
+          body: JSON.stringify({ action: actionType, payload: item })
         });
         const result = await res.json();
 
         if (result.status === "success") {
-          showToast(result.message, "success");
+          showToast(result.message || "Berhasil disimpan", "success");
           renderQRCode(item.kodeQR, item.nama);
-          document.getElementById("form-add-product").reset();
+          resetProductForm();
           fetchProductsFromSheet();
         }
       } catch (err) {
@@ -593,6 +713,50 @@
         btn.disabled = false;
         btn.textContent = "Simpan Produk ke Sheet";
       }
+    }
+
+    function editProduct(kode) {
+      const p = products.find(prod => String(prod.kodeQR) === String(kode));
+      if (!p) return;
+
+      document.getElementById("edit-mode-index").value = 1;
+      document.getElementById("input-kode").value = p.kodeQR;
+      document.getElementById("input-kode").readOnly = true;
+      document.getElementById("input-nama").value = p.nama;
+      document.getElementById("input-kategori").value = p.kategori || "";
+      document.getElementById("input-satuan").value = p.satuan || "pcs";
+      document.getElementById("input-harga-beli").value = p.hargaBeli;
+      document.getElementById("input-harga-jual").value = p.hargaJual;
+      document.getElementById("input-stok").value = p.stok;
+
+      document.getElementById("form-title-text").textContent = "Edit Produk";
+      document.getElementById("btn-cancel-edit").classList.remove("hidden");
+    }
+
+    async function deleteProduct(kode) {
+      if (!confirm(`Yakin ingin menghapus produk dengan kode ${kode}?`)) return;
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "deleteStock", payload: { kodeQR: kode } })
+        });
+        const result = await res.json();
+        if (result.status === "success") {
+          showToast("Produk berhasil dihapus", "success");
+          fetchProductsFromSheet();
+        }
+      } catch (err) {
+        showToast("Gagal menghapus produk", "error");
+      }
+    }
+
+    function resetProductForm() {
+      document.getElementById("form-add-product").reset();
+      document.getElementById("edit-mode-index").value = "-1";
+      document.getElementById("input-kode").readOnly = false;
+      document.getElementById("form-title-text").textContent = "Tambah Produk";
+      document.getElementById("btn-cancel-edit").classList.add("hidden");
     }
 
     // ADD EXPENSE TO GOOGLE SHEETS
@@ -627,16 +791,23 @@
       }
     }
 
-    // CHECKOUT PROCESS TO GOOGLE SHEETS
+    // 4. CHECKOUT PROCESS & OTOMATIS TAMPILKAN STRUK
     async function processCheckout() {
       if (cart.length === 0) return showToast("Keranjang belanja kosong!", "warning");
+
+      const payAmount = Number(document.getElementById("pay-amount").value) || 0;
+      const grandTotalStr = document.getElementById("summary-grandtotal").textContent.replace(/[^0-9]/g, '');
+      const grandTotal = Number(grandTotalStr) || 0;
+
+      if (payAmount < grandTotal) return showToast("Uang pembayaran kurang!", "warning");
 
       const btn = document.getElementById("btn-checkout");
       btn.disabled = true;
       btn.textContent = "Memproses & Mengirim Ke Sheet...";
 
+      const trxId = "TRX-" + Date.now();
       const payload = {
-        idTrx: "TRX-" + Date.now(),
+        idTrx: trxId,
         items: cart.map(item => ({ kodeQR: item.kodeQR, qty: item.qty }))
       };
 
@@ -648,7 +819,8 @@
         const result = await res.json();
 
         if (result.status === "success") {
-          showToast("Transaksi berhasil dicatat di Google Sheets!", "success");
+          showToast("Transaksi berhasil!", "success");
+          showReceiptModal(trxId);
           cart = [];
           renderCart();
           document.getElementById("pay-amount").value = "";
@@ -662,7 +834,38 @@
       }
     }
 
-    // CART & SCANNER UI LOGIC
+    // 4. PRINT RECEIPT DIALOG MODAL
+    function showReceiptModal(trxId) {
+      const subtotalStr = document.getElementById("summary-subtotal").textContent;
+      const ppnStr = document.getElementById("summary-ppn").textContent;
+      const grandTotalStr = document.getElementById("summary-grandtotal").textContent;
+      const payStr = `Rp ${Number(document.getElementById("pay-amount").value || 0).toLocaleString("id-ID")}`;
+      const changeStr = document.getElementById("pay-change").textContent;
+
+      document.getElementById("rec-trx-id").textContent = trxId;
+      document.getElementById("rec-date").textContent = new Date().toLocaleString("id-ID");
+
+      document.getElementById("rec-items-list").innerHTML = cart.map(i => `
+        <div class="flex justify-between">
+          <span>${i.nama} x${i.qty} ${i.satuan || 'pcs'}</span>
+          <span>Rp ${(i.hargaJual * i.qty).toLocaleString("id-ID")}</span>
+        </div>
+      `).join("");
+
+      document.getElementById("rec-subtotal").textContent = subtotalStr;
+      document.getElementById("rec-ppn").textContent = ppnStr;
+      document.getElementById("rec-total").textContent = grandTotalStr;
+      document.getElementById("rec-pay").textContent = payStr;
+      document.getElementById("rec-change").textContent = changeStr;
+
+      document.getElementById("receipt-modal").classList.remove("hidden");
+    }
+
+    function closeReceiptModal() {
+      document.getElementById("receipt-modal").classList.add("hidden");
+    }
+
+    // 1. CART & SCANNER UI LOGIC DENGAN EDIT +- Serta MANUAL EDIT QTY
     function addItemToCartByCode(code) {
       const product = products.find(p => String(p.kodeQR) === String(code));
       if (!product) return showToast(`Barang dengan kode "${code}" tidak ditemukan!`, "error");
@@ -676,6 +879,7 @@
         cart.push({
           kodeQR: product.kodeQR,
           nama: product.nama,
+          satuan: product.satuan || 'pcs',
           hargaJual: Number(product.hargaJual),
           qty: 1
         });
@@ -696,16 +900,62 @@
             <tr>
               <td class="px-3 py-3 font-medium">${item.nama}</td>
               <td class="px-3 py-3 text-right">Rp ${item.hargaJual.toLocaleString("id-ID")}</td>
-              <td class="px-3 py-3 text-center">${item.qty}</td>
+              <td class="px-3 py-3 text-center">
+                <div class="inline-flex items-center space-x-1 bg-slate-100 rounded-lg p-1">
+                  <button onclick="changeCartQty('${item.kodeQR}', -1)" class="w-6 h-6 text-xs bg-white border border-slate-200 rounded font-bold hover:bg-slate-50">-</button>
+                  <input type="number" step="any" min="0.1" value="${item.qty}" onchange="manualSetCartQty('${item.kodeQR}', this.value)" 
+                    class="w-12 text-center text-xs font-semibold bg-transparent focus:outline-none" />
+                  <span class="text-xs text-slate-400 pr-1">${item.satuan || 'pcs'}</span>
+                  <button onclick="changeCartQty('${item.kodeQR}', 1)" class="w-6 h-6 text-xs bg-white border border-slate-200 rounded font-bold hover:bg-slate-50">+</button>
+                </div>
+              </td>
               <td class="px-3 py-3 text-right font-bold">Rp ${subtotal.toLocaleString("id-ID")}</td>
               <td class="px-3 py-3 text-center">
-                <button onclick="updateCartQty('${item.kodeQR}', 0)" class="text-red-500 text-xs"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="updateCartQty('${item.kodeQR}', 0)" class="text-red-500 text-xs hover:text-red-700"><i class="fa-solid fa-xmark"></i></button>
               </td>
             </tr>
           `;
         }).join("");
       }
       calculateCartTotal();
+    }
+
+    function changeCartQty(code, delta) {
+      const item = cart.find(c => c.kodeQR === code);
+      if (!item) return;
+      const product = products.find(p => p.kodeQR === code);
+      const newQty = item.qty + delta;
+
+      if (product && newQty > product.stok) return showToast(`Stok ${product.nama} tidak mencukupi!`, "warning");
+      
+      if (newQty <= 0) {
+        updateCartQty(code, 0);
+      } else {
+        item.qty = Number(newQty.toFixed(2));
+        renderCart();
+      }
+    }
+
+    function manualSetCartQty(code, val) {
+      const parsedVal = parseFloat(val);
+      const item = cart.find(c => c.kodeQR === code);
+      const product = products.find(p => p.kodeQR === code);
+
+      if (!item) return;
+
+      if (isNaN(parsedVal) || parsedVal <= 0) {
+        updateCartQty(code, 0);
+        return;
+      }
+
+      if (product && parsedVal > product.stok) {
+        showToast(`Stok ${product.nama} terbatas (${product.stok})!`, "warning");
+        item.qty = product.stok;
+      } else {
+        item.qty = Number(parsedVal.toFixed(2));
+      }
+
+      renderCart();
     }
 
     function updateCartQty(code, qty) {
@@ -738,6 +988,7 @@
       document.getElementById("pay-change").textContent = `Rp ${Math.max(0, change).toLocaleString("id-ID")}`;
     }
 
+    // 5. STOK TABEL DENGAN TOMBOL EDIT EDITABLE DAN HAPUS
     function renderStockTable() {
       const tbody = document.getElementById("stock-table-body");
       if (products.length === 0) {
@@ -752,10 +1003,16 @@
           <td class="px-3 py-3 text-right">Rp ${Number(p.hargaJual).toLocaleString("id-ID")}</td>
           <td class="px-3 py-3 text-center">
             <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${p.stok > 5 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
-              ${p.stok}
+              ${p.stok} ${p.satuan || 'pcs'}
             </span>
           </td>
-          <td class="px-3 py-3 text-center">
+          <td class="px-3 py-3 text-center space-x-1">
+            <button onclick="editProduct('${p.kodeQR}')" title="Edit Produk" class="text-xs bg-amber-50 text-amber-600 hover:bg-amber-100 px-2 py-1 rounded">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button onclick="deleteProduct('${p.kodeQR}')" title="Hapus Produk" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-2 py-1 rounded">
+              <i class="fa-solid fa-trash"></i>
+            </button>
             <button onclick="renderQRCode('${p.kodeQR}', '${p.nama}')" title="Cetak QR" class="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded">
               <i class="fa-solid fa-qrcode"></i>
             </button>
@@ -801,7 +1058,7 @@
           <div onclick="addItemToCartByCode('${p.kodeQR}'); clearSearch();" class="p-2 hover:bg-blue-50 cursor-pointer flex justify-between">
             <div>
               <p class="font-semibold text-sm">${p.nama}</p>
-              <p class="text-xs text-slate-400">Kode: ${p.kodeQR} | Stok: ${p.stok}</p>
+              <p class="text-xs text-slate-400">Kode: ${p.kodeQR} | Stok: ${p.stok} ${p.satuan || 'pcs'}</p>
             </div>
             <span class="text-sm font-bold text-blue-600">Rp ${Number(p.hargaJual).toLocaleString("id-ID")}</span>
           </div>
@@ -861,6 +1118,7 @@
       }
     }
 
+    // 3. CORETAX RULES SIMULATOR ACCORDING TO INDONESIAN LAWS
     function syncDataToCoreTax() {
       const omzetStr = document.getElementById("stat-omzet").textContent.replace(/[^0-9]/g, '');
       const labaStr = document.getElementById("stat-laba-kotor").textContent.replace(/[^0-9]/g, '');
@@ -873,9 +1131,16 @@
     function runCoreTaxSim() {
       const omzet = Number(document.getElementById("coretax-omzet").value) || 0;
       const labaKotor = Number(document.getElementById("coretax-laba-kotor").value) || 0;
+      const ppnRate = Number(document.getElementById("coretax-ppn-rate").value) || 0;
+      const pphScheme = document.getElementById("coretax-pph-scheme").value;
 
-      const ppn = omzet * 0.12;
-      const pph = omzet * 0.005;
+      let pphRate = 0;
+      if (pphScheme === "umkm_05") pphRate = 0.005;
+      else if (pphScheme === "pasal_22") pphRate = 0.015;
+      else if (pphScheme === "pasal_23") pphRate = 0.02;
+
+      const ppn = omzet * ppnRate;
+      const pph = omzet * pphRate;
       const labaBersih = labaKotor - pph;
 
       document.getElementById("res-dpp").textContent = `Rp ${Math.round(omzet).toLocaleString("id-ID")}`;
