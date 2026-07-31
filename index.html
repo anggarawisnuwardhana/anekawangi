@@ -460,7 +460,13 @@
     <section id="sec-laporan" class="hidden space-y-6">
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 class="font-bold text-lg text-slate-900">Laporan Keuangan & History Real-Time</h2>
+          <div class="flex items-center gap-2">
+            <h2 class="font-bold text-lg text-slate-900">Laporan Keuangan & History Real-Time</h2>
+            <!-- Tag Date / Tanggal Laporan di Web -->
+            <span id="report-date-tag" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+              <i class="fa-regular fa-calendar-days mr-1"></i><span id="report-date-val">-</span>
+            </span>
+          </div>
           <p class="text-xs text-slate-500">Filter transaksi & pengeluaran berdasarkan rentang periode waktu tertentu</p>
         </div>
 
@@ -493,6 +499,12 @@
       </div>
 
       <div id="pdf-report-content" class="space-y-6">
+        <!-- Tag Date khusus Tampilan PDF -->
+        <div class="flex justify-between items-center border-b pb-2 mb-2 text-xs text-slate-600">
+          <span class="font-bold text-slate-800">Laporan Keuangan - Aneka Wangi</span>
+          <span>Dicetak Tanggal: <strong id="pdf-date-tag">-</strong></span>
+        </div>
+
         <!-- Stat Cards -->
         <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
@@ -571,10 +583,11 @@
                     <th class="px-3 py-2">Tanggal</th>
                     <th class="px-3 py-2">Keterangan</th>
                     <th class="px-3 py-2 text-right">Jumlah (Rp)</th>
+                    <th class="px-3 py-2 text-center pdf-exclude">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="report-expense-table-body" class="divide-y divide-slate-100">
-                  <tr><td colspan="3" class="py-4 text-center text-slate-400">Pilih filter lalu klik Terapkan Filter</td></tr>
+                  <tr><td colspan="4" class="py-4 text-center text-slate-400">Pilih filter lalu klik Terapkan Filter</td></tr>
                 </tbody>
               </table>
             </div>
@@ -711,7 +724,21 @@
     window.addEventListener("DOMContentLoaded", () => {
       fetchProductsFromSheet();
       fetchExpensesFromSheet();
+      updateDateTags();
     });
+
+    function updateDateTags() {
+      const currentDateStr = new Date().toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+      const webDateTag = document.getElementById("report-date-val");
+      const pdfDateTag = document.getElementById("pdf-date-tag");
+
+      if (webDateTag) webDateTag.textContent = currentDateStr;
+      if (pdfDateTag) pdfDateTag.textContent = currentDateStr;
+    }
 
     function showToast(message, type = "info") {
       const container = document.getElementById("toast-container");
@@ -794,6 +821,7 @@
         currentReportExpenses = data.expenses || [];
 
         renderReportTables(currentReportSales, currentReportExpenses);
+        updateDateTags();
       } catch (err) {
         showToast("Gagal menghitung laporan keuangan", "error");
       }
@@ -820,13 +848,18 @@
 
       const expBody = document.getElementById("report-expense-table-body");
       if (!reportExpenses || reportExpenses.length === 0) {
-        expBody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-slate-400">Tidak ada data pengeluaran.</td></tr>`;
+        expBody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400">Tidak ada data pengeluaran.</td></tr>`;
       } else {
         expBody.innerHTML = reportExpenses.map(e => `
           <tr class="hover:bg-slate-50">
             <td class="px-3 py-2 text-slate-500">${e.tanggal ? new Date(e.tanggal).toLocaleDateString("id-ID") : '-'}</td>
             <td class="px-3 py-2 font-medium">${e.keterangan}</td>
             <td class="px-3 py-2 text-right font-bold text-red-600">Rp ${Number(e.jumlah || 0).toLocaleString("id-ID")}</td>
+            <td class="px-3 py-2 text-center pdf-exclude">
+              <button onclick="deleteExpenseFromReport('${e.idExp}')" title="Hapus Pengeluaran" class="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-2 py-1 rounded">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
           </tr>
         `).join("");
       }
@@ -870,6 +903,29 @@
       }
     }
 
+    // HAPUS PENGELUARAN DARI MENU LAPORAN
+    async function deleteExpenseFromReport(idExp) {
+      if (!idExp) return;
+      if (!confirm(`Yakin ingin menghapus pengeluaran ini dari laporan?`)) return;
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "deleteExpense", payload: { idExp: idExp } })
+        });
+        const result = await res.json();
+        if (result.status === "success") {
+          showToast("Pengeluaran berhasil dihapus", "success");
+          fetchProfitReportFromSheet();
+          fetchExpensesFromSheet();
+        } else {
+          showToast(result.message || "Gagal menghapus pengeluaran", "error");
+        }
+      } catch (err) {
+        showToast("Gagal menghapus pengeluaran dari database", "error");
+      }
+    }
+
     function toggleFilterInputs() {
       const type = document.getElementById("report-filter-type").value;
       document.getElementById("filter-date-input").classList.toggle("hidden", type !== "daily");
@@ -879,6 +935,7 @@
 
     // FITUR DOWNLOAD LAPORAN PDF
     function downloadReportPDF() {
+      updateDateTags();
       const element = document.getElementById("pdf-report-content");
       const excludeElems = element.querySelectorAll('.pdf-exclude');
       
