@@ -1797,7 +1797,7 @@
           <td class="px-3 py-3 font-medium">${p.nama}</td>
           <td class="px-3 py-3 text-right">Rp ${Number(p.hargaJual).toLocaleString("id-ID")}</td>
           <td class="px-3 py-3 text-center">
-            <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${p.stok > 5 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+            <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${p.stok >= 50 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
               ${p.stok} ${p.satuan || 'pcs'}
             </span>
           </td>
@@ -2068,14 +2068,14 @@
         }
       }
 
-      // CEK STOK YANG MAU HABIS (STOK <= 5)
+      // CEK STOK YANG MAU HABIS (STOK < 50)
       if (query.includes("habis") || query.includes("stok sedikit") || query.includes("hampir habis") || query.includes("mau habis")) {
-        const lowStock = products.filter(p => Number(p.stok) <= 50);
+        const lowStock = products.filter(p => Number(p.stok) < 50);
         if (lowStock.length > 0) {
           let itemsList = lowStock.map(p => `• <strong>${p.nama}</strong>: Sisa ${p.stok} ${p.satuan || 'pcs'}`).join("<br/>");
-          return `⚠️ <strong>Peringatan Stok Menipis!</strong><br/>Beberapa barang ini stoknya tinggal sikit lagi nih boss (<= 50 pcs):<br/><br/>${itemsList}<br/><br/>Segera di-restock biar pembeli nggak kehabisan ya!`;
+          return `⚠️ <strong>Peringatan Stok Menipis!</strong><br/>Beberapa barang ini stoknya tinggal sikit lagi nih boss (< 50 pcs):<br/><br/>${itemsList}<br/><br/>Segera di-restock biar pembeli nggak kehabisan ya!`;
         } else {
-          return `✅ Aman boss! Semua produk kamu stoknya masih aman dan mencukupi di atas 50 unit.`;
+          return `✅ Aman boss! Semua produk kamu stoknya masih aman dan mencukupi di atas/sama dengan 50 unit.`;
         }
       }
 
@@ -2106,8 +2106,7 @@
 3. <strong>Pantau Pengeluaran:</strong> Jangan lupa catat biaya tersembunyi seperti plastik & kantong belanja di menu Pengeluaran Operasional agar laba bersih tetap presisi.`;
       }
 
-      // RESPONS DEFAULT SANTAI
-      return `Saya membaca database Google Sheet toko kamu secara langsung. Kamu bisa tanyakan seputar stok barang yang habis, riwayat transaksi, pengeluaran terbesar, tutorial aplikasi, atau strategi pengembangan toko! 😊`;
+      return `Saya paham! Kamu bisa kelola stok, transaksi kasir, maupun laporan keuangan toko Aneka Wangi secara langsung melalui menu navigasi di atas. Ada lagi yang ingin ditanyakan atau dianalisis?`;
     }
   </script>
 </body>
