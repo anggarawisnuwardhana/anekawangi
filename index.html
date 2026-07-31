@@ -314,13 +314,19 @@
               <span id="summary-subtotal" class="font-semibold text-slate-800">Rp 0</span>
             </div>
 
-            <!-- OPSI HARGA DISKON -->
+            <!-- OPSI HARGA DISKON (DUAL MODE: RUPIAH & PERSENTASE) -->
             <div class="flex justify-between items-center text-slate-600 pt-2 border-t border-dashed">
               <span class="text-xs font-medium text-amber-600 flex items-center gap-1">
-                <i class="fa-solid fa-tags"></i> Diskon (Rp)
+                <i class="fa-solid fa-tags"></i> Diskon
               </span>
-              <input type="number" id="cart-discount" oninput="calculateCartTotal()" min="0" placeholder="0"
-                class="w-28 text-right px-2 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-blue-500 focus:outline-none font-semibold text-amber-600" />
+              <div class="flex items-center gap-1">
+                <select id="cart-discount-type" onchange="calculateCartTotal()" class="text-xs border border-slate-200 bg-slate-50 rounded-lg px-1.5 py-1 font-semibold text-amber-600 focus:outline-none focus:bg-white">
+                  <option value="rp">Rp</option>
+                  <option value="percent">%</option>
+                </select>
+                <input type="number" id="cart-discount" oninput="calculateCartTotal()" min="0" placeholder="0"
+                  class="w-24 text-right px-2 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:border-blue-500 focus:outline-none font-semibold text-amber-600" />
+              </div>
             </div>
 
             <div class="flex justify-between items-center text-slate-600 pt-2 border-t border-dashed">
@@ -1094,27 +1100,57 @@
       renderReportTables(filteredSales, filteredExpenses);
     }
 
-    // CETAK ULANG STRUK TRANSAKSI
+    // CETAK ULANG STRUK TRANSAKSI (PRESISI DAN SAMA SEPERTI AWAL MEMANFAATKAN LOCAL STORAGE METADATA)
     function reprintReceipt(idTrx) {
+      const storedData = localStorage.getItem(`receipt_${idTrx}`);
       const trx = currentReportSales.find(s => String(s.idTrx) === String(idTrx));
-      if (!trx) return showToast("Data transaksi tidak ditemukan", "error");
 
-      document.getElementById("rec-trx-id").textContent = trx.idTrx;
-      document.getElementById("rec-date").textContent = trx.tanggal ? new Date(trx.tanggal).toLocaleString("id-ID") : new Date().toLocaleString("id-ID");
+      if (!trx && !storedData) return showToast("Data transaksi tidak ditemukan", "error");
 
-      document.getElementById("rec-items-list").innerHTML = `
-        <div class="flex justify-between items-start">
-          <span class="pr-2">Transaksi Penjualan (${trx.idTrx})</span>
-          <span class="whitespace-nowrap font-medium">Rp ${Number(trx.total || 0).toLocaleString("id-ID")}</span>
-        </div>
-      `;
+      if (storedData) {
+        const meta = JSON.parse(storedData);
+        document.getElementById("rec-trx-id").textContent = meta.idTrx;
+        document.getElementById("rec-date").textContent = meta.date;
 
-      document.getElementById("rec-subtotal").textContent = `Rp ${Number(trx.total || 0).toLocaleString("id-ID")}`;
-      document.getElementById("rec-discount-row").classList.add("hidden");
-      document.getElementById("rec-ppn").textContent = `Rp 0`;
-      document.getElementById("rec-total").textContent = `Rp ${Number(trx.total || 0).toLocaleString("id-ID")}`;
-      document.getElementById("rec-pay").textContent = `Rp ${Number(trx.total || 0).toLocaleString("id-ID")}`;
-      document.getElementById("rec-change").textContent = `Rp 0`;
+        document.getElementById("rec-items-list").innerHTML = meta.items.map(i => `
+          <div class="flex justify-between items-start">
+            <span class="pr-2">${i.nama} x${i.qty} ${i.satuan || 'pcs'}</span>
+            <span class="whitespace-nowrap font-medium">Rp ${(i.hargaJual * i.qty).toLocaleString("id-ID")}</span>
+          </div>
+        `).join("");
+
+        document.getElementById("rec-subtotal").textContent = meta.subtotalStr;
+        
+        const discRow = document.getElementById("rec-discount-row");
+        if (meta.discountVal > 0) {
+          discRow.classList.remove("hidden");
+          document.getElementById("rec-discount").textContent = meta.discountStr;
+        } else {
+          discRow.classList.add("hidden");
+        }
+
+        document.getElementById("rec-ppn").textContent = meta.ppnStr;
+        document.getElementById("rec-total").textContent = meta.grandTotalStr;
+        document.getElementById("rec-pay").textContent = meta.payStr;
+        document.getElementById("rec-change").textContent = meta.changeStr;
+      } else {
+        document.getElementById("rec-trx-id").textContent = trx.idTrx;
+        document.getElementById("rec-date").textContent = trx.tanggal ? new Date(trx.tanggal).toLocaleString("id-ID") : new Date().toLocaleString("id-ID");
+
+        document.getElementById("rec-items-list").innerHTML = `
+          <div class="flex justify-between items-start">
+            <span class="pr-2">Transaksi Penjualan (${trx.idTrx})</span>
+            <span class="whitespace-nowrap font-medium">Rp ${Number(trx.total || 0).toLocaleString("id-ID")}</span>
+          </div>
+        `;
+
+        document.getElementById("rec-subtotal").textContent = `Rp ${Number(trx.total || 0).toLocaleString("id-ID")}`;
+        document.getElementById("rec-discount-row").classList.add("hidden");
+        document.getElementById("rec-ppn").textContent = `Rp 0`;
+        document.getElementById("rec-total").textContent = `Rp ${Number(trx.total || 0).toLocaleString("id-ID")}`;
+        document.getElementById("rec-pay").textContent = `Rp ${Number(trx.total || 0).toLocaleString("id-ID")}`;
+        document.getElementById("rec-change").textContent = `Rp 0`;
+      }
 
       document.getElementById("receipt-modal").classList.remove("hidden");
     }
@@ -1130,6 +1166,7 @@
         });
         const result = await res.json();
         if (result.status === "success") {
+          localStorage.removeItem(`receipt_${idTrx}`);
           showToast("Transaksi berhasil dihapus", "success");
           fetchProfitReportFromSheet();
           loadDashboardData();
@@ -1397,7 +1434,7 @@
       document.getElementById("btn-cancel-expense-edit").classList.add("hidden");
     }
 
-    // CHECKOUT DENGAN VALIDASI STOK & DISKON
+    // CHECKOUT DENGAN VALIDASI STOK, SIMPAN META DATA CETAK, & DISKON
     async function processCheckout() {
       if (cart.length === 0) return showToast("Keranjang belanja kosong!", "warning");
 
@@ -1459,14 +1496,41 @@
 
     function showReceiptModal(trxId) {
       const subtotalStr = document.getElementById("summary-subtotal").textContent;
-      const discountVal = Number(document.getElementById("cart-discount").value) || 0;
+      const discountInput = Number(document.getElementById("cart-discount").value) || 0;
+      const discountType = document.getElementById("cart-discount-type").value;
+      const rawSubtotal = cart.reduce((sum, item) => sum + (item.hargaJual * item.qty), 0);
+      
+      let calculatedDiscount = 0;
+      if (discountType === "percent") {
+        calculatedDiscount = Math.round((rawSubtotal * discountInput) / 100);
+      } else {
+        calculatedDiscount = discountInput;
+      }
+
       const ppnStr = document.getElementById("summary-ppn").textContent;
       const grandTotalStr = document.getElementById("summary-grandtotal").textContent;
       const payStr = `Rp ${Number(document.getElementById("pay-amount").value || 0).toLocaleString("id-ID")}`;
       const changeStr = document.getElementById("pay-change").textContent;
+      const dateStr = new Date().toLocaleString("id-ID");
+
+      // SIMPAN METADATA UNTUK KEBUTUHAN CETAK ULANG PERSISI LATER
+      const receiptMetaData = {
+        idTrx: trxId,
+        date: dateStr,
+        items: [...cart],
+        subtotalStr: subtotalStr,
+        discountVal: calculatedDiscount,
+        discountStr: `Rp ${calculatedDiscount.toLocaleString("id-ID")}`,
+        ppnStr: ppnStr,
+        grandTotalStr: grandTotalStr,
+        payStr: payStr,
+        changeStr: changeStr
+      };
+
+      localStorage.setItem(`receipt_${trxId}`, JSON.stringify(receiptMetaData));
 
       document.getElementById("rec-trx-id").textContent = trxId;
-      document.getElementById("rec-date").textContent = new Date().toLocaleString("id-ID");
+      document.getElementById("rec-date").textContent = dateStr;
 
       document.getElementById("rec-items-list").innerHTML = cart.map(i => `
         <div class="flex justify-between items-start">
@@ -1478,9 +1542,9 @@
       document.getElementById("rec-subtotal").textContent = subtotalStr;
       
       const discRow = document.getElementById("rec-discount-row");
-      if (discountVal > 0) {
+      if (calculatedDiscount > 0) {
         discRow.classList.remove("hidden");
-        document.getElementById("rec-discount").textContent = `Rp ${discountVal.toLocaleString("id-ID")}`;
+        document.getElementById("rec-discount").textContent = `Rp ${calculatedDiscount.toLocaleString("id-ID")}`;
       } else {
         discRow.classList.add("hidden");
       }
@@ -1607,12 +1671,20 @@
       renderCart();
     }
 
-    // MEMPERHITUNGKAN KAN HARGA DISKON
+    // MEMPERHITUNGKAN HARGA DISKON DUA BENTUK (RUPIAH ATAU PERSENTASE)
     function calculateCartTotal() {
       const rawSubtotal = cart.reduce((sum, item) => sum + (item.hargaJual * item.qty), 0);
-      const discountVal = Number(document.getElementById("cart-discount").value) || 0;
+      const discountInput = Number(document.getElementById("cart-discount").value) || 0;
+      const discountType = document.getElementById("cart-discount-type").value;
       
-      const subtotalAfterDiscount = Math.max(0, rawSubtotal - discountVal);
+      let calculatedDiscount = 0;
+      if (discountType === "percent") {
+        calculatedDiscount = (rawSubtotal * discountInput) / 100;
+      } else {
+        calculatedDiscount = discountInput;
+      }
+
+      const subtotalAfterDiscount = Math.max(0, rawSubtotal - calculatedDiscount);
       const ppnChecked = document.getElementById("ppn-toggle").checked;
       const ppn = ppnChecked ? Math.round(subtotalAfterDiscount * 0.12) : 0;
       const grandTotal = subtotalAfterDiscount + ppn;
