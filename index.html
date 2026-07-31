@@ -2070,12 +2070,12 @@
 
       // CEK STOK YANG MAU HABIS (STOK <= 5)
       if (query.includes("habis") || query.includes("stok sedikit") || query.includes("hampir habis") || query.includes("mau habis")) {
-        const lowStock = products.filter(p => Number(p.stok) <= 5);
+        const lowStock = products.filter(p => Number(p.stok) <= 50);
         if (lowStock.length > 0) {
           let itemsList = lowStock.map(p => `• <strong>${p.nama}</strong>: Sisa ${p.stok} ${p.satuan || 'pcs'}`).join("<br/>");
-          return `⚠️ <strong>Peringatan Stok Menipis!</strong><br/>Beberapa barang ini stoknya tinggal sikit lagi nih boss (<= 5 pcs):<br/><br/>${itemsList}<br/><br/>Segera di-restock biar pembeli nggak kehabisan ya!`;
+          return `⚠️ <strong>Peringatan Stok Menipis!</strong><br/>Beberapa barang ini stoknya tinggal sikit lagi nih boss (<= 50 pcs):<br/><br/>${itemsList}<br/><br/>Segera di-restock biar pembeli nggak kehabisan ya!`;
         } else {
-          return `✅ Aman boss! Semua produk kamu stoknya masih aman dan mencukupi di atas 5 unit.`;
+          return `✅ Aman boss! Semua produk kamu stoknya masih aman dan mencukupi di atas 50 unit.`;
         }
       }
 
