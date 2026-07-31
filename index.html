@@ -301,26 +301,33 @@
             <h2 class="font-bold text-slate-900 flex items-center gap-2">
               <i class="fa-solid fa-boxes-packing text-blue-600"></i> Data Stok
             </h2>
-            <button onclick="fetchProductsFromSheet()" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-lg font-medium">
-              <i class="fa-solid fa-rotate mr-1"></i> Refresh Data
-            </button>
+            <div class="flex items-center gap-2">
+              <button onclick="downloadStockPDF()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1">
+                <i class="fa-solid fa-file-pdf"></i> Download PDF
+              </button>
+              <button onclick="fetchProductsFromSheet()" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-lg font-medium">
+                <i class="fa-solid fa-rotate mr-1"></i> Refresh Data
+              </button>
+            </div>
           </div>
 
-          <div class="overflow-x-auto max-h-[500px]">
-            <table class="w-full text-sm text-left">
-              <thead class="bg-slate-50 text-slate-500 uppercase text-xs sticky top-0">
-                <tr>
-                  <th class="px-3 py-2.5">Kode</th>
-                  <th class="px-3 py-2.5">Nama Produk</th>
-                  <th class="px-3 py-2.5 text-right">Harga Jual</th>
-                  <th class="px-3 py-2.5 text-center">Stok</th>
-                  <th class="px-3 py-2.5 text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="stock-table-body" class="divide-y divide-slate-100">
-                <tr><td colspan="5" class="py-6 text-center text-slate-400">Memuat data...</td></tr>
-              </tbody>
-            </table>
+          <div id="pdf-stock-container">
+            <div class="overflow-x-auto max-h-[500px]">
+              <table class="w-full text-sm text-left">
+                <thead class="bg-slate-50 text-slate-500 uppercase text-xs sticky top-0">
+                  <tr>
+                    <th class="px-3 py-2.5">Kode</th>
+                    <th class="px-3 py-2.5">Nama Produk</th>
+                    <th class="px-3 py-2.5 text-right">Harga Jual</th>
+                    <th class="px-3 py-2.5 text-center">Stok</th>
+                    <th class="px-3 py-2.5 text-center pdf-exclude">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="stock-table-body" class="divide-y divide-slate-100">
+                  <tr><td colspan="5" class="py-6 text-center text-slate-400">Memuat data...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -757,6 +764,31 @@
       });
     }
 
+    // FITUR DOWNLOAD LAPORAN STOK PDF
+    function downloadStockPDF() {
+      const element = document.getElementById("pdf-stock-container");
+      const excludeElems = element.querySelectorAll('.pdf-exclude');
+      
+      excludeElems.forEach(el => el.style.display = 'none');
+
+      const opt = {
+        margin:       0.4,
+        filename:     `Laporan_Stok_Barang_${new Date().toISOString().slice(0,10)}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
+      showToast("Mengekspor PDF Stok Barang...", "info");
+      html2pdf().set(opt).from(element).save().then(() => {
+        excludeElems.forEach(el => el.style.display = '');
+        showToast("PDF Stok Barang berhasil diunduh!", "success");
+      }).catch(err => {
+        excludeElems.forEach(el => el.style.display = '');
+        showToast("Gagal mengunduh PDF Stok", "error");
+      });
+    }
+
     async function handleAddProduct(e) {
       e.preventDefault();
       const btn = document.getElementById("btn-submit-product");
@@ -1123,7 +1155,7 @@
               ${p.stok} ${p.satuan || 'pcs'}
             </span>
           </td>
-          <td class="px-3 py-3 text-center space-x-1">
+          <td class="px-3 py-3 text-center space-x-1 pdf-exclude">
             <button onclick="editProduct('${p.kodeQR}')" title="Edit Produk" class="text-xs bg-amber-50 text-amber-600 hover:bg-amber-100 px-2 py-1 rounded">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
