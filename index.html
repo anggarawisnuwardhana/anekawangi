@@ -140,6 +140,9 @@
         <button onclick="switchTab('coretax')" id="tab-coretax" class="py-3 px-1 text-slate-500 hover:text-slate-700 flex items-center space-x-2 shrink-0">
           <i class="fa-solid fa-calculator"></i><span>Simulasi CoreTax</span>
         </button>
+        <button onclick="switchTab('ai-assistant')" id="tab-ai-assistant" class="py-3 px-1 text-slate-500 hover:text-slate-700 flex items-center space-x-2 shrink-0">
+          <i class="fa-solid fa-robot"></i><span>AI Assistant</span>
+        </button>
       </div>
     </nav>
   </header>
@@ -381,7 +384,7 @@
               <div class="flex gap-2">
                 <input type="text" id="input-kode" required placeholder="Contoh: BRG-001"
                   class="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:outline-none" />
-                <button type="button" onclick="generateAutoCode()" class="bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl text-xs font-medium">Auto</button>
+                <button type="button" id="btn-auto-code" onclick="generateAutoCode()" class="bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl text-xs font-medium">Auto</button>
               </div>
             </div>
 
@@ -774,6 +777,50 @@
       </div>
     </section>
 
+    <!-- TAB 6: AI ASSISTANT -->
+    <section id="sec-ai-assistant" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl shadow-md flex justify-between items-center">
+        <div>
+          <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+            <i class="fa-solid fa-robot"></i> AI Assistant
+          </h2>
+          <p class="text-sm text-blue-100">Asisten cerdas untuk menganalisis dan menjelaskan data toko berdasarkan database sheet Anda.</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[550px] overflow-hidden">
+        <!-- AI Chat Messages Area -->
+        <div id="ai-chat-box" class="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50 text-sm">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0">AI</div>
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 max-w-xl text-slate-800 shadow-sm">
+              Halo! Saya Asisten AI Aneka Wangi. Saya bisa membantu Anda menganalisis stok barang, informasi produk, maupun performa penjualan toko berdasarkan database. Ada yang ingin Anda tanyakan?
+            </div>
+          </div>
+        </div>
+
+        <!-- Preset Suggestions -->
+        <div class="px-4 py-2 border-t border-slate-100 bg-white flex items-center gap-2 overflow-x-auto text-xs">
+          <span class="text-slate-400 font-medium shrink-0">Rekomendasi:</span>
+          <button onclick="sendQuickAiQuery('Sebutkan produk yang stoknya hampir habis!')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">Stok Hampir Habis</button>
+          <button onclick="sendQuickAiQuery('Berapa total produk yang terdaftar di database?')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">Total Produk</button>
+          <button onclick="sendQuickAiQuery('Produk apa saja yang paling mahal?')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">Produk Termahal</button>
+          <button onclick="sendQuickAiQuery('Berikan ringkasan performa toko!')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full whitespace-nowrap">Ringkasan Toko</button>
+        </div>
+
+        <!-- Input Chat -->
+        <div class="p-3 bg-white border-t border-slate-200">
+          <form onsubmit="handleAiSubmit(event)" class="flex gap-2">
+            <input type="text" id="ai-input" placeholder="Tanyakan seputar data stok, barang, atau keuangan..."
+              class="flex-1 px-4 py-2.5 text-sm bg-slate-100 focus:bg-white border border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" />
+            <button type="submit" id="btn-send-ai" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm transition flex items-center gap-2 shrink-0">
+              <i class="fa-solid fa-paper-plane"></i> Kirim
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- MODAL PRINT STRUK CETAK OTOMATIS -->
@@ -897,7 +944,7 @@
     }
 
     function switchTab(tab) {
-      const tabs = ['dashboard', 'kasir', 'stok', 'pengeluaran', 'laporan', 'coretax'];
+      const tabs = ['dashboard', 'kasir', 'stok', 'pengeluaran', 'laporan', 'coretax', 'ai-assistant'];
       tabs.forEach(t => {
         document.getElementById(`sec-${t}`).classList.add("hidden");
         document.getElementById(`tab-${t}`).classList.remove("active-tab");
@@ -1334,7 +1381,13 @@
 
       document.getElementById("edit-mode-index").value = 1;
       document.getElementById("input-kode").value = p.kodeQR;
+      
+      /* MATIKAN EDIT KODE ID BARANG AGAR TIDAK TERGANTI SECARA TIDAK SENGADJA */
       document.getElementById("input-kode").readOnly = true;
+      document.getElementById("input-kode").classList.add("bg-slate-200", "cursor-not-allowed");
+      document.getElementById("btn-auto-code").disabled = true;
+      document.getElementById("btn-auto-code").classList.add("opacity-50", "cursor-not-allowed");
+
       document.getElementById("input-nama").value = p.nama;
       document.getElementById("input-kategori").value = p.kategori || "";
       document.getElementById("input-satuan").value = p.satuan || "pcs";
@@ -1367,7 +1420,13 @@
     function resetProductForm() {
       document.getElementById("form-add-product").reset();
       document.getElementById("edit-mode-index").value = "-1";
+      
+      /* NORMALKAN INPUT KODE SAAT RESET FORM */
       document.getElementById("input-kode").readOnly = false;
+      document.getElementById("input-kode").classList.remove("bg-slate-200", "cursor-not-allowed");
+      document.getElementById("btn-auto-code").disabled = false;
+      document.getElementById("btn-auto-code").classList.remove("opacity-50", "cursor-not-allowed");
+
       document.getElementById("form-title-text").textContent = "Tambah Produk";
       document.getElementById("btn-cancel-edit").classList.add("hidden");
     }
@@ -1955,6 +2014,132 @@
       document.getElementById("res-ppn").textContent = `Rp ${Math.round(ppn).toLocaleString("id-ID")}`;
       document.getElementById("res-pph").textContent = `Rp ${Math.round(pph).toLocaleString("id-ID")}`;
       document.getElementById("res-laba-bersih").textContent = `Rp ${Math.round(labaBersih).toLocaleString("id-ID")}`;
+    }
+
+    /* AI ASSISTANT ENGINE (BERDASARKAN DATABASE SHEET PRODUK & EXPENSES) */
+    function sendQuickAiQuery(queryText) {
+      document.getElementById("ai-input").value = queryText;
+      handleAiSubmit(new Event('submit'));
+    }
+
+    function handleAiSubmit(e) {
+      e.preventDefault();
+      const inputEl = document.getElementById("ai-input");
+      const userText = inputEl.value.trim();
+      if (!userText) return;
+
+      appendAiChatMessage("user", userText);
+      inputEl.value = "";
+
+      const loadingId = appendAiLoadingMessage();
+
+      setTimeout(() => {
+        const aiResponse = generateAiResponse(userText);
+        removeAiLoadingMessage(loadingId);
+        appendAiChatMessage("ai", aiResponse);
+      }, 600);
+    }
+
+    function appendAiChatMessage(sender, text) {
+      const chatBox = document.getElementById("ai-chat-box");
+      const wrapper = document.createElement("div");
+      wrapper.className = "flex items-start gap-3 " + (sender === "user" ? "justify-end" : "");
+
+      if (sender === "ai") {
+        wrapper.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0">AI</div>
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200 max-w-xl text-slate-800 shadow-sm leading-relaxed">${text}</div>
+        `;
+      } else {
+        wrapper.innerHTML = `
+          <div class="bg-blue-600 text-white p-3.5 rounded-2xl max-w-xl shadow-sm leading-relaxed">${text}</div>
+        `;
+      }
+
+      chatBox.appendChild(wrapper);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function appendAiLoadingMessage() {
+      const chatBox = document.getElementById("ai-chat-box");
+      const id = "loading-" + Date.now();
+      const wrapper = document.createElement("div");
+      wrapper.id = id;
+      wrapper.className = "flex items-start gap-3";
+      wrapper.innerHTML = `
+        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0">AI</div>
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 max-w-xl text-slate-400 shadow-sm italic flex items-center gap-2">
+          <i class="fa-solid fa-circle-notch animate-spin text-blue-600"></i> Memproses data dari Database Sheet...
+        </div>
+      `;
+      chatBox.appendChild(wrapper);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      return id;
+    }
+
+    function removeAiLoadingMessage(id) {
+      const elem = document.getElementById(id);
+      if (elem) elem.remove();
+    }
+
+    function generateAiResponse(q) {
+      const query = q.toLowerCase();
+
+      if (query.includes("stok") && (query.includes("habis") || query.includes("sedikit") || query.includes("kurang"))) {
+        const lowStock = products.filter(p => Number(p.stok) <= 5);
+        if (lowStock.length === 0) {
+          return "Semua produk saat ini dalam kondisi stok aman (di atas 5 unit).";
+        }
+        let list = lowStock.map(p => `• <strong>${p.nama}</strong> (${p.kodeQR}): sisa <strong>${p.stok} ${p.satuan || 'pcs'}</strong>`).join("<br/>");
+        return `Ditemukan <strong>${lowStock.length} produk</strong> dengan stok hampir habis (<= 5 unit):<br/><br/>${list}`;
+      }
+
+      if (query.includes("total") && (query.includes("produk") || query.includes("barang") || query.includes("item"))) {
+        const totalItems = products.length;
+        const totalStockCount = products.reduce((sum, p) => sum + Number(p.stok || 0), 0);
+        return `Saat ini terdapat <strong>${totalItems} variasi produk</strong> terdaftar di database Sheet dengan total akumulasi ketersediaan <strong>${totalStockCount} unit</strong>.`;
+      }
+
+      if (query.includes("mahal") || query.includes("tertinggi") || query.includes("harga jual")) {
+        if (products.length === 0) return "Belum ada data produk di database.";
+        const sorted = [...products].sort((a, b) => Number(b.hargaJual) - Number(a.hargaJual)).slice(0, 5);
+        let list = sorted.map((p, i) => `${i+1}. <strong>${p.nama}</strong> - Rp ${Number(p.hargaJual).toLocaleString("id-ID")}`).join("<br/>");
+        return `Berikut 5 produk dengan harga jual tertinggi di toko Anda:<br/><br/>${list}`;
+      }
+
+      if (query.includes("ringkasan") || query.includes("performa") || query.includes("laporan") || query.includes("omzet")) {
+        const totalProds = products.length;
+        const omzetText = document.getElementById("dash-stat-omzet").textContent;
+        const labaText = document.getElementById("dash-stat-lababersih").textContent;
+        const expText = document.getElementById("dash-stat-pengeluaran").textContent;
+
+        return `<strong>Ringkasan Toko Aneka Wangi:</strong><br/>
+          • Total Variasi Produk: <strong>${totalProds} Jenis</strong><br/>
+          • Omzet Penjualan: <strong>${omzetText}</strong><br/>
+          • Total Pengeluaran: <strong>${expText}</strong><br/>
+          • Estimasi Laba Bersih: <strong>${labaText}</strong>`;
+      }
+
+      if (query.includes("pengeluaran") || query.includes("beban") || query.includes("biaya")) {
+        if (expenses.length === 0) return "Belum ada data catatan pengeluaran operasional yang terdaftar.";
+        const totalExpVal = expenses.reduce((sum, e) => sum + Number(e.jumlah || 0), 0);
+        const lastExp = expenses[expenses.length - 1];
+        return `Total akumulasi pengeluaran tercatat adalah <strong>Rp ${totalExpVal.toLocaleString("id-ID")}</strong> dari total ${expenses.length} catatan. Catatan pengeluaran terakhir: <em>"${lastExp.keterangan}"</em> sebesar Rp ${Number(lastExp.jumlah).toLocaleString("id-ID")}.`;
+      }
+
+      // Default Response / Search Specific Product
+      const matched = products.filter(p => p.nama.toLowerCase().includes(query) || String(p.kodeQR).toLowerCase().includes(query));
+      if (matched.length > 0) {
+        let details = matched.map(p => 
+          `• <strong>${p.nama}</strong> [${p.kodeQR}]<br/>` +
+          `  - Stok: ${p.stok} ${p.satuan || 'pcs'}<br/>` +
+          `  - Harga Beli (HPP): Rp ${Number(p.hargaBeli).toLocaleString("id-ID")}<br/>` +
+          `  - Harga Jual: Rp ${Number(p.hargaJual).toLocaleString("id-ID")}`
+        ).join("<br/><br/>");
+        return `Berikut data produk yang cocok dengan pencarian Anda dari database Sheet:<br/><br/>${details}`;
+      }
+
+      return `Maaf, saya tidak menemukan informasi yang spesifik mengenai "${q}". Anda dapat menanyakan tentang informasi stok barang, harga termahal, ringkasan performa toko, atau nama produk tertentu.`;
     }
   </script>
 </body>
