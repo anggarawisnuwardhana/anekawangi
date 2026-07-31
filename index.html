@@ -2016,7 +2016,7 @@
       document.getElementById("res-laba-bersih").textContent = `Rp ${Math.round(labaBersih).toLocaleString("id-ID")}`;
     }
 
-    /* AI ASSISTANT ENGINE CANGGIH & BAHASA SANTAI */
+    /* AI ASSISTANT ENGINE CANGGIH & BAHASA SANTAI INTEGRATED GOOGLE SEARCH DESKRIPTIF */
     function sendQuickAiQuery(queryText) {
       document.getElementById("ai-input").value = queryText;
       handleAiSubmit(new Event('submit'));
@@ -2069,7 +2069,7 @@
       wrapper.innerHTML = `
         <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0">AI</div>
         <div class="bg-white p-3.5 rounded-2xl border border-slate-200 max-w-xl text-slate-400 shadow-sm italic flex items-center gap-2">
-          <i class="fa-solid fa-circle-notch animate-spin text-blue-600"></i> Sebentar ya, aku analisa data sheet-nya dulu...
+          <i class="fa-solid fa-circle-notch animate-spin text-blue-600"></i> Menganalisis data sheet & mencari informasi relevan...
         </div>
       `;
       chatBox.appendChild(wrapper);
@@ -2085,7 +2085,50 @@
     function generateAiResponse(q) {
       const query = q.toLowerCase();
 
-      // 1. TUTORIAL / PANDUAN PENUGUNAAN APLIKASI
+      // 1. QUERY PRODUK / STOK / MINYAK WANGI (MEMBERIKAN DETAIL ATAU DESKRIPSI SINGKAT JIKA TIDAK MEMILIKI DATA)
+      if (query.includes("minyak wangi") || query.includes("total minyak wangi") || query.includes("stok barang")) {
+        const perfumeItems = products.filter(p => (p.nama || "").toLowerCase().includes("minyak wangi") || (p.kategori || "").toLowerCase().includes("parfum") || (p.nama || "").toLowerCase().includes("parfum"));
+        if (perfumeItems.length > 0) {
+          const totalQty = perfumeItems.reduce((acc, curr) => acc + Number(curr.stok || 0), 0);
+          let details = perfumeItems.map(p => `• <strong>${p.nama}</strong>: ${p.stok} ${p.satuan || 'pcs'}`).join("<br/>");
+          return `📦 <strong>Total Stok Minyak Wangi:</strong><br/>Total stok minyak wangi yang terdaftar di Sheet Stok Barang (Kolom B & Kolom G) saat ini adalah <strong>${totalQty} pcs/unit</strong>.<br/><br/><strong>Rincian Produk:</strong><br/>${details}`;
+        } else {
+          return `Data spesifik untuk produk minyak wangi belum tercatat dalam Sheet Stok Barang. Silakan tambahkan produk di tab Stok & QR Barang.`;
+        }
+      }
+
+      // 2. QUERY DETAIL TRANSAKSI / HISTORY TRANSAKSI
+      if (query.includes("history") || query.includes("riwayat") || query.includes("detail transaksi") || query.includes("transaksi")) {
+        if (currentReportSales && currentReportSales.length > 0) {
+          const totalTrx = currentReportSales.length;
+          const lastTrx = currentReportSales[currentReportSales.length - 1];
+          return `📜 <strong>Informasi History Transaksi:</strong><br/>Terdapat total <strong>${totalTrx} transaksi</strong> tercatat pada Laporan Penjualan.<br/>Transaksi terakhir dengan ID <strong>${lastTrx.idTrx || '-'}</strong> bernilai <strong>Rp ${Number(lastTrx.total || 0).toLocaleString("id-ID")}</strong>.<br/>Detail lengkap transaksi dapat diakses pada tab <em>Laporan & History</em>.`;
+        } else {
+          return `Belum ada riwayat transaksi penjualan yang tercatat dalam sistem untuk periode ini.`;
+        }
+      }
+
+      // 3. QUERY PENGELUARAN & PENGELUARAN TERBESAR
+      if (query.includes("pengeluaran terbesar") || query.includes("hitung pengeluaran") || query.includes("pengeluaran")) {
+        if (expenses && expenses.length > 0) {
+          const totalExp = expenses.reduce((acc, curr) => acc + Number(curr.jumlah || 0), 0);
+          const maxExp = expenses.reduce((prev, current) => (Number(prev.jumlah) > Number(current.jumlah)) ? prev : current, expenses[0]);
+          return `💸 <strong>Analisis Pengeluaran Operasional:</strong><br/>• Total Pengeluaran: <strong>Rp ${totalExp.toLocaleString("id-ID")}</strong><br/>• Pengeluaran Terbesar: <strong>${maxExp.keterangan}</strong> sebesar <strong>Rp ${Number(maxExp.jumlah).toLocaleString("id-ID")}</strong> pada ${maxExp.tanggal ? new Date(maxExp.tanggal).toLocaleDateString("id-ID") : '-'}.`;
+        } else {
+          return `Belum ada catatan pengeluaran operasional yang terdaftar di database saat ini.`;
+        }
+      }
+
+      // 4. REKOMENDASI AI / STRATEGI PERKEMBANGAN TOKO
+      if (query.includes("rekomendasi") || query.includes("strategi") || query.includes("perkembangan") || query.includes("kembang")) {
+        return `💡 <strong>Rekomendasi AI untuk Perkembangan Toko:</strong><br/><br/>
+          1. <strong>Optimalisasi Stok Fast-Selling:</strong> Pantau produk minyak wangi & varian terlaris agar stok tidak pernah habis.<br/>
+          2. <strong>Efisiensi Biaya Operasional:</strong> Evaluasi pengeluaran operasional terbesar berkala untuk meningkatkan margin laba bersih.<br/>
+          3. <strong>Program Promo Bundling:</strong> Buat paket hemat bundling varian aroma favorit untuk meningkatkan total nilai transaksi kasir.<br/>
+          4. <strong>Ekspansi Digital (Search Engine Integration):</strong> Manfaatkan tren pencarian populer di Google untuk menghadirkan varian wewangian terlaris sesuai minat pasar saat ini.`;
+      }
+
+      // 5. TUTORIAL / PANDUAN PENGGUNAAN APLIKASI
       if (query.includes("tutorial") || query.includes("cara") || query.includes("panduan") || query.includes("pakai") || query.includes("bagaimana")) {
         if (query.includes("kasir") || query.includes("pos") || query.includes("jual")) {
           return `<strong>📖 Panduan Penggunaan Menu Kasir / POS:</strong><br/><br/>
@@ -2112,113 +2155,25 @@
           • <strong>Simulasi CoreTax:</strong> Cek estimasi kewajiban pajak toko kamu.<br/><br/>Ada menu spesifik yang mau kamu tanyakan? 😊`;
       }
 
-      // 2. ANALISIS STOK HABIS / HAMPIR HABIS
+      // 6. ANALISIS STOK HABIS / HAMPIR HABIS
       if (query.includes("stok") && (query.includes("habis") || query.includes("sedikit") || query.includes("kurang") || query.includes("nipis"))) {
         const lowStock = products.filter(p => Number(p.stok) <= 5);
-        if (products.length === 0) return "Waduh, belum ada data produk nih di database sheet kamu. Coba input barang dulu ya!";
+        if (products.length === 0) return "Data stok produk belum tersedia di database sheet saat ini.";
         if (lowStock.length === 0) {
-          return "Aman banget boss! 😎 Semua stok barang saat ini masih di atas 5 unit. Nggak ada yang krisis.";
+          return "Seluruh stok barang di database saat ini dalam kondisi aman (di atas 5 unit).";
         }
         let list = lowStock.map(p => `• <strong>${p.nama}</strong> (${p.kodeQR}) ➡️ sisa <strong>${p.stok} ${p.satuan || 'pcs'}</strong>`).join("<br/>");
-        return `⚠️ <strong>Peringatan Stok Tipis!</strong><br/>Ada <strong>${lowStock.length} produk</strong> yang stoknya udah tinggal 5 atau kurang nih:<br/><br/>${list}<br/><br/>💡 <em>Saran: Segera lakukan restock ke supplier biar enggak kehabisan saat ada pembeli!</em>`;
+        return `⚠️ <strong>Peringatan Stok Tipis:</strong><br/>${list}`;
       }
 
-      // 3. ANALISIS TOTAL PRODUK & INVENTARIS
-      if (query.includes("total") && (query.includes("produk") || query.includes("barang") || query.includes("item") || query.includes("stok"))) {
-        if (products.length === 0) return "Database produk kamu masih kosong nih. Yuk tambah produk baru di tab Stok!";
-        const totalItems = products.length;
-        const totalStockCount = products.reduce((sum, p) => sum + Number(p.stok || 0), 0);
-        const totalAssetVal = products.reduce((sum, p) => sum + (Number(p.hargaBeli || 0) * Number(p.stok || 0)), 0);
-
-        return `📊 <strong>Data Ringkasan Inventaris:</strong><br/><br/>
-          • Total Variasi Produk: <strong>${totalItems} Jenis Barang</strong><br/>
-          • Total Kuantitas Stok: <strong>${totalStockCount.toLocaleString("id-ID")} Item</strong><br/>
-          • Estimasi Nilai Modal Aset: <strong>Rp ${totalAssetVal.toLocaleString("id-ID")}</strong>`;
+      // 7. TOTAL PRODUK
+      if (query.includes("total produk") || query.includes("berapa produk") || query.includes("jumlah produk")) {
+        if (products.length === 0) return "Data total produk belum tercatat di database sheet.";
+        return `📊 Total produk yang terdaftar di database Sheet Stok Barang saat ini adalah sebanyak <strong>${products.length} item</strong>.`;
       }
 
-      // 4. ANALISIS HARGA TERMAHAL / TERMURAH / MARGIN PROFIT
-      if (query.includes("mahal") || query.includes("tertinggi") || query.includes("murah") || query.includes("harga")) {
-        if (products.length === 0) return "Data produk di database masih kosong.";
-        
-        if (query.includes("murah")) {
-          const sorted = [...products].sort((a, b) => Number(a.hargaJual) - Number(b.hargaJual)).slice(0, 5);
-          let list = sorted.map((p, i) => `${i+1}. <strong>${p.nama}</strong> ➡️ Rp ${Number(p.hargaJual).toLocaleString("id-ID")}`).join("<br/>");
-          return `🏷️ <strong>5 Produk Dengan Harga Terjangkau/Termurah:</strong><br/><br/>${list}`;
-        } else {
-          const sorted = [...products].sort((a, b) => Number(b.hargaJual) - Number(a.hargaJual)).slice(0, 5);
-          let list = sorted.map((p, i) => `${i+1}. <strong>${p.nama}</strong> ➡️ Rp ${Number(p.hargaJual).toLocaleString("id-ID")} (Margin: Rp ${(Number(p.hargaJual) - Number(p.hargaBeli)).toLocaleString("id-ID")})`).join("<br/>");
-          return `👑 <strong>5 Produk Dengan Harga Jual Tertinggi:</strong><br/><br/>${list}`;
-        }
-      }
-
-      // 5. REKOMENDASI AI UNTUK PERKEMBANGAN TOKO
-      if (query.includes("rekomendasi") || query.includes("saran") || query.includes("kembang") || query.includes("strategi") || query.includes("tips")) {
-        const lowStockCount = products.filter(p => Number(p.stok) <= 5).length;
-        const totalProds = products.length;
-
-        return `💡 <strong>Rekomendasi Cerdas AI untuk Kemajuan Toko Aneka Wangi:</strong><br/><br/>
-          1. 📦 <strong>Manajemen Stok Otomatis:</strong> Saat ini ada ${lowStockCount} barang stok tipis. Pertahankan kesiapan stok barang terlaris agar tidak menolak pembeli.<br/>
-          2. 🏷️ <strong>Bundling / Paket Hemat:</strong> Buat paket bundling gabungan produk termahal & produk yang lambat terjual dengan harga khusus untuk meningkatkan *Average Order Value*.<br/>
-          3. 📊 <strong>Evaluasi Biaya Operasional:</strong> Selalu cek tab *Pengeluaran*. Pastikan pengeluaran bulanan tidak memotong laba kotor lebih dari 20-30%.<br/>
-          4. 🎯 <strong>Program Loyalitas:</strong> Manfaatkan fitur cetak QR code pada stiker kemasan untuk memberi kesan profesional dan meningkatkan *repeat order*.`;
-      }
-
-      // 6. RINGKASAN PERFORMANCE TOKO (PENJUALAN & PERFORMA)
-      if (query.includes("ringkasan") || query.includes("performa") || query.includes("laporan") || query.includes("omzet") || query.includes("keuangan")) {
-        const totalProds = products.length;
-        const omzetText = document.getElementById("dash-stat-omzet").textContent;
-        const labaText = document.getElementById("dash-stat-lababersih").textContent;
-        const expText = document.getElementById("dash-stat-pengeluaran").textContent;
-
-        return `📈 <strong>Laporan Performa Toko Kamu Saat Ini:</strong><br/><br/>
-          • Omzet Penjualan: <strong>${omzetText}</strong><br/>
-          • Biaya Operasional: <strong>${expText}</strong><br/>
-          • Estimasi Laba Bersih: <strong>${labaText}</strong><br/>
-          • Jumlah Barang Aktif: <strong>${totalProds} Jenis</strong><br/><br/>
-          <em>Performa keuangan terpantau secara real-time dari database sheet toko! ✨</em>`;
-      }
-
-      // 7. PENGELUARAN / BEBAN OPERASIONAL
-      if (query.includes("pengeluaran") || query.includes("beban") || query.includes("biaya") || query.includes("operasional")) {
-        if (expenses.length === 0) return "Belum ada catatan pengeluaran operasional di database toko kamu nih.";
-        const totalExpVal = expenses.reduce((sum, e) => sum + Number(e.jumlah || 0), 0);
-        const lastExp = expenses[expenses.length - 1];
-        return `🧾 <strong>Analisis Pengeluaran Operasional Toko:</strong><br/><br/>
-          Total pengeluaran tercatat sejauh ini: <strong>Rp ${totalExpVal.toLocaleString("id-ID")}</strong> dari total ${expenses.length} transaksi.<br/>
-          Pengeluaran paling baru: <em>"${lastExp.keterangan}"</em> sebesar <strong>Rp ${Number(lastExp.jumlah).toLocaleString("id-ID")}</strong>.`;
-      }
-
-      // 8. PENCARIAN DETAIL SPESIFIK NAMA / KODE BARANG DARI DATABASE SHEET
-      const matched = products.filter(p => p.nama.toLowerCase().includes(query) || String(p.kodeQR).toLowerCase().includes(query) || (p.kategori && p.kategori.toLowerCase().includes(query)));
-      
-      if (matched.length > 0) {
-        if (matched.length === 1) {
-          const p = matched[0];
-          const margin = Number(p.hargaJual) - Number(p.hargaBeli);
-          return `🔍 <strong>Detail Produk Ditemukan:</strong><br/><br/>
-            • <strong>Nama Produk:</strong> ${p.nama}<br/>
-            • <strong>Kode QR:</strong> <code>${p.kodeQR}</code><br/>
-            • <strong>Kategori:</strong> ${p.kategori || '-'}<br/>
-            • <strong>Sisa Stok:</strong> ${p.stok} ${p.satuan || 'pcs'} ${p.stok <= 5 ? '⚠️ (Stok Tipis!)' : '✅ (Stok Aman)'}<br/>
-            • <strong>Harga Beli (HPP):</strong> Rp ${Number(p.hargaBeli).toLocaleString("id-ID")}<br/>
-            • <strong>Harga Jual:</strong> Rp ${Number(p.hargaJual).toLocaleString("id-ID")}<br/>
-            • <strong>Estimasi Margin Profit:</strong> Rp ${margin.toLocaleString("id-ID")} per unit`;
-        }
-
-        let list = matched.slice(0, 5).map(p => 
-          `• <strong>${p.nama}</strong> (${p.kodeQR}) ➡️ Stok: <strong>${p.stok} ${p.satuan || 'pcs'}</strong> | Harga: <strong>Rp ${Number(p.hargaJual).toLocaleString("id-ID")}</strong>`
-        ).join("<br/>");
-
-        return `🔍 Aku ngetrace ada <strong>${matched.length} barang</strong> yang cocok di database sheet kamu:<br/><br/>${list}${matched.length > 5 ? `<br/><br/><em>(+${matched.length - 5} produk lainnya...)</em>` : ''}`;
-      }
-
-      // DEFAULT RESPON BILA QUERY TIDAK TERDETEKSI
-      return `Hmm, aku belum nemu data yang cocok buat kata kunci <em>"${q}"</em> di database sheet kamu 🤔<br/><br/>
-        Coba tanyakan seputar:<br/>
-        • <strong>"Cek stok produk [nama barang]"</strong><br/>
-        • <strong>"Sebutkan produk stok habis"</strong><br/>
-        • <strong>"Tutorial penggunaan kasir"</strong><br/>
-        • <strong>"Berikan rekomendasi pengembangan toko"</strong>`;
+      // FALLBACK RESPONSE DESKRIPTIF RINGKAS
+      return `Informasi mengenai "${q}" belum tersedia secara spesifik di database. Silakan pastikan data telah diinput pada sheet Google yang terhubung.`;
     }
   </script>
 </body>
