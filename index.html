@@ -330,7 +330,6 @@
     <section id="sec-pengeluaran" class="hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- Form Tambah/Edit Pengeluaran -->
         <div class="lg:col-span-5 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-4">
             <h2 id="form-expense-title" class="font-bold text-slate-900 flex items-center gap-2">
@@ -360,7 +359,6 @@
           </form>
         </div>
 
-        <!-- Tabel Riwayat Pengeluaran (dengan Opsi Edit & Hapus) -->
         <div class="lg:col-span-7 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-4">
             <h2 class="font-bold text-slate-900 flex items-center gap-2">
@@ -392,7 +390,7 @@
       </div>
     </section>
 
-    <!-- TAB 4: LAPORAN & HISTORY (FITUR FILTER LENGKAP) -->
+    <!-- TAB 4: LAPORAN & HISTORY (DENGAN EXPORT PDF & FILTER LENGKAP) -->
     <section id="sec-laporan" class="hidden space-y-6">
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -400,7 +398,7 @@
           <p class="text-xs text-slate-500">Filter transaksi & pengeluaran berdasarkan rentang periode waktu tertentu</p>
         </div>
 
-        <!-- Filter Laporan Periode -->
+        <!-- Filter Laporan Periode & Tombol Download PDF -->
         <div class="flex flex-wrap items-center gap-2">
           <select id="report-filter-type" onchange="toggleFilterInputs()" class="text-xs px-3 py-2 border rounded-xl bg-slate-50 font-medium">
             <option value="all">Semua Waktu</option>
@@ -420,74 +418,79 @@
           <button onclick="fetchProfitReportFromSheet()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
             <i class="fa-solid fa-filter"></i> Terapkan Filter
           </button>
+
+          <!-- Fitur Download PDF -->
+          <button onclick="downloadReportPDF()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-file-pdf"></i> Download PDF
+          </button>
         </div>
       </div>
 
-      <!-- Stat Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-          <p class="text-xs font-medium text-slate-500 mb-1">Total Omzet</p>
-          <p id="stat-omzet" class="text-lg font-bold text-blue-600">Rp 0</p>
-        </div>
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-          <p class="text-xs font-medium text-slate-500 mb-1">Total HPP</p>
-          <p id="stat-hpp" class="text-lg font-bold text-slate-700">Rp 0</p>
-        </div>
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-          <p class="text-xs font-medium text-slate-500 mb-1">Laba Kotor</p>
-          <p id="stat-laba-kotor" class="text-lg font-bold text-amber-600">Rp 0</p>
-        </div>
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-          <p class="text-xs font-medium text-slate-500 mb-1">Pengeluaran Operasional</p>
-          <p id="stat-operasional" class="text-lg font-bold text-red-600">Rp 0</p>
-        </div>
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-          <p class="text-xs font-medium text-slate-500 mb-1">Laba Bersih</p>
-          <p id="stat-laba-bersih" class="text-lg font-bold text-emerald-600">Rp 0</p>
-        </div>
-      </div>
-
-      <!-- Detail History Transaksi Penjualan & Pengeluaran -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- History Penjualan -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
-            <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> History Transaksi Penjualan
-          </h3>
-          <div class="overflow-x-auto max-h-[400px]">
-            <table class="w-full text-xs text-left">
-              <thead class="bg-slate-50 text-slate-500 uppercase sticky top-0">
-                <tr>
-                  <th class="px-3 py-2">ID Trx</th>
-                  <th class="px-3 py-2">Tanggal</th>
-                  <th class="px-3 py-2 text-right">Total (Rp)</th>
-                </tr>
-              </thead>
-              <tbody id="report-sales-table-body" class="divide-y divide-slate-100">
-                <tr><td colspan="3" class="py-4 text-center text-slate-400">Pilih filter lalu klik Terapkan Filter</td></tr>
-              </tbody>
-            </table>
+      <div id="pdf-report-content" class="space-y-6">
+        <!-- Stat Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <p class="text-xs font-medium text-slate-500 mb-1">Total Omzet</p>
+            <p id="stat-omzet" class="text-lg font-bold text-blue-600">Rp 0</p>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <p class="text-xs font-medium text-slate-500 mb-1">Total HPP</p>
+            <p id="stat-hpp" class="text-lg font-bold text-slate-700">Rp 0</p>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <p class="text-xs font-medium text-slate-500 mb-1">Laba Kotor</p>
+            <p id="stat-laba-kotor" class="text-lg font-bold text-amber-600">Rp 0</p>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <p class="text-xs font-medium text-slate-500 mb-1">Pengeluaran Operasional</p>
+            <p id="stat-operasional" class="text-lg font-bold text-red-600">Rp 0</p>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <p class="text-xs font-medium text-slate-500 mb-1">Laba Bersih</p>
+            <p id="stat-laba-bersih" class="text-lg font-bold text-emerald-600">Rp 0</p>
           </div>
         </div>
 
-        <!-- History Pengeluaran dalam Laporan -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
-            <i class="fa-solid fa-file-invoice-dollar text-red-600"></i> History Pengeluaran Operasional
-          </h3>
-          <div class="overflow-x-auto max-h-[400px]">
-            <table class="w-full text-xs text-left">
-              <thead class="bg-slate-50 text-slate-500 uppercase sticky top-0">
-                <tr>
-                  <th class="px-3 py-2">Tanggal</th>
-                  <th class="px-3 py-2">Keterangan</th>
-                  <th class="px-3 py-2 text-right">Jumlah (Rp)</th>
-                </tr>
-              </thead>
-              <tbody id="report-expense-table-body" class="divide-y divide-slate-100">
-                <tr><td colspan="3" class="py-4 text-center text-slate-400">Pilih filter lalu klik Terapkan Filter</td></tr>
-              </tbody>
-            </table>
+        <!-- Detail History Transaksi Penjualan & Pengeluaran -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> History Transaksi Penjualan
+            </h3>
+            <div class="overflow-x-auto max-h-[400px]">
+              <table class="w-full text-xs text-left">
+                <thead class="bg-slate-50 text-slate-500 uppercase sticky top-0">
+                  <tr>
+                    <th class="px-3 py-2">ID Trx</th>
+                    <th class="px-3 py-2">Tanggal</th>
+                    <th class="px-3 py-2 text-right">Total (Rp)</th>
+                  </tr>
+                </thead>
+                <tbody id="report-sales-table-body" class="divide-y divide-slate-100">
+                  <tr><td colspan="3" class="py-4 text-center text-slate-400">Pilih filter lalu klik Terapkan Filter</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-file-invoice-dollar text-red-600"></i> History Pengeluaran Operasional
+            </h3>
+            <div class="overflow-x-auto max-h-[400px]">
+              <table class="w-full text-xs text-left">
+                <thead class="bg-slate-50 text-slate-500 uppercase sticky top-0">
+                  <tr>
+                    <th class="px-3 py-2">Tanggal</th>
+                    <th class="px-3 py-2">Keterangan</th>
+                    <th class="px-3 py-2 text-right">Jumlah (Rp)</th>
+                  </tr>
+                </thead>
+                <tbody id="report-expense-table-body" class="divide-y divide-slate-100">
+                  <tr><td colspan="3" class="py-4 text-center text-slate-400">Pilih filter lalu klik Terapkan Filter</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -573,7 +576,6 @@
         <p class="text-xs text-slate-500">Struk siap dicetak / diunduh</p>
       </div>
 
-      <!-- Thermal Printable Receipt Area -->
       <div id="printable-receipt" class="bg-slate-50 p-4 rounded-xl text-xs space-y-2 border font-mono">
         <div class="text-center border-b pb-2">
           <p class="font-bold text-sm">DJATI STORE</p>
@@ -620,7 +622,6 @@
       fetchExpensesFromSheet();
     });
 
-    // TOAST NOTIFICATION SYSTEM
     function showToast(message, type = "info") {
       const container = document.getElementById("toast-container");
       const toast = document.createElement("div");
@@ -642,7 +643,6 @@
       }, 3000);
     }
 
-    // TAB SWITCHING
     function switchTab(tab) {
       const tabs = ['kasir', 'stok', 'pengeluaran', 'laporan', 'coretax'];
       tabs.forEach(t => {
@@ -659,13 +659,7 @@
       if (tab === 'coretax') syncDataToCoreTax();
     }
 
-    // API INTEGRATION FUNCTIONS (FETCH REAL DATA FROM GOOGLE SHEETS)
     async function fetchProductsFromSheet() {
-      if (SCRIPT_URL.includes("GANTI_DENGAN_URL")) {
-        showToast("Harap masukkan URL Apps Script pada kode JS!", "warning");
-        return;
-      }
-
       try {
         const res = await fetch(`${SCRIPT_URL}?action=getProducts`);
         const data = await res.json();
@@ -677,8 +671,6 @@
     }
 
     async function fetchExpensesFromSheet() {
-      if (SCRIPT_URL.includes("GANTI_DENGAN_URL")) return;
-
       try {
         const res = await fetch(`${SCRIPT_URL}?action=getExpenses`);
         const data = await res.json();
@@ -689,10 +681,8 @@
       }
     }
 
-    // LAPORAN & HISTORY DENGAN FILTER TANGGAL, BULAN, TAHUN, SEMUA WAKTU
+    // LAPORAN & HISTORY DENGAN FILTER TANGGAL, BULAN, TAHUN
     async function fetchProfitReportFromSheet() {
-      if (SCRIPT_URL.includes("GANTI_DENGAN_URL")) return;
-
       const type = document.getElementById("report-filter-type").value;
       let filterVal = "";
       if (type === "daily") filterVal = document.getElementById("filter-date-input").value;
@@ -750,7 +740,23 @@
       document.getElementById("filter-year-input").classList.toggle("hidden", type !== "yearly");
     }
 
-    // MANAJEMEN PRODUK (PCS, ML, KG)
+    // FITUR DOWNLOAD LAPORAN PDF
+    function downloadReportPDF() {
+      const element = document.getElementById("pdf-report-content");
+      const opt = {
+        margin:       0.3,
+        filename:     `Laporan_Keuangan_${new Date().toISOString().slice(0,10)}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+      };
+
+      showToast("Mengekspor Laporan PDF...", "info");
+      html2pdf().set(opt).from(element).save().then(() => {
+        showToast("Laporan PDF berhasil diunduh!", "success");
+      });
+    }
+
     async function handleAddProduct(e) {
       e.preventDefault();
       const btn = document.getElementById("btn-submit-product");
@@ -835,7 +841,6 @@
       document.getElementById("btn-cancel-edit").classList.add("hidden");
     }
 
-    // MANAJEMEN PENGELUARAN (DENGAN EDIT NAMA & JUMLAH, SERTA HAPUS)
     async function handleAddExpense(e) {
       e.preventDefault();
       const btn = document.getElementById("btn-submit-expense");
@@ -907,7 +912,6 @@
       document.getElementById("btn-cancel-expense-edit").classList.add("hidden");
     }
 
-    // PROCESS CHECKOUT & PRINT RECEIPT
     async function processCheckout() {
       if (cart.length === 0) return showToast("Keranjang belanja kosong!", "warning");
 
@@ -980,7 +984,6 @@
       document.getElementById("receipt-modal").classList.add("hidden");
     }
 
-    // CART LOGIC
     function addItemToCartByCode(code) {
       const product = products.find(p => String(p.kodeQR) === String(code));
       if (!product) return showToast(`Barang dengan kode "${code}" tidak ditemukan!`, "error");
@@ -1103,7 +1106,6 @@
       document.getElementById("pay-change").textContent = `Rp ${Math.max(0, change).toLocaleString("id-ID")}`;
     }
 
-    // RENDER TABLE STOK
     function renderStockTable() {
       const tbody = document.getElementById("stock-table-body");
       if (products.length === 0) {
@@ -1136,7 +1138,6 @@
       `).join("");
     }
 
-    // RENDER TABLE PENGELUARAN (DENGAN EDIT & HAPUS)
     function renderExpenseTable() {
       const tbody = document.getElementById("expense-table-body");
       if (expenses.length === 0) {
@@ -1162,7 +1163,6 @@
       `).join("");
     }
 
-    // SEARCH & QR HELPERS
     function handleGlobalSearch(query) {
       const clearBtn = document.getElementById("btn-clear-search");
       const dropdown = document.getElementById("search-results-dropdown");
@@ -1242,7 +1242,6 @@
       }
     }
 
-    // CORETAX SIMULATOR
     function syncDataToCoreTax() {
       const omzetStr = document.getElementById("stat-omzet").textContent.replace(/[^0-9]/g, '');
       const labaStr = document.getElementById("stat-laba-kotor").textContent.replace(/[^0-9]/g, '');
