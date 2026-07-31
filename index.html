@@ -701,7 +701,7 @@
         products = data;
         renderStockTable();
       } catch (err) {
-        showToast("Gagal mengambil data produk dari Google Sheets", "error");
+        showToast("Gagal mengambil data produk dari Database", "error");
       }
     }
 
@@ -821,7 +821,7 @@
       e.preventDefault();
       const btn = document.getElementById("btn-submit-product");
       btn.disabled = true;
-      btn.textContent = "Menyimpan ke Sheet...";
+      btn.textContent = "Menyimpan...";
 
       const editIndex = Number(document.getElementById("edit-mode-index").value);
 
@@ -850,10 +850,10 @@
           fetchProductsFromSheet();
         }
       } catch (err) {
-        showToast("Gagal menyambung ke Google Sheets", "error");
+        showToast("Gagal menyambung ke Database", "error");
       } finally {
         btn.disabled = false;
-        btn.textContent = "Simpan Produk ke Sheet";
+        btn.textContent = "Simpan Produk";
       }
     }
 
@@ -928,10 +928,10 @@
           fetchExpensesFromSheet();
         }
       } catch (err) {
-        showToast("Gagal mencatat pengeluaran ke Google Sheets", "error");
+        showToast("Gagal mencatat pengeluaran", "error");
       } finally {
         btn.disabled = false;
-        btn.textContent = "Simpan Pengeluaran ke Sheet";
+        btn.textContent = "Simpan Pengeluaran";
       }
     }
 
@@ -983,7 +983,7 @@
 
       const btn = document.getElementById("btn-checkout");
       btn.disabled = true;
-      btn.textContent = "Memproses & Mengirim Ke Sheet...";
+      btn.textContent = "Memproses & Mengirim Ke Database...";
 
       const trxId = "TRX-" + Date.now();
       const payload = {
@@ -1010,7 +1010,7 @@
         showToast("Gagal memproses transaksi", "error");
       } finally {
         btn.disabled = false;
-        btn.textContent = "Proses & Simpan Ke Google Sheet";
+        btn.textContent = "Proses & Simpan";
       }
     }
 
@@ -1169,7 +1169,7 @@
     function renderStockTable() {
       const tbody = document.getElementById("stock-table-body");
       if (products.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">Tidak ada stok produk di Sheet.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">Tidak ada stok produk.</td></tr>`;
         return;
       }
 
