@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Djati Application by Djati Group</title>
+  <title>Aneka Wangi by djati Application</title>
   
   <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -47,8 +47,8 @@
             <i class="fa-solid fa-store text-lg"></i>
           </div>
           <div>
-            <h1 class="font-bold text-lg leading-tight text-slate-900">Djati Application</h1>
-            <p class="text-xs text-slate-500">by Djati Group</p>
+            <h1 class="font-bold text-lg leading-tight text-slate-900">Aneka Wangi</h1>
+            <p class="text-xs text-slate-500">by djati Application</p>
           </div>
         </div>
 
@@ -71,7 +71,7 @@
         <!-- Status API Indicator -->
         <div id="sync-status" class="hidden md:flex items-center space-x-2 text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span id="sync-status-text" class="font-medium">Google Sheets Connected</span>
+          <span id="sync-status-text" class="font-medium">Database Connected</span>
         </div>
 
       </div>
@@ -110,7 +110,7 @@
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-3">
             <h2 class="font-bold text-slate-800 flex items-center gap-2">
-              <i class="fa-solid fa-qrcode text-blue-600"></i> Scanner Barang
+              <i class="fa-solid fa-qrcode text-blue-600"></i> Scanner Item
             </h2>
             <div class="flex items-center gap-2 text-xs text-slate-500">
               <span id="scan-status-badge" class="px-2 py-0.5 rounded bg-slate-100 text-slate-600">Siap Scan</span>
@@ -183,7 +183,7 @@
             <div class="flex justify-between items-center text-slate-600 pt-2 border-t border-dashed">
               <div class="flex items-center gap-1.5">
                 <input type="checkbox" id="ppn-toggle" onchange="calculateCartTotal()" class="rounded text-blue-600 focus:ring-blue-500 h-4 w-4" checked />
-                <label for="ppn-toggle" class="text-xs font-medium text-slate-700">Simulasi PPN CoreTax (12%)</label>
+                <label for="ppn-toggle" class="text-xs font-medium text-slate-700">PPN CoreTax (12%)</label>
               </div>
               <span id="summary-ppn" class="font-semibold text-slate-800">Rp 0</span>
             </div>
@@ -207,7 +207,7 @@
 
           <button onclick="processCheckout()" id="btn-checkout"
             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-500/20 transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-check-circle"></i> Proses & Simpan Ke Google Sheet
+            <i class="fa-solid fa-check-circle"></i> BAYAR
           </button>
         </div>
       </div>
@@ -245,7 +245,7 @@
             <div class="grid grid-cols-3 gap-3">
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">Kategori</label>
-                <input type="text" id="input-kategori" placeholder="Makanan..."
+                <input type="text" id="input-kategori" placeholder="Kategori Item..."
                   class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:outline-none" />
               </div>
               
@@ -279,7 +279,7 @@
             </div>
 
             <button type="submit" id="btn-submit-product" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition">
-              Simpan Produk ke Sheet
+              Simpan Produk
             </button>
           </form>
 
@@ -299,7 +299,7 @@
         <div class="lg:col-span-7 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
           <div class="flex justify-between items-center mb-4">
             <h2 class="font-bold text-slate-900 flex items-center gap-2">
-              <i class="fa-solid fa-boxes-packing text-blue-600"></i> Data Stok Real dari Sheet
+              <i class="fa-solid fa-boxes-packing text-blue-600"></i> Data Stok
             </h2>
             <button onclick="fetchProductsFromSheet()" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-lg font-medium">
               <i class="fa-solid fa-rotate mr-1"></i> Refresh Data
@@ -318,7 +318,7 @@
                 </tr>
               </thead>
               <tbody id="stock-table-body" class="divide-y divide-slate-100">
-                <tr><td colspan="5" class="py-6 text-center text-slate-400">Memuat data dari Google Sheet...</td></tr>
+                <tr><td colspan="5" class="py-6 text-center text-slate-400">Memuat data...</td></tr>
               </tbody>
             </table>
           </div>
@@ -500,7 +500,7 @@
     <section id="sec-coretax" class="hidden space-y-6">
       <div class="bg-gradient-to-r from-blue-900 to-indigo-800 text-white p-6 rounded-2xl shadow-md">
         <h2 class="text-xl font-bold mb-1">Simulasi CoreTax Indonesia</h2>
-        <p class="text-sm text-blue-100">Penghitungan pajak sesuai Peraturan CoreTax Dirjen Pajak RI terupdate.</p>
+        <p class="text-sm text-blue-100">Penghitungan pajak sesuai Peraturan CoreTax Dirjen Pajak RI.</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -538,7 +538,7 @@
           </div>
 
           <button onclick="syncDataToCoreTax()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium py-2 rounded-xl">
-            <i class="fa-solid fa-arrows-rotate mr-1"></i> Tarik Data Real dari Google Sheet
+            <i class="fa-solid fa-arrows-rotate mr-1"></i> Tarik Data Real dari Data Base Aneka Wangi
           </button>
         </div>
 
@@ -578,8 +578,8 @@
 
       <div id="printable-receipt" class="bg-slate-50 p-4 rounded-xl text-xs space-y-2 border font-mono">
         <div class="text-center border-b pb-2">
-          <p class="font-bold text-sm">DJATI STORE</p>
-          <p class="text-[10px]">Jl. Raya Djati Group Indonesia</p>
+          <p class="font-bold text-sm">ANEKA WANGI STORE</p>
+          <p class="text-[10px]">Jl. Raya Aneka Wangi</p>
           <p id="rec-trx-id" class="text-[10px] text-slate-500 mt-1"></p>
           <p id="rec-date" class="text-[10px] text-slate-500"></p>
         </div>
