@@ -329,8 +329,10 @@
         });
 
         // --- Helper Functions ---
+const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbzPm_wxX7kh6_P_821-MpVMdyJQ_NpFibZyHTSPRrJjCEjfUaaCGQKQ23qZsRHbCeHOuA/exec";
+        
         function getGasUrl() {
-            return localStorage.getItem("gas_app_url") || "";
+            return localStorage.getItem("gas_api_url") || DEFAULT_GAS_URL;
         }
 
         function saveGasUrl() {
