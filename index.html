@@ -1100,7 +1100,7 @@
       renderReportTables(filteredSales, filteredExpenses);
     }
 
-    // CETAK ULANG STRUK TRANSAKSI (PRESISI DAN SAMA SEPERTI AWAL MEMANFAATKAN LOCAL STORAGE METADATA)
+    // CETAK ULANG STRUK TRANSAKSI (PRESISI DAN SAMA SEPERTI AWAL MEMANFAATKAN LOCAL STORAGE METADATA / FALLBACK DATABASE)
     function reprintReceipt(idTrx) {
       const storedData = localStorage.getItem(`receipt_${idTrx}`);
       const trx = currentReportSales.find(s => String(s.idTrx) === String(idTrx));
@@ -1502,9 +1502,10 @@
       
       let calculatedDiscount = 0;
       if (discountType === "percent") {
-        calculatedDiscount = Math.round((rawSubtotal * discountInput) / 100);
+        const validPercent = Math.min(100, Math.max(0, discountInput));
+        calculatedDiscount = Math.round((rawSubtotal * validPercent) / 100);
       } else {
-        calculatedDiscount = discountInput;
+        calculatedDiscount = Math.min(rawSubtotal, Math.max(0, discountInput));
       }
 
       const ppnStr = document.getElementById("summary-ppn").textContent;
@@ -1513,7 +1514,7 @@
       const changeStr = document.getElementById("pay-change").textContent;
       const dateStr = new Date().toLocaleString("id-ID");
 
-      // SIMPAN METADATA UNTUK KEBUTUHAN CETAK ULANG PERSISI LATER
+      // SIMPAN METADATA UNTUK KEBUTUHAN CETAK ULANG PRESISI LATER
       const receiptMetaData = {
         idTrx: trxId,
         date: dateStr,
@@ -1671,16 +1672,30 @@
       renderCart();
     }
 
-    // MEMPERHITUNGKAN HARGA DISKON DUA BENTUK (RUPIAH ATAU PERSENTASE)
+    // MEMPERHITUNGKAN HARGA DISKON DUA BENTUK (RUPIAH ATAU PERSENTASE) DENGAN VALIDASI MAKSIMAL
     function calculateCartTotal() {
       const rawSubtotal = cart.reduce((sum, item) => sum + (item.hargaJual * item.qty), 0);
-      const discountInput = Number(document.getElementById("cart-discount").value) || 0;
+      const discountInputEl = document.getElementById("cart-discount");
+      let discountInput = Number(discountInputEl.value) || 0;
       const discountType = document.getElementById("cart-discount-type").value;
       
+      if (discountInput < 0) {
+        discountInput = 0;
+        discountInputEl.value = 0;
+      }
+
       let calculatedDiscount = 0;
       if (discountType === "percent") {
+        if (discountInput > 100) {
+          discountInput = 100;
+          discountInputEl.value = 100;
+        }
         calculatedDiscount = (rawSubtotal * discountInput) / 100;
       } else {
+        if (discountInput > rawSubtotal) {
+          discountInput = rawSubtotal;
+          discountInputEl.value = rawSubtotal;
+        }
         calculatedDiscount = discountInput;
       }
 
